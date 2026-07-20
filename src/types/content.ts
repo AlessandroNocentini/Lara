@@ -4,11 +4,17 @@ export interface SiteMeta {
   themeColor: string;
 }
 
+export interface SocialLink {
+  platform: string;
+  url: string;
+}
+
 export interface HeroContent {
   eyebrow: string;
   headline: string;
   highlightWords: string[];
   image: string;
+  socialLinks: SocialLink[];
 }
 
 export interface PainPointsContent {
@@ -22,18 +28,26 @@ export interface PainPointsContent {
 export interface MethodItem {
   title: string;
   description: string;
+  image: string;
 }
 
 export interface MethodContent {
   title: string;
   items: MethodItem[];
+  section: string;
+}
+
+export interface ResultsContent {
+  image: string;
+  beginner: string;
+  intermediate: string;
+  advanced: string;
 }
 
 export interface AboutContent {
   greeting: string;
   name: string;
-  bio: string[];
-  credentials: string[];
+  bio: string;
   image: string;
 }
 
@@ -48,6 +62,7 @@ export interface SiteContent {
   hero: HeroContent;
   painPoints: PainPointsContent;
   method: MethodContent;
+  results: ResultsContent;
   about: AboutContent;
   contact: ContactContent;
 }

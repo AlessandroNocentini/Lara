@@ -1,41 +1,85 @@
 # Lara
 
-## Status: pre-code concept stage
+**"Learn Italian with Lara"** — a landing page for Lara, a native Italian
+language teacher offering 1:1 lessons. Static, single-page site built with
+[Astro](https://astro.build).
 
-This repository does not yet contain any source code. It holds early reference
-material for a planned website/landing page: **"Learn Italian with Lara"** —
-a promotional page for Lara, a native Italian language teacher, aimed at
-prospective 1:1 students.
+## Status
 
-This conclusion is inferred entirely from the mockup/reference images in
-[`Ideas/`](Ideas/README.md) (hero banners, a "my method" features section, and
-an "about me" bio). There is no other evidence in the repo (no config, no
-package manifest, no code) about scope or tech stack.
+Working v1 codebase. Not yet deployed, not yet content-complete (see
+[What's deliberately missing](#whats-deliberately-missing) below).
 
-## What exists today
+## Getting started
 
-- This README.
-- `Ideas/` — six reference images for page sections. See
-  [`Ideas/README.md`](Ideas/README.md) for what each one shows.
+Requires Node.js `>=22.12.0`.
 
-Nothing else. Do not assume a framework, folder layout, or build system;
-none has been chosen yet.
+```bash
+npm install
+npm run dev       # local dev server with hot reload
+npm run build     # production build -> dist/
+npm run preview   # serve the production build locally
+```
 
-## Open questions (flagged, not guessed)
+## Architecture: one JSON file drives the page
 
-- **Tech stack**: undecided. No code, no dependency manifest exists.
-- **Origin of the `Ideas/` images**: unclear whether they are original
-  mockups being drafted for this project, or screenshots gathered from an
-  existing site (e.g. a teacher profile page) as inspiration/reference copy.
-  See notes in `Ideas/README.md`.
-- **Scope**: unclear whether the end result is a single static landing page,
-  or something with booking/scheduling/payments.
-- `Ideas/` is currently untracked in git (present on disk, not committed as
-  of the initial commit).
+The entire page's copy and content structure lives in
+[`content/siteContent.json`](content/siteContent.json), typed by the
+`SiteContent` interface in [`src/types/content.ts`](src/types/content.ts).
+[`src/pages/index.astro`](src/pages/index.astro) imports that JSON once and
+passes each section a typed slice of it as a `content` prop — components
+never reach into the JSON themselves, and never hardcode copy.
 
-## For future sessions
+**Why:** editing `siteContent.json` alone changes the rendered page — no
+component code has to change for a copy/content edit. This is deliberate
+groundwork for a future Git-based CMS (Sveltia or Decap CMS, not yet
+integrated) that would let Lara edit her own site's text and images by
+writing straight into this same JSON file, without touching any code. Until
+that CMS exists, editing the JSON by hand *is* the content workflow.
 
-When code is added, this README should be replaced with an actual project
-overview (what it is, how to run it, how it's structured) and this file's
-"pre-code" framing should be removed. Until then, keep this file short —
-there is nothing to document beyond intent.
+Any image field left as an empty string (`""`) renders as a
+"Photo coming soon" placeholder ([`PlaceholderImage.astro`](src/components/PlaceholderImage.astro))
+instead of a broken `<img>` — so real photos can be dropped in later by
+filling in a path, with no code change.
+
+## Structure
+
+```
+content/siteContent.json   All page copy + structure (the CMS's future target file)
+src/types/content.ts       TypeScript contract for siteContent.json (SiteContent)
+src/pages/index.astro      Composes the page: Layout + one component per section
+src/layouts/Layout.astro   <html> shell, global CSS, Navbar, CustomCursor
+src/components/            One component per page section (see below) + shared UI
+src/styles/global.css      Design tokens (palette, type, spacing) as CSS custom properties
+src/utils/markdown.ts      Renders markdown-flavored content fields (marked)
+Ideas/                     Reference mockups that informed the design (see Ideas/README.md)
+```
+
+Page sections, in render order: Hero → About → PainPoints → Method → Results
+→ Contact, each its own component in `src/components/`. Shared/non-section
+components: `Navbar` (fixed nav), `CustomCursor` (custom cursor, disabled on
+touch devices and when `prefers-reduced-motion`), `PlaceholderImage`, and
+`SocialIcon` (a small hand-authored icon set — no icon library dependency).
+
+No UI framework (no React/Vue/Svelte) and no CSS framework — plain Astro
+components and hand-written CSS custom properties in `global.css`.
+
+## What's deliberately missing
+
+These are known, intentional gaps — not oversights:
+
+- **CMS**: no Sveltia/Decap CMS wired up yet. The content-driven architecture
+  above exists specifically to make adding one later low-risk.
+- **Hosting**: not deployed. GitHub Pages is the intended target, not yet set up.
+- **Contact form backend**: `Contact.astro`'s form is fully styled and
+  interactive, but submission is simulated client-side only (it calls
+  `preventDefault()` and shows the success message without sending data
+  anywhere). Web3Forms is the intended backend; not yet integrated.
+- **Real photos and final copy**: most `image` fields in `siteContent.json`
+  are empty (rendering as placeholders), and some copy (e.g. `results`
+  intermediate/advanced levels) is still placeholder text.
+
+## Reference material
+
+[`Ideas/`](Ideas/README.md) holds the original mockup/screenshot images that
+informed the design (hero concepts, method section, about section). It
+predates the code and is kept for historical/design reference.

@@ -1,8 +1,141 @@
+@import "@fontsource/fraunces/500.css";
+@import "@fontsource/fraunces/600.css";
+@import "@fontsource/fraunces/600-italic.css";
+@import "@fontsource/nunito/400.css";
+@import "@fontsource/nunito/600.css";
+@import "@fontsource/nunito/700.css";
+
+:root {
+  /* Palette */
+  --color-white: #ffffff;
+  --color-cream: #fffbf4;
+  --color-teal: #0f766e;
+  --color-teal-dark: #0b5b54;
+  --color-lightblue: #8ecae6;
+  --color-yellow: #f5c244;
+  --color-ocher: #d98e31;
+  --color-red: #c1442d;
+  --color-ink: #1f2937;
+  --color-ink-soft: #4b5563;
+
+  /* Typography */
+  --font-heading: "Fraunces", Georgia, serif;
+  --font-body: "Nunito", system-ui, sans-serif;
+
+  /* Spacing / shape */
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 2rem;
+  --radius-full: 999px;
+  --section-padding: clamp(3rem, 6vw, 6rem) clamp(1.5rem, 6vw, 4rem);
+  --content-max-width: 72rem;
+
+  /* Shadow */
+  --shadow-soft: 0 12px 30px -12px rgb(15 118 110 / 0.25);
+  --shadow-lift: 0 20px 40px -16px rgb(31 41 55 / 0.25);
+
+  /* Layout */
+  --navbar-height: 4.25rem;
+}
+
 * {
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--navbar-height);
+}
+
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-cream);
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  line-height: 1.15;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+
+.container {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 0.9rem 1.9rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.button-primary {
+  background: var(--color-red);
+  color: var(--color-white);
+  box-shadow: var(--shadow-soft);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: var(--shadow-lift);
+  }
+
+  [data-hover-lift]:hover {
+    transform: translateY(-6px);
+  }
+
+  [data-hover-wiggle]:hover {
+    animation: wiggle 0.4s ease;
+  }
+}
+
+[data-hover-lift] {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-2deg);
+  }
+  75% {
+    transform: rotate(2deg);
+  }
+}
+
+@media (pointer: fine) {
+  body.has-custom-cursor,
+  body.has-custom-cursor a,
+  body.has-custom-cursor button {
+    cursor: none;
+  }
 }

@@ -8,7 +8,106 @@ interface Props {
 const { content } = Astro.props;
 ---
 
-<section id="contact">
-	<h2>{content.heading}</h2>
-	<p>{content.description}</p>
+<section id="contact" class="contact">
+	<div class="container contact-inner">
+		<h2>{content.heading}</h2>
+		{content.description && <p class="description">{content.description}</p>}
+
+		<form class="contact-form" data-contact-form>
+			<label>
+				Name
+				<input type="text" name="name" required />
+			</label>
+			<label>
+				Email
+				<input type="email" name="email" required />
+			</label>
+			<label>
+				Message
+				<textarea name="message" rows="4" required></textarea>
+			</label>
+			<button type="submit" class="button button-primary" data-hover-lift>Send message</button>
+			<p class="success-message" data-success-message role="status">{content.successMessage}</p>
+		</form>
+	</div>
 </section>
+
+<style>
+	.contact {
+		padding: var(--section-padding);
+		background: linear-gradient(160deg, var(--color-teal-dark) 0%, var(--color-teal) 100%);
+		color: var(--color-white);
+	}
+
+	.contact-inner {
+		max-width: 32rem;
+		text-align: center;
+	}
+
+	h2 {
+		font-size: clamp(1.8rem, 3vw, 2.4rem);
+		margin-bottom: 0.75rem;
+	}
+
+	.description {
+		color: rgb(255 255 255 / 0.85);
+		margin-bottom: 2rem;
+	}
+
+	.contact-form {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+		text-align: left;
+		margin-top: 2rem;
+	}
+
+	label {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+		font-weight: 700;
+		font-size: 0.9rem;
+	}
+
+	input,
+	textarea {
+		font-family: var(--font-body);
+		font-size: 1rem;
+		padding: 0.7rem 0.9rem;
+		border-radius: var(--radius-sm);
+		border: none;
+		resize: vertical;
+	}
+
+	button {
+		align-self: center;
+		margin-top: 0.5rem;
+	}
+
+	.success-message {
+		display: none;
+		text-align: center;
+		font-weight: 700;
+		color: var(--color-yellow);
+	}
+
+	.contact-form.is-submitted .success-message {
+		display: block;
+	}
+
+	.contact-form.is-submitted input,
+	.contact-form.is-submitted textarea,
+	.contact-form.is-submitted button {
+		display: none;
+	}
+</style>
+
+<script>
+	document.querySelectorAll<HTMLFormElement>("[data-contact-form]").forEach((form) => {
+		form.addEventListener("submit", (event) => {
+			event.preventDefault();
+			form.classList.add("is-submitted");
+		});
+	});
+</script>

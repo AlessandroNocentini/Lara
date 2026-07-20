@@ -1,0 +1,104 @@
+---
+import PlaceholderImage from "./PlaceholderImage.astro";
+import { renderMarkdown } from "../utils/markdown";
+import type { ResultsContent } from "../types/content";
+
+interface Props {
+  content: ResultsContent;
+}
+
+const { content } = Astro.props;
+
+const levels = [
+  { key: "beginner", label: "Beginner" },
+  { key: "intermediate", label: "Intermediate" },
+  { key: "advanced", label: "Advanced" },
+] as const;
+
+const activeLevels = levels
+  .filter((level) => Boolean(content[level.key]))
+  .map((level) => ({ ...level, html: renderMarkdown(content[level.key]) }));
+---
+
+<section id="results" class="results">
+	<div class="container results-inner">
+		<div class="results-image" data-hover-lift>
+			<PlaceholderImage src={content.image || undefined} alt="Results of learning Italian with Lara" variant="rounded" />
+		</div>
+		<div class="results-levels">
+			<h2>Results</h2>
+			{activeLevels.map((level) => (
+				<div class="results-card" data-hover-lift>
+					<span class="results-label">{level.label}</span>
+					<div set:html={level.html} />
+				</div>
+			))}
+		</div>
+	</div>
+</section>
+
+<style>
+	.results {
+		padding: var(--section-padding);
+	}
+
+	.results-inner {
+		display: grid;
+		grid-template-columns: 1fr 1.4fr;
+		gap: clamp(2rem, 5vw, 3.5rem);
+		align-items: start;
+	}
+
+	.results-image {
+		aspect-ratio: 4 / 5;
+	}
+
+	h2 {
+		font-size: clamp(1.8rem, 3vw, 2.4rem);
+		color: var(--color-teal-dark);
+		margin-bottom: 1.5rem;
+	}
+
+	.results-levels {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+
+	.results-card {
+		background: var(--color-white);
+		border-left: 4px solid var(--color-ocher);
+		border-radius: var(--radius-sm);
+		padding: 1.25rem 1.5rem;
+		box-shadow: var(--shadow-soft);
+	}
+
+	.results-label {
+		display: inline-block;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		font-size: 0.75rem;
+		font-weight: 700;
+		color: var(--color-ocher);
+		margin-bottom: 0.4rem;
+	}
+
+	.results-card :global(strong) {
+		color: var(--color-teal-dark);
+	}
+
+	.results-card :global(p) {
+		color: var(--color-ink-soft);
+	}
+
+	@media (max-width: 800px) {
+		.results-inner {
+			grid-template-columns: 1fr;
+		}
+
+		.results-image {
+			max-width: 20rem;
+			margin-inline: auto;
+		}
+	}
+</style>

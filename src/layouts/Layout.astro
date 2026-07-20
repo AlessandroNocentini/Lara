@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+import CustomCursor from "../components/CustomCursor.astro";
+import Navbar from "../components/Navbar.astro";
 import type { SiteMeta } from "../types/content";
 
 interface Props {
@@ -15,9 +17,12 @@ const { meta } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
+		<meta name="theme-color" content={meta.themeColor} />
 		<title>{meta.siteName}</title>
 	</head>
 	<body>
+		<CustomCursor />
+		<Navbar meta={meta} />
 		<slot />
 	</body>
 </html>

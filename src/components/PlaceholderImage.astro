@@ -1,0 +1,60 @@
+---
+interface Props {
+  src?: string;
+  alt: string;
+  variant?: "circle" | "rounded";
+  class?: string;
+}
+
+const { src, alt, variant = "rounded", class: className = "" } = Astro.props;
+---
+
+{
+  src ? (
+    <img src={src} alt={alt} class={`placeholder-image ${variant} ${className}`} />
+  ) : (
+    <div class={`placeholder-image placeholder-empty ${variant} ${className}`} role="img" aria-label={alt}>
+      <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6">
+        <rect x="3" y="5" width="18" height="14" rx="2.5" />
+        <circle cx="8.5" cy="10" r="1.6" />
+        <path d="M3 16l5-4.5 4 3.5 3.5-3L21 16" />
+      </svg>
+      <span>Photo coming soon</span>
+    </div>
+  )
+}
+
+<style>
+  .placeholder-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .placeholder-image.circle {
+    border-radius: var(--radius-full);
+    aspect-ratio: 1 / 1;
+  }
+
+  .placeholder-image.rounded {
+    border-radius: var(--radius-lg);
+  }
+
+  .placeholder-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: linear-gradient(135deg, var(--color-lightblue) 0%, var(--color-teal) 100%);
+    color: var(--color-white);
+    min-height: 12rem;
+  }
+
+  .placeholder-empty span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+</style>

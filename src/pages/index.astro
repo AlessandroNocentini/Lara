@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
 import PainPoints from "../components/PainPoints.astro";
 import Method from "../components/Method.astro";
+import Results from "../components/Results.astro";
 import About from "../components/About.astro";
 import Contact from "../components/Contact.astro";
 import siteContent from "../../content/siteContent.json";
@@ -13,8 +14,9 @@ const content = siteContent as SiteContent;
 
 <Layout meta={content.meta}>
 	<Hero content={content.hero} />
+	<About content={content.about} />
 	<PainPoints content={content.painPoints} />
 	<Method content={content.method} />
-	<About content={content.about} />
+	<Results content={content.results} />
 	<Contact content={content.contact} />
 </Layout>
