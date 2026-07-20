@@ -1,4 +1,6 @@
 ---
+import PlaceholderImage from "./PlaceholderImage.astro";
+import SocialIcon from "./SocialIcon.astro";
 import type { HeroContent } from "../types/content";
 
 interface Props {
@@ -6,9 +8,149 @@ interface Props {
 }
 
 const { content } = Astro.props;
+
+const accentColors = ["var(--color-yellow)", "var(--color-ocher)", "var(--color-lightblue)"];
+
+function renderHeadline(headline: string, highlightWords: string[]) {
+  if (highlightWords.length === 0) return [{ text: headline, highlight: false }];
+
+  const pattern = new RegExp(`(${highlightWords.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "gi");
+  const parts = headline.split(pattern);
+
+  return parts.filter(Boolean).map((part) => ({
+    text: part,
+    highlight: highlightWords.some((w) => w.toLowerCase() === part.toLowerCase()),
+  }));
+}
+
+const parts = renderHeadline(content.headline, content.highlightWords);
 ---
 
-<section id="hero">
-	<p>{content.eyebrow}</p>
-	<h1>{content.headline}</h1>
+<section id="hero" class="hero">
+	<div class="hero-inner container">
+		<div class="hero-copy">
+			{content.eyebrow && <p class="eyebrow">{content.eyebrow}</p>}
+			<h1>
+				{parts.map((part, i) => (
+					part.highlight ? (
+						<span class="highlight" style={`--highlight-color: ${accentColors[i % accentColors.length]}`}>{part.text}</span>
+					) : (
+						<>{part.text}</>
+					)
+				))}
+			</h1>
+			<a class="button button-primary" href="#contact" data-hover-lift>Book a first lesson</a>
+			{content.socialLinks.length > 0 && (
+				<ul class="social-links">
+					{content.socialLinks.map((social) => (
+						<li>
+							<a
+								href={social.url}
+								data-hover-lift
+								aria-label={social.platform}
+								target={social.platform === "email" ? undefined : "_blank"}
+								rel={social.platform === "email" ? undefined : "noopener noreferrer"}
+							>
+								<SocialIcon platform={social.platform} />
+							</a>
+						</li>
+					))}
+				</ul>
+			)}
+		</div>
+		<div class="hero-portrait" data-hover-lift>
+			<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="circle" />
+		</div>
+	</div>
+
+	<svg class="hero-wave" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true">
+		<path d="M0,40 C320,110 1120,-20 1440,50 L1440,100 L0,100 Z" fill="var(--color-cream)" />
+	</svg>
 </section>
+
+<style>
+	.hero {
+		position: relative;
+		background: linear-gradient(160deg, var(--color-teal) 0%, var(--color-teal-dark) 100%);
+		color: var(--color-white);
+		padding: calc(var(--navbar-height) + clamp(2.5rem, 6vw, 5rem)) clamp(1.5rem, 6vw, 4rem) 6rem;
+		overflow: hidden;
+	}
+
+	.hero-inner {
+		display: grid;
+		grid-template-columns: 1.3fr 1fr;
+		gap: clamp(2rem, 5vw, 4rem);
+		align-items: center;
+	}
+
+	.eyebrow {
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-weight: 700;
+		font-size: 0.85rem;
+		color: var(--color-yellow);
+		margin-bottom: 0.75rem;
+	}
+
+	h1 {
+		font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+		margin-bottom: 2rem;
+	}
+
+	.highlight {
+		color: var(--highlight-color);
+	}
+
+	.social-links {
+		list-style: none;
+		display: flex;
+		gap: 0.9rem;
+		margin: 1.5rem 0 0;
+		padding: 0;
+	}
+
+	.social-links a {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.6rem;
+		height: 2.6rem;
+		border-radius: var(--radius-full);
+		background: rgb(255 255 255 / 0.12);
+		color: var(--color-white);
+		border: 1px solid rgb(255 255 255 / 0.3);
+		transition: background-color 0.2s ease, transform 0.2s ease;
+	}
+
+	.social-links a:hover {
+		background: var(--color-red);
+		border-color: var(--color-red);
+	}
+
+	.hero-portrait {
+		width: min(280px, 60vw);
+		margin-inline: auto;
+		filter: drop-shadow(var(--shadow-lift));
+	}
+
+	.hero-wave {
+		position: absolute;
+		bottom: -2px;
+		left: 0;
+		width: 100%;
+		height: 90px;
+		display: block;
+	}
+
+	@media (max-width: 800px) {
+		.hero-inner {
+			grid-template-columns: 1fr;
+			text-align: center;
+		}
+
+		.social-links {
+			justify-content: center;
+		}
+	}
+</style>

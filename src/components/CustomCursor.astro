@@ -1,0 +1,98 @@
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
+<style>
+  .cursor-dot,
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+
+  .cursor-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--color-red);
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+  }
+
+  .cursor-ring {
+    width: 34px;
+    height: 34px;
+    border: 2px solid var(--color-teal);
+    transition: opacity 0.2s ease, transform 0.18s ease-out, width 0.2s ease, height 0.2s ease, border-color 0.2s ease;
+  }
+</style>
+
+<script>
+  const isFinePointer = window.matchMedia("(pointer: fine)").matches;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (isFinePointer && !prefersReducedMotion) {
+    document.body.classList.add("has-custom-cursor");
+
+    const dot = document.querySelector<HTMLElement>(".cursor-dot")!;
+    const ring = document.querySelector<HTMLElement>(".cursor-ring")!;
+
+    let ringX = 0;
+    let ringY = 0;
+    let targetX = 0;
+    let targetY = 0;
+
+    const show = () => {
+      dot.style.opacity = "1";
+      ring.style.opacity = "1";
+    };
+
+    window.addEventListener(
+      "pointermove",
+      (event) => {
+        show();
+        targetX = event.clientX;
+        targetY = event.clientY;
+        dot.style.left = `${targetX}px`;
+        dot.style.top = `${targetY}px`;
+      },
+      { passive: true }
+    );
+
+    document.addEventListener("mouseleave", () => {
+      dot.style.opacity = "0";
+      ring.style.opacity = "0";
+    });
+
+    const interactiveSelector = "a, button, [data-hover-lift], [data-cursor-grow]";
+
+    document.addEventListener("mouseover", (event) => {
+      if ((event.target as HTMLElement).closest(interactiveSelector)) {
+        ring.classList.add("cursor-ring--active");
+        ring.style.width = "52px";
+        ring.style.height = "52px";
+        ring.style.borderColor = "var(--color-red)";
+      }
+    });
+
+    document.addEventListener("mouseout", (event) => {
+      if ((event.target as HTMLElement).closest(interactiveSelector)) {
+        ring.style.width = "34px";
+        ring.style.height = "34px";
+        ring.style.borderColor = "var(--color-teal)";
+      }
+    });
+
+    const animate = () => {
+      ringX += (targetX - ringX) * 0.18;
+      ringY += (targetY - ringY) * 0.18;
+      ring.style.left = `${ringX}px`;
+      ring.style.top = `${ringY}px`;
+      requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+  }
+</script>

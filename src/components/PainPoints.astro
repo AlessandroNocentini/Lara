@@ -6,11 +6,59 @@ interface Props {
 }
 
 const { content } = Astro.props;
+
+const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 ---
 
-<section id="pain-points">
-	<ul>
-		{content.questions.map((question) => <li>{question}</li>)}
-	</ul>
-	<a href={content.cta.target}>{content.cta.label}</a>
+<section id="pain-points" class="pain-points">
+	<div class="container pain-points-inner">
+		<ul class="bubbles">
+			{content.questions.map((question, i) => (
+				<li
+					class="bubble"
+					data-hover-wiggle
+					style={`--rotate: ${rotations[i % rotations.length]}deg`}
+				>
+					{question}
+				</li>
+			))}
+		</ul>
+		<a class="button button-primary" href={content.cta.target} data-hover-lift>{content.cta.label}</a>
+	</div>
 </section>
+
+<style>
+	.pain-points {
+		padding: var(--section-padding);
+	}
+
+	.pain-points-inner {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 2.5rem;
+	}
+
+	.bubbles {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 1.25rem;
+		max-width: 50rem;
+	}
+
+	.bubble {
+		background: var(--color-white);
+		border: 2px solid var(--color-teal);
+		color: var(--color-teal-dark);
+		border-radius: var(--radius-lg);
+		padding: 1rem 1.5rem;
+		font-weight: 700;
+		font-size: 1.05rem;
+		box-shadow: var(--shadow-soft);
+		transform: rotate(var(--rotate));
+	}
+</style>

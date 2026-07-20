@@ -49,5 +49,8 @@ a finished spec.
   a stray fragment of a red bar and truncated text, consistent with a
   screenshot of a live page rather than a mockup made from scratch. This is
   a plausible reading, not a confirmed fact — do not treat it as settled.
-- These images are the only content in the repository besides the README.
-  There is no code to cross-reference them against yet.
+- These images predate the codebase and are no longer the only content in
+  the repository — see the root [`README.md`](../README.md) for the current
+  Astro project. They're kept here as historical/design reference; the
+  current implemented copy lives in [`content/siteContent.json`](../content/siteContent.json)
+  and may already differ from what's shown here.

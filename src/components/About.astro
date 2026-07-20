@@ -1,4 +1,6 @@
 ---
+import PlaceholderImage from "./PlaceholderImage.astro";
+import { renderMarkdown } from "../utils/markdown";
 import type { AboutContent } from "../types/content";
 
 interface Props {
@@ -6,13 +8,62 @@ interface Props {
 }
 
 const { content } = Astro.props;
+const bioHtml = renderMarkdown(content.bio);
 ---
 
-<section id="about">
-	<p>{content.greeting}</p>
-	<h2>{content.name}</h2>
-	{content.bio.map((paragraph) => <p>{paragraph}</p>)}
-	<ul>
-		{content.credentials.map((credential) => <li>{credential}</li>)}
-	</ul>
+<section id="about" class="about">
+	<div class="container about-inner">
+		<div class="about-portrait" data-hover-lift>
+			<PlaceholderImage src={content.image || undefined} alt={`Photo of ${content.name}`} variant="circle" />
+		</div>
+		<div class="about-copy">
+			<p class="greeting">{content.greeting}</p>
+			<h2>{content.name}</h2>
+			<div class="bio" set:html={bioHtml} />
+		</div>
+	</div>
 </section>
+
+<style>
+	.about {
+		padding: var(--section-padding);
+		background: var(--color-white);
+	}
+
+	.about-inner {
+		display: grid;
+		grid-template-columns: 1fr 1.6fr;
+		gap: clamp(2rem, 5vw, 3.5rem);
+		align-items: center;
+	}
+
+	.about-portrait {
+		width: min(260px, 70vw);
+		margin-inline: auto;
+	}
+
+	.greeting {
+		font-family: var(--font-heading);
+		font-style: italic;
+		font-size: 2rem;
+		color: var(--color-red);
+	}
+
+	h2 {
+		font-size: clamp(1.8rem, 3vw, 2.2rem);
+		color: var(--color-teal-dark);
+		margin-bottom: 1.25rem;
+	}
+
+	.bio :global(p) {
+		color: var(--color-ink-soft);
+		margin-bottom: 1rem;
+	}
+
+	@media (max-width: 800px) {
+		.about-inner {
+			grid-template-columns: 1fr;
+			text-align: center;
+		}
+	}
+</style>

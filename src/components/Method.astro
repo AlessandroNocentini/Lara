@@ -1,4 +1,6 @@
 ---
+import PlaceholderImage from "./PlaceholderImage.astro";
+import { renderMarkdown } from "../utils/markdown";
 import type { MethodContent } from "../types/content";
 
 interface Props {
@@ -6,16 +8,95 @@ interface Props {
 }
 
 const { content } = Astro.props;
+const sectionHtml = renderMarkdown(content.section);
 ---
 
-<section id="method">
-	<h2>{content.title}</h2>
-	<ul>
-		{content.items.map((item) => (
-			<li>
-				<h3>{item.title}</h3>
-				<p>{item.description}</p>
-			</li>
-		))}
-	</ul>
+<section id="method" class="method">
+	<div class="container">
+		<h2>{content.title}</h2>
+		<div class="method-intro" set:html={sectionHtml} />
+		<div class="method-grid">
+			{content.items.map((item) => (
+				<article class="method-card" data-hover-lift>
+					<div class="method-card-media">
+						<PlaceholderImage src={item.image || undefined} alt={item.title} variant="rounded" />
+					</div>
+					<div class="method-card-body">
+						<h3>{item.title}</h3>
+						<p>{item.description}</p>
+					</div>
+				</article>
+			))}
+		</div>
+	</div>
 </section>
+
+<style>
+	.method {
+		padding: var(--section-padding);
+		background: var(--color-white);
+	}
+
+	h2 {
+		font-size: clamp(1.8rem, 3vw, 2.4rem);
+		color: var(--color-teal-dark);
+		text-align: center;
+	}
+
+	.method-intro {
+		max-width: 42rem;
+		margin: 1.5rem auto 3rem;
+		text-align: center;
+		color: var(--color-ink-soft);
+	}
+
+	.method-intro :global(strong) {
+		color: var(--color-teal-dark);
+	}
+
+	.method-intro :global(ol) {
+		text-align: left;
+		padding-left: 1.25rem;
+	}
+
+	.method-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+		gap: 1.75rem;
+	}
+
+	.method-card {
+		display: flex;
+		flex-direction: column;
+		background: var(--color-cream);
+		border-radius: var(--radius-md);
+		overflow: hidden;
+		box-shadow: var(--shadow-soft);
+		transition: transform 0.25s ease, box-shadow 0.25s ease;
+	}
+
+	.method-card-media {
+		flex: 1 1 50%;
+		aspect-ratio: 4 / 3;
+	}
+
+	.method-card-media :global(.placeholder-image) {
+		border-radius: 0;
+	}
+
+	.method-card-body {
+		flex: 1 1 50%;
+		padding: 1.5rem;
+	}
+
+	.method-card h3 {
+		font-size: 1.15rem;
+		margin-bottom: 0.5rem;
+		color: var(--color-teal-dark);
+	}
+
+	.method-card p {
+		color: var(--color-ink-soft);
+		font-size: 0.95rem;
+	}
+</style>

@@ -8,7 +8,11 @@
     "eyebrow": "",
     "headline": "Learn Italian with a Native Italian Teacher",
     "highlightWords": ["Native", "Italian"],
-    "image": ""
+    "image": "",
+    "socialLinks": [
+      { "platform": "instagram", "url": "#" },
+      { "platform": "email", "url": "#" }
+    ]
   },
   "about": {
     "greeting": "Ciao!",
