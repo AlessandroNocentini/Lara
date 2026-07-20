@@ -1,0 +1,18 @@
+---
+import type { AboutContent } from "../types/content";
+
+interface Props {
+  content: AboutContent;
+}
+
+const { content } = Astro.props;
+---
+
+<section id="about">
+	<p>{content.greeting}</p>
+	<h2>{content.name}</h2>
+	{content.bio.map((paragraph) => <p>{paragraph}</p>)}
+	<ul>
+		{content.credentials.map((credential) => <li>{credential}</li>)}
+	</ul>
+</section>

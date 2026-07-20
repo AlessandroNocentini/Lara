@@ -1,0 +1,16 @@
+---
+import type { PainPointsContent } from "../types/content";
+
+interface Props {
+  content: PainPointsContent;
+}
+
+const { content } = Astro.props;
+---
+
+<section id="pain-points">
+	<ul>
+		{content.questions.map((question) => <li>{question}</li>)}
+	</ul>
+	<a href={content.cta.target}>{content.cta.label}</a>
+</section>

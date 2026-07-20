@@ -1,0 +1,14 @@
+---
+import type { ContactContent } from "../types/content";
+
+interface Props {
+  content: ContactContent;
+}
+
+const { content } = Astro.props;
+---
+
+<section id="contact">
+	<h2>{content.heading}</h2>
+	<p>{content.description}</p>
+</section>

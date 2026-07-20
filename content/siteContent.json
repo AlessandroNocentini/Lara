@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "siteName": "Learn 🍹talian with Lara",
+    "language": "en",
+    "themeColor": "#0f766e"
+  },
+  "hero": {
+    "eyebrow": "",
+    "headline": "Learn Italian with a Native Italian Teacher",
+    "highlightWords": ["Native", "Italian"],
+    "image": ""
+  },
+  "about": {
+    "greeting": "Ciao!",
+    "name": "Sono Lara",
+    "bio": "Hi! I'm Lara, a native Italian teacher and language enthusiast.\n\nI hold a Bachelor's degree in Linguistic and Cultural Mediation, a Master's degree in Languages and Cultures for Communication and International Cooperation, and a Master's in Interpreting - all driven by my passion for languages and intercultural communication.\n\nI've studied, lived and worked abroad, including in the UK and Russia.",
+    "image": ""
+  },
+  "painPoints": {
+    "questions": [
+      "Does grammar feel overwhelming?",
+      "Planning a trip or moving to Italy?",
+      "Dreaming of having real conversations in Italian?",
+      "Do you want to understand Italians beyond the textbook?"
+    ],
+    "cta": {
+      "label": "Tell me more",
+      "target": "#contact"
+    }
+  },
+  "method": {
+    "title": "My Method",
+    "items": [
+      { "title": "Speak from Day One", "description": "Start communicationg in Italian from your very first lesson.", "image": "" },
+      { "title": "Interactive & Fun", "description": "Games, activities, and engaging tasks that make learning enjoyable.", "image": "" },
+      { "title": "Authentic Italian", "description": "Learn with songs, videos, podcasts, and real-life materials.", "image": "" },
+      { "title": "Conversation-Based", "description": "Talk about a wide range of topics and build confidence naturally.", "image": "" },
+      { "title": "Tailored to You", "description": "Every lesson is adapted to your goals, interests, and learning style.", "image": "" },
+      { "title": "Italian for Real Life", "description": "Practice the language you'll actualy use in everyday situations.", "image": "" }
+    ],
+    "section": "Interactive lessons with guided conversations, activities, and games to start using Italian from day one.\n\n**Why thwy work:**\n\n1. I don't focus on correcting 'mistakes'; instead I guide you step by step.\n2. You will learn to correct yourself naturally. building confidence and becoming more independent.\n3. Interactive, engaging, and personalized lessons.\n4. If needed, I can also explain complex concepts in English, French, or Russian."
+  },
+  "results": {
+    "image": "",
+    "beginner": "**Starting from zero?** In few months you'll be able to handle many everyday situations, ask directions, express needs, desires and simple opinions.",
+    "intermediate": "placeholder description",
+    "advanced": "placeholder description"
+  },
+  "contact": {
+    "heading": "Get in touch",
+    "description": "",
+    "successMessage": "Thanks! I'll get back to you soon."
+  }
+}

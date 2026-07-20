@@ -1,0 +1,14 @@
+---
+import type { HeroContent } from "../types/content";
+
+interface Props {
+  content: HeroContent;
+}
+
+const { content } = Astro.props;
+---
+
+<section id="hero">
+	<p>{content.eyebrow}</p>
+	<h1>{content.headline}</h1>
+</section>
