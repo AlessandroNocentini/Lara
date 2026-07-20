@@ -11,18 +11,24 @@ export interface SocialLink {
 
 export interface HeroContent {
   eyebrow: string;
-  headline: string;
-  highlightWords: string[];
   image: string;
+  backgroundImage: string;
   socialLinks: SocialLink[];
 }
 
 export interface PainPointsContent {
+  heading: string;
+  highlightWords: string[];
   questions: string[];
   cta: {
     label: string;
     target: string;
   };
+}
+
+export interface CursorAssets {
+  umbrellaImage: string;
+  orangeSliceImage: string;
 }
 
 export interface MethodItem {
@@ -65,4 +71,5 @@ export interface SiteContent {
   results: ResultsContent;
   about: AboutContent;
   contact: ContactContent;
+  cursor: CursorAssets;
 }

@@ -1,4 +1,5 @@
 ---
+import { splitHighlighted } from "../utils/highlightText";
 import type { PainPointsContent } from "../types/content";
 
 interface Props {
@@ -8,10 +9,21 @@ interface Props {
 const { content } = Astro.props;
 
 const rotations = [-2, 1, -1.5, 2, -1, 1.5];
+const accentColors = ["var(--color-red)", "var(--color-ocher)"];
+const headingParts = splitHighlighted(content.heading, content.highlightWords);
 ---
 
 <section id="pain-points" class="pain-points">
 	<div class="container pain-points-inner">
+		<h2>
+			{headingParts.map((part, i) =>
+				part.highlight ? (
+					<span class="highlight" style={`--highlight-color: ${accentColors[i % accentColors.length]}`}>{part.text}</span>
+				) : (
+					<>{part.text}</>
+				)
+			)}
+		</h2>
 		<ul class="bubbles">
 			{content.questions.map((question, i) => (
 				<li
@@ -37,6 +49,17 @@ const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 		flex-direction: column;
 		align-items: center;
 		gap: 2.5rem;
+		text-align: center;
+	}
+
+	h2 {
+		font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+		color: var(--color-teal-dark);
+		max-width: 40rem;
+	}
+
+	.highlight {
+		color: var(--highlight-color);
 	}
 
 	.bubbles {
