@@ -6,9 +6,8 @@
   },
   "hero": {
     "eyebrow": "",
-    "headline": "Learn Italian with a Native Italian Teacher",
-    "highlightWords": ["Native", "Italian"],
     "image": "",
+    "backgroundImage": "",
     "socialLinks": [
       { "platform": "instagram", "url": "#" },
       { "platform": "email", "url": "#" }
@@ -21,6 +20,8 @@
     "image": ""
   },
   "painPoints": {
+    "heading": "Learn Italian with a Native Italian Teacher",
+    "highlightWords": ["Native", "Italian"],
     "questions": [
       "Does grammar feel overwhelming?",
       "Planning a trip or moving to Italy?",
@@ -54,5 +55,9 @@
     "heading": "Get in touch",
     "description": "",
     "successMessage": "Thanks! I'll get back to you soon."
+  },
+  "cursor": {
+    "umbrellaImage": "",
+    "orangeSliceImage": ""
   }
 }

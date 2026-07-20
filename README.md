@@ -36,10 +36,14 @@ integrated) that would let Lara edit her own site's text and images by
 writing straight into this same JSON file, without touching any code. Until
 that CMS exists, editing the JSON by hand *is* the content workflow.
 
-Any image field left as an empty string (`""`) renders as a
+Most `image`-type fields left as an empty string (`""`) render as a
 "Photo coming soon" placeholder ([`PlaceholderImage.astro`](src/components/PlaceholderImage.astro))
 instead of a broken `<img>` — so real photos can be dropped in later by
-filling in a path, with no code change.
+filling in a path, with no code change. The one exception is
+`hero.backgroundImage`: it's applied as a CSS background (layered under a
+translucent teal gradient in `Hero.astro`), not rendered through
+`PlaceholderImage`, so an empty value there just means "no background image,"
+not a visible placeholder.
 
 ## Structure
 
@@ -51,14 +55,38 @@ src/layouts/Layout.astro   <html> shell, global CSS, Navbar, CustomCursor
 src/components/            One component per page section (see below) + shared UI
 src/styles/global.css      Design tokens (palette, type, spacing) as CSS custom properties
 src/utils/markdown.ts      Renders markdown-flavored content fields (marked)
+src/utils/highlightText.ts Splits a string into plain/highlighted parts (used by PainPoints)
 Ideas/                     Reference mockups that informed the design (see Ideas/README.md)
 ```
 
 Page sections, in render order: Hero → About → PainPoints → Method → Results
 → Contact, each its own component in `src/components/`. Shared/non-section
-components: `Navbar` (fixed nav), `CustomCursor` (custom cursor, disabled on
-touch devices and when `prefers-reduced-motion`), `PlaceholderImage`, and
+components: `Navbar` (fixed nav), `CustomCursor`, `PlaceholderImage`, and
 `SocialIcon` (a small hand-authored icon set — no icon library dependency).
+
+A couple of content-modeling choices worth knowing before editing copy:
+
+- **Hero's `<h1>` is derived, not stored.** It comes from splitting
+  `meta.siteName` (`"Learn 🍹talian with Lara"`) on `" with "` into two lines
+  — there's no separate `hero.headline` field. This is deliberate: the brand
+  name and the hero title are the same string, kept as one source of truth
+  instead of two fields that could drift out of sync.
+- **The highlighted heading above the pain-point bubbles** ("Learn Italian
+  with a Native Italian Teacher", with accent-colored words) is
+  `painPoints.heading` / `painPoints.highlightWords`, rendered via
+  `splitHighlighted()` from `src/utils/highlightText.ts`. It lives on
+  `PainPointsContent`, not `HeroContent` — despite reading like a hero
+  headline, it renders inside the PainPoints section.
+- **`CustomCursor`** takes a `cursor: CursorAssets` prop (threaded from
+  `index.astro` → `Layout.astro`) and renders three trailing marks: a 🍹
+  emoji (no lag, leads), a hand-drawn SVG cocktail umbrella (lag 0.16), and a
+  hand-drawn SVG orange slice (lag 0.10, trails furthest). `cursor.umbrellaImage`
+  / `cursor.orangeSliceImage` follow the same empty-string-means-placeholder
+  convention as other image fields: empty renders the inline SVG fallback;
+  a path renders an `<img>` instead. Disabled on touch devices and when
+  `prefers-reduced-motion` is set. If real art is supplied later, source it
+  square with a transparent background at roughly 128×128px (SVG preferred)
+  — it displays at only ~24–28px, so oversized/lossy raster art will look soft.
 
 No UI framework (no React/Vue/Svelte) and no CSS framework — plain Astro
 components and hand-written CSS custom properties in `global.css`.
@@ -74,9 +102,10 @@ These are known, intentional gaps — not oversights:
   interactive, but submission is simulated client-side only (it calls
   `preventDefault()` and shows the success message without sending data
   anywhere). Web3Forms is the intended backend; not yet integrated.
-- **Real photos and final copy**: most `image` fields in `siteContent.json`
-  are empty (rendering as placeholders), and some copy (e.g. `results`
-  intermediate/advanced levels) is still placeholder text.
+- **Real photos, cursor art, and final copy**: most `image` fields in
+  `siteContent.json` are empty (rendering as placeholders or SVG fallbacks),
+  and some copy (e.g. `results` intermediate/advanced levels) is still
+  placeholder text.
 
 ## Reference material
 

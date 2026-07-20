@@ -12,8 +12,8 @@ import type { SiteContent } from "../types/content";
 const content = siteContent as SiteContent;
 ---
 
-<Layout meta={content.meta}>
-	<Hero content={content.hero} />
+<Layout meta={content.meta} cursor={content.cursor}>
+	<Hero content={content.hero} siteName={content.meta.siteName} />
 	<About content={content.about} />
 	<PainPoints content={content.painPoints} />
 	<Method content={content.method} />

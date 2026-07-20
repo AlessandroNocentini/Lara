@@ -61,7 +61,10 @@ const links = [
 	.nav-links {
 		list-style: none;
 		display: flex;
+		flex: 1;
+		min-width: 0;
 		align-items: center;
+		justify-content: flex-end;
 		gap: clamp(1rem, 3vw, 1.75rem);
 		margin: 0;
 		padding: 0;
@@ -79,5 +82,25 @@ const links = [
 
 	.nav-links a:hover {
 		color: var(--color-red);
+	}
+
+	@media (max-width: 480px) {
+		.navbar-inner {
+			gap: 0.75rem;
+			padding: 0.75rem 1rem;
+		}
+
+		.brand {
+			font-size: 1rem;
+		}
+
+		.nav-links {
+			justify-content: flex-start;
+			gap: 0.85rem;
+		}
+
+		.nav-links a {
+			font-size: 0.85rem;
+		}
 	}
 </style>
