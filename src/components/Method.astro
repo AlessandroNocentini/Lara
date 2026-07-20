@@ -1,0 +1,21 @@
+---
+import type { MethodContent } from "../types/content";
+
+interface Props {
+  content: MethodContent;
+}
+
+const { content } = Astro.props;
+---
+
+<section id="method">
+	<h2>{content.title}</h2>
+	<ul>
+		{content.items.map((item) => (
+			<li>
+				<h3>{item.title}</h3>
+				<p>{item.description}</p>
+			</li>
+		))}
+	</ul>
+</section>
