@@ -10,7 +10,7 @@
     "image": "/images/lara_2.jpg",
     "backgroundImage": "",
     "socialLinks": [
-      { "platform": "instagram", "url": "#" },
+      { "platform": "instagram", "url": "https://www.instagram.com/laraduardo?igsh=MWJtbWFnaTJuN3Y3MA==" },
       { "platform": "email", "url": "#" }
     ]
   },
@@ -45,7 +45,7 @@
       { "title": "Tailored to You", "description": "Every lesson is adapted to your goals, interests, and learning style.", "image": "/images/tailored.jpg" },
       { "title": "Italian for Real Life", "description": "Practice the language you'll actualy use in everyday situations.", "image": "" }
     ],
-    "section": "Interactive lessons with guided conversations, activities, and games to start using Italian from day one.\n\n**Why thwy work:**\n\n1. I don't focus on correcting 'mistakes'; instead I guide you step by step.\n2. You will learn to correct yourself naturally. building confidence and becoming more independent.\n3. Interactive, engaging, and personalized lessons.\n4. If needed, I can also explain complex concepts in English, French, or Russian."
+    "section": "Interactive lessons with guided conversations, activities, and games to start using Italian from day one.\n\n**Why they work:**\n\n1. I don't focus on correcting 'mistakes'; instead I guide you step by step.\n2. You will learn to correct yourself naturally. building confidence and becoming more independent.\n3. Interactive, engaging, and personalized lessons.\n4. If needed, I can also explain complex concepts in English, French, or Russian."
   },
   "results": {
     "image": "/images/results.jpg",
