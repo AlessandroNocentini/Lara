@@ -45,6 +45,16 @@ translucent teal gradient in `Hero.astro`), not rendered through
 `PlaceholderImage`, so an empty value there just means "no background image,"
 not a visible placeholder.
 
+`PlaceholderImage` also takes optional `frame` / `rotate` / `tapeColor` props
+(all default off/unset, so existing callers are unaffected) that wrap the
+image in a white polaroid-style card with a rotated washi-tape accent —
+the "scrapbook" look inspired by `Ideas/style_1–3.jpeg`. It's applied to the
+Hero portrait, About portrait, and Results image (each with its own rotation
+angle and tape color). **Method's card images intentionally don't use it** —
+Method's cards are a half-image/half-text layout from an earlier design
+pass, and framing/rotating an image inside that layout would fight it rather
+than complement it.
+
 ## Structure
 
 ```
@@ -61,7 +71,8 @@ Ideas/                     Reference mockups that informed the design (see Ideas
 
 Page sections, in render order: Hero → About → PainPoints → Method → Results
 → Contact, each its own component in `src/components/`. Shared/non-section
-components: `Navbar` (fixed nav), `CustomCursor`, `PlaceholderImage`, and
+components: `Navbar` (fixed nav), `CustomCursor`, `PlaceholderImage`,
+`SectionKicker` (small rotated tab/sticker-style label, see below), and
 `SocialIcon` (a small hand-authored icon set — no icon library dependency).
 
 A couple of content-modeling choices worth knowing before editing copy:
@@ -77,16 +88,35 @@ A couple of content-modeling choices worth knowing before editing copy:
   `splitHighlighted()` from `src/utils/highlightText.ts`. It lives on
   `PainPointsContent`, not `HeroContent` — despite reading like a hero
   headline, it renders inside the PainPoints section.
+- **`SectionKicker` labels are hardcoded, not content-driven** — a deliberate
+  exception to this project's usual rule that components never hardcode
+  copy. `SectionKicker` renders a small rotated sticker-style label
+  (`label`/`color` props) above the `<h2>` in About, Method, Results, and
+  Contact; each caller passes a literal string ("About", "Method", etc.)
+  inline rather than reading it from `siteContent.json`. There is no
+  `kicker` field in `SiteContent` — don't go looking for one. Hero skips it
+  entirely since `hero.eyebrow` already fills that role from content.
+  Treated as decoration (like the blob SVGs below), not editable copy.
+- Soft, near-transparent background shapes — blob SVGs in About/Results, a
+  faint Italy-outline watermark in Contact (reprising the Italy motif from
+  `Ideas/hero_v2.jpeg`) — sit behind section content at `z-index: 0` with
+  `pointer-events: none`. Both sections set `overflow: hidden` on their root
+  so the (intentionally oversized/off-canvas) shapes can't cause horizontal
+  page overflow. Purely decorative; safe to ignore when reasoning about
+  content or layout.
 - **`CustomCursor`** takes a `cursor: CursorAssets` prop (threaded from
-  `index.astro` → `Layout.astro`) and renders three trailing marks: a 🍹
-  emoji (no lag, leads), a hand-drawn SVG cocktail umbrella (lag 0.16), and a
-  hand-drawn SVG orange slice (lag 0.10, trails furthest). `cursor.umbrellaImage`
-  / `cursor.orangeSliceImage` follow the same empty-string-means-placeholder
-  convention as other image fields: empty renders the inline SVG fallback;
-  a path renders an `<img>` instead. Disabled on touch devices and when
-  `prefers-reduced-motion` is set. If real art is supplied later, source it
-  square with a transparent background at roughly 128×128px (SVG preferred)
-  — it displays at only ~24–28px, so oversized/lossy raster art will look soft.
+  `index.astro` → `Layout.astro`) and renders three trailing marks, each
+  48×48px: a spritz mark (no lag, leads), a cocktail umbrella (lag 0.16), and
+  an orange slice (lag 0.10, trails furthest). All three now have real SVG
+  art (`content/siteContent.json` → `cursor.spritzImage` / `umbrellaImage` /
+  `orangeSliceImage`, files in `public/images/`). Umbrella/orange-slice follow
+  the empty-string-means-placeholder convention: empty falls back to an
+  inline hand-drawn SVG, a path renders an `<img>`. Spritz has no SVG
+  fallback — empty falls back to a 🍹 emoji instead. Disabled on touch
+  devices and when `prefers-reduced-motion` is set. Source new cursor art
+  square with a transparent background at roughly 128×128px (SVG
+  preferred) — it displays at 48px, so this is comfortable headroom, not a
+  tight crop.
 
 No UI framework (no React/Vue/Svelte) and no CSS framework — plain Astro
 components and hand-written CSS custom properties in `global.css`.
@@ -102,13 +132,15 @@ These are known, intentional gaps — not oversights:
   interactive, but submission is simulated client-side only (it calls
   `preventDefault()` and shows the success message without sending data
   anywhere). Web3Forms is the intended backend; not yet integrated.
-- **Real photos, cursor art, and final copy**: most `image` fields in
-  `siteContent.json` are empty (rendering as placeholders or SVG fallbacks),
-  and some copy (e.g. `results` intermediate/advanced levels) is still
-  placeholder text.
+- **Real photos and final copy**: most other `image` fields in
+  `siteContent.json` are still empty (rendering as placeholders); cursor art
+  is done (see `CustomCursor` above). Some copy (e.g. `results`
+  intermediate/advanced levels) is still placeholder text.
 
 ## Reference material
 
 [`Ideas/`](Ideas/README.md) holds the original mockup/screenshot images that
-informed the design (hero concepts, method section, about section). It
-predates the code and is kept for historical/design reference.
+informed the design (hero concepts, method section, about section), plus a
+few general visual-style references (`style_1–3.jpeg`, not Lara-specific
+content) that inspired the scrapbook/polaroid decoration described above. It
+predates most of the code and is kept for historical/design reference.

@@ -1,5 +1,6 @@
 ---
 import PlaceholderImage from "./PlaceholderImage.astro";
+import SectionKicker from "./SectionKicker.astro";
 import { renderMarkdown } from "../utils/markdown";
 import type { MethodContent } from "../types/content";
 
@@ -13,7 +14,10 @@ const sectionHtml = renderMarkdown(content.section);
 
 <section id="method" class="method">
 	<div class="container">
-		<h2>{content.title}</h2>
+		<div class="method-heading">
+			<SectionKicker label="Method" color="var(--color-lightblue)" />
+			<h2>{content.title}</h2>
+		</div>
 		<div class="method-intro" set:html={sectionHtml} />
 		<div class="method-grid">
 			{content.items.map((item) => (
@@ -37,10 +41,13 @@ const sectionHtml = renderMarkdown(content.section);
 		background: var(--color-white);
 	}
 
+	.method-heading {
+		text-align: center;
+	}
+
 	h2 {
 		font-size: clamp(1.8rem, 3vw, 2.4rem);
 		color: var(--color-teal-dark);
-		text-align: center;
 	}
 
 	.method-intro {

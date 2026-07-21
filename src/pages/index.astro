@@ -13,7 +13,7 @@ const content = siteContent as SiteContent;
 ---
 
 <Layout meta={content.meta} cursor={content.cursor}>
-	<Hero content={content.hero} siteName={content.meta.siteName} />
+	<Hero content={content.hero} siteName={content.meta.siteName} titleImage={content.meta.image} />
 	<About content={content.about} />
 	<PainPoints content={content.painPoints} />
 	<Method content={content.method} />
