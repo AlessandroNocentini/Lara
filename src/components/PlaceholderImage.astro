@@ -4,25 +4,47 @@ interface Props {
   alt: string;
   variant?: "circle" | "rounded";
   class?: string;
+  frame?: boolean;
+  rotate?: number;
+  tapeColor?: string;
 }
 
-const { src, alt, variant = "rounded", class: className = "" } = Astro.props;
+const {
+  src,
+  alt,
+  variant = "rounded",
+  class: className = "",
+  frame = false,
+  rotate = 0,
+  tapeColor = "var(--color-ocher)",
+} = Astro.props;
+
+const frameStyle = frame ? `--frame-rotate: ${rotate}deg; --tape-color: ${tapeColor};` : undefined;
 ---
 
-{
-  src ? (
-    <img src={src} alt={alt} class={`placeholder-image ${variant} ${className}`} />
-  ) : (
-    <div class={`placeholder-image placeholder-empty ${variant} ${className}`} role="img" aria-label={alt}>
-      <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6">
-        <rect x="3" y="5" width="18" height="14" rx="2.5" />
-        <circle cx="8.5" cy="10" r="1.6" />
-        <path d="M3 16l5-4.5 4 3.5 3.5-3L21 16" />
-      </svg>
-      <span>Photo coming soon</span>
+{(() => {
+  const inner =
+    src ? (
+      <img src={src} alt={alt} class={`placeholder-image ${variant} ${className}`} />
+    ) : (
+      <div class={`placeholder-image placeholder-empty ${variant} ${className}`} role="img" aria-label={alt}>
+        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6">
+          <rect x="3" y="5" width="18" height="14" rx="2.5" />
+          <circle cx="8.5" cy="10" r="1.6" />
+          <path d="M3 16l5-4.5 4 3.5 3.5-3L21 16" />
+        </svg>
+        <span>Photo coming soon</span>
+      </div>
+    );
+
+  return frame ? (
+    <div class="photo-frame" style={frameStyle}>
+      {inner}
     </div>
-  )
-}
+  ) : (
+    inner
+  );
+})()}
 
 <style>
   .placeholder-image {
@@ -56,5 +78,44 @@ const { src, alt, variant = "rounded", class: className = "" } = Astro.props;
     font-size: 0.85rem;
     font-weight: 600;
     opacity: 0.9;
+  }
+
+  .photo-frame {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    padding: 0.6rem 0.6rem 1.4rem;
+    background: var(--color-white);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lift);
+    transform: rotate(var(--frame-rotate, 0deg));
+  }
+
+  .photo-frame::before {
+    content: "";
+    position: absolute;
+    top: -0.6rem;
+    left: 50%;
+    width: 3.2rem;
+    height: 1.1rem;
+    background: var(--tape-color, var(--color-ocher));
+    opacity: 0.85;
+    transform: translateX(-50%) rotate(-4deg);
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.15);
+  }
+
+  .photo-frame .placeholder-image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .photo-frame .placeholder-image.circle {
+    border-radius: var(--radius-full);
+  }
+
+  .photo-frame .placeholder-image.rounded {
+    border-radius: var(--radius-sm);
   }
 </style>

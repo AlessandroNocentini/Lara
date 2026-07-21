@@ -50,7 +50,14 @@ const heroStyle = content.backgroundImage
 			)}
 		</div>
 		<div class="hero-portrait" data-hover-lift>
-			<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="circle" />
+			<PlaceholderImage
+				src={content.image || undefined}
+				alt="Photo of Lara"
+				variant="circle"
+				frame
+				rotate={-4}
+				tapeColor="var(--color-ocher)"
+			/>
 		</div>
 	</div>
 
@@ -127,7 +134,6 @@ const heroStyle = content.backgroundImage
 	.hero-portrait {
 		width: min(280px, 60vw);
 		margin-inline: auto;
-		filter: drop-shadow(var(--shadow-lift));
 	}
 
 	.hero-wave {

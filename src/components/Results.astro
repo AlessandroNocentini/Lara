@@ -1,5 +1,6 @@
 ---
 import PlaceholderImage from "./PlaceholderImage.astro";
+import SectionKicker from "./SectionKicker.astro";
 import { renderMarkdown } from "../utils/markdown";
 import type { ResultsContent } from "../types/content";
 
@@ -21,11 +22,25 @@ const activeLevels = levels
 ---
 
 <section id="results" class="results">
+	<svg class="results-blob" viewBox="0 0 400 400" aria-hidden="true">
+		<path
+			fill="var(--color-ocher)"
+			d="M300 70 C360 130 350 250 280 310 C210 370 90 360 50 290 C10 220 30 100 110 60 C190 20 240 10 300 70 Z"
+		/>
+	</svg>
 	<div class="container results-inner">
 		<div class="results-image" data-hover-lift>
-			<PlaceholderImage src={content.image || undefined} alt="Results of learning Italian with Lara" variant="rounded" />
+			<PlaceholderImage
+				src={content.image || undefined}
+				alt="Results of learning Italian with Lara"
+				variant="rounded"
+				frame
+				rotate={-3}
+				tapeColor="var(--color-lightblue)"
+			/>
 		</div>
 		<div class="results-levels">
+			<SectionKicker label="Results" color="var(--color-ocher)" />
 			<h2>Results</h2>
 			{activeLevels.map((level) => (
 				<div class="results-card" data-hover-lift>
@@ -39,10 +54,25 @@ const activeLevels = levels
 
 <style>
 	.results {
+		position: relative;
 		padding: var(--section-padding);
+		overflow: hidden;
+	}
+
+	.results-blob {
+		position: absolute;
+		bottom: -15%;
+		left: -10%;
+		width: 28rem;
+		height: 28rem;
+		opacity: 0.1;
+		pointer-events: none;
+		z-index: 0;
 	}
 
 	.results-inner {
+		position: relative;
+		z-index: 1;
 		display: grid;
 		grid-template-columns: 1fr 1.4fr;
 		gap: clamp(2rem, 5vw, 3.5rem);

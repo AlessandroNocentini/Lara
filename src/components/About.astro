@@ -1,5 +1,6 @@
 ---
 import PlaceholderImage from "./PlaceholderImage.astro";
+import SectionKicker from "./SectionKicker.astro";
 import { renderMarkdown } from "../utils/markdown";
 import type { AboutContent } from "../types/content";
 
@@ -12,11 +13,25 @@ const bioHtml = renderMarkdown(content.bio);
 ---
 
 <section id="about" class="about">
+	<svg class="about-blob" viewBox="0 0 400 400" aria-hidden="true">
+		<path
+			fill="var(--color-teal)"
+			d="M320 60 C380 110 390 220 330 290 C270 360 150 370 90 310 C30 250 30 130 100 70 C170 10 260 10 320 60 Z"
+		/>
+	</svg>
 	<div class="container about-inner">
 		<div class="about-portrait" data-hover-lift>
-			<PlaceholderImage src={content.image || undefined} alt={`Photo of ${content.name}`} variant="circle" />
+			<PlaceholderImage
+				src={content.image || undefined}
+				alt={`Photo of ${content.name}`}
+				variant="circle"
+				frame
+				rotate={3}
+				tapeColor="var(--color-yellow)"
+			/>
 		</div>
 		<div class="about-copy">
+			<SectionKicker label="About" color="var(--color-yellow)" />
 			<p class="greeting">{content.greeting}</p>
 			<h2>{content.name}</h2>
 			<div class="bio" set:html={bioHtml} />
@@ -26,11 +41,26 @@ const bioHtml = renderMarkdown(content.bio);
 
 <style>
 	.about {
+		position: relative;
 		padding: var(--section-padding);
 		background: var(--color-white);
+		overflow: hidden;
+	}
+
+	.about-blob {
+		position: absolute;
+		top: -8%;
+		right: -12%;
+		width: 32rem;
+		height: 32rem;
+		opacity: 0.08;
+		pointer-events: none;
+		z-index: 0;
 	}
 
 	.about-inner {
+		position: relative;
+		z-index: 1;
 		display: grid;
 		grid-template-columns: 1fr 1.6fr;
 		gap: clamp(2rem, 5vw, 3.5rem);
