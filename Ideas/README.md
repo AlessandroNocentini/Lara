@@ -31,6 +31,14 @@ a finished spec.
   worked in the UK and Russia; teaching international students since 2022;
   DILS-PG Level II certification in teaching Italian as a foreign language
   (2025).
+- **`style_1.jpeg`, `style_2.jpeg`, `style_3.jpeg`** — General visual-style
+  inspiration (scrapbook/polaroid, tactile-photo aesthetic), not
+  Lara-specific content or copy. Unlike the images above, these weren't
+  mined for text or section structure — only for look and feel. They
+  informed the "scrapbook decoration" pass: framed/rotated photos with
+  washi-tape accents (`PlaceholderImage`'s `frame` prop), rotated sticker
+  labels (`SectionKicker`), and soft background shapes. See the root
+  [`README.md`](../README.md) for where that landed in the code.
 
 ## Key concepts
 

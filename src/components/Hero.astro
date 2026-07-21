@@ -1,43 +1,34 @@
 ---
 import PlaceholderImage from "./PlaceholderImage.astro";
 import SocialIcon from "./SocialIcon.astro";
+import SpritzTitle from "./SpritzTitle.astro";
 import type { HeroContent } from "../types/content";
 
 interface Props {
   content: HeroContent;
+  siteName: string;
+  titleImage: string;
 }
 
-const { content } = Astro.props;
+const { content, siteName, titleImage } = Astro.props;
 
-const accentColors = ["var(--color-yellow)", "var(--color-ocher)", "var(--color-lightblue)"];
+const [firstLine, ...rest] = siteName.split(" with ");
+const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 
-function renderHeadline(headline: string, highlightWords: string[]) {
-  if (highlightWords.length === 0) return [{ text: headline, highlight: false }];
-
-  const pattern = new RegExp(`(${highlightWords.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "gi");
-  const parts = headline.split(pattern);
-
-  return parts.filter(Boolean).map((part) => ({
-    text: part,
-    highlight: highlightWords.some((w) => w.toLowerCase() === part.toLowerCase()),
-  }));
-}
-
-const parts = renderHeadline(content.headline, content.highlightWords);
+const heroStyle = content.backgroundImage
+  ? `--hero-bg-image: url('${content.backgroundImage}')`
+  : undefined;
 ---
 
-<section id="hero" class="hero">
+<section id="hero" class="hero" style={heroStyle}>
 	<div class="hero-inner container">
 		<div class="hero-copy">
 			{content.eyebrow && <p class="eyebrow">{content.eyebrow}</p>}
 			<h1>
-				{parts.map((part, i) => (
-					part.highlight ? (
-						<span class="highlight" style={`--highlight-color: ${accentColors[i % accentColors.length]}`}>{part.text}</span>
-					) : (
-						<>{part.text}</>
-					)
-				))}
+				<span class="title-line">
+					<SpritzTitle text={firstLine} image={titleImage} size="1.25em" gap="-0.08em" />
+				</span>
+				{secondLine && <span class="title-line">{secondLine}</span>}
 			</h1>
 			<a class="button button-primary" href="#contact" data-hover-lift>Book a first lesson</a>
 			{content.socialLinks.length > 0 && (
@@ -59,7 +50,14 @@ const parts = renderHeadline(content.headline, content.highlightWords);
 			)}
 		</div>
 		<div class="hero-portrait" data-hover-lift>
-			<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="circle" />
+			<PlaceholderImage
+				src={content.image || undefined}
+				alt="Photo of Lara"
+				variant="circle"
+				frame
+				rotate={-4}
+				tapeColor="var(--color-ocher)"
+			/>
 		</div>
 	</div>
 
@@ -71,7 +69,10 @@ const parts = renderHeadline(content.headline, content.highlightWords);
 <style>
 	.hero {
 		position: relative;
-		background: linear-gradient(160deg, var(--color-teal) 0%, var(--color-teal-dark) 100%);
+		background-color: var(--color-teal);
+		background-image: linear-gradient(160deg, rgb(15 118 110 / 0.88) 0%, rgb(11 91 84 / 0.94) 100%), var(--hero-bg-image, none);
+		background-size: cover;
+		background-position: center;
 		color: var(--color-white);
 		padding: calc(var(--navbar-height) + clamp(2.5rem, 6vw, 5rem)) clamp(1.5rem, 6vw, 4rem) 6rem;
 		overflow: hidden;
@@ -94,12 +95,14 @@ const parts = renderHeadline(content.headline, content.highlightWords);
 	}
 
 	h1 {
-		font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+		display: flex;
+		flex-direction: column;
+		font-size: clamp(2.4rem, 5.5vw, 4rem);
 		margin-bottom: 2rem;
 	}
 
-	.highlight {
-		color: var(--highlight-color);
+	.title-line:last-child {
+		color: var(--color-yellow);
 	}
 
 	.social-links {
@@ -131,7 +134,6 @@ const parts = renderHeadline(content.headline, content.highlightWords);
 	.hero-portrait {
 		width: min(280px, 60vw);
 		margin-inline: auto;
-		filter: drop-shadow(var(--shadow-lift));
 	}
 
 	.hero-wave {

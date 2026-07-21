@@ -1,98 +1,147 @@
-<div class="cursor-dot" aria-hidden="true"></div>
-<div class="cursor-ring" aria-hidden="true"></div>
+---
+import type { CursorAssets } from "../types/content";
+
+interface Props {
+  cursor: CursorAssets;
+}
+
+const { cursor } = Astro.props;
+---
+
+<div class="cursor-mark cursor-spritz" aria-hidden="true">
+	{cursor.spritzImage ? (
+		<img src={cursor.spritzImage} alt="" width="48" height="48" />
+	) : (
+		<span class="cursor-emoji">🍹</span>
+	)}
+</div>
+
+<div class="cursor-mark cursor-umbrella" aria-hidden="true">
+	{cursor.umbrellaImage ? (
+		<img src={cursor.umbrellaImage} alt="" width="48" height="48" />
+	) : (
+		<svg viewBox="0 0 24 24" width="48" height="48" fill="none">
+			<path
+				d="M12 3 C6 3 2 8 2 11 L6 9 L9 11 L12 8 L15 11 L18 9 L22 11 C22 8 18 3 12 3 Z"
+				fill="var(--color-ocher)"
+			/>
+			<path d="M12 11 L12 19" stroke="var(--color-ink)" stroke-width="1.4" stroke-linecap="round" />
+			<path d="M12 19 C12 21 14 21 14 19" stroke="var(--color-ink)" stroke-width="1.4" stroke-linecap="round" />
+		</svg>
+	)}
+</div>
+
+<div class="cursor-mark cursor-orange" aria-hidden="true">
+	{cursor.orangeSliceImage ? (
+		<img src={cursor.orangeSliceImage} alt="" width="48" height="48" />
+	) : (
+		<svg viewBox="0 0 24 24" width="48" height="48" fill="none">
+			<circle cx="12" cy="12" r="10" fill="var(--color-yellow)" stroke="var(--color-ocher)" stroke-width="2" />
+			<g stroke="var(--color-white)" stroke-width="1" stroke-linecap="round">
+				<line x1="12" y1="12" x2="12" y2="3" />
+				<line x1="12" y1="12" x2="19.8" y2="7.5" />
+				<line x1="12" y1="12" x2="19.8" y2="16.5" />
+				<line x1="12" y1="12" x2="12" y2="21" />
+				<line x1="12" y1="12" x2="4.2" y2="16.5" />
+				<line x1="12" y1="12" x2="4.2" y2="7.5" />
+			</g>
+		</svg>
+	)}
+</div>
 
 <style>
-  .cursor-dot,
-  .cursor-ring {
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 9999;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-  }
+	.cursor-mark {
+		position: fixed;
+		top: 0;
+		left: 0;
+		pointer-events: none;
+		z-index: 9999;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transform: translate(-50%, -50%);
+		opacity: 0;
+		transition: opacity 0.2s ease, transform 0.2s ease;
+	}
 
-  .cursor-dot {
-    width: 8px;
-    height: 8px;
-    background: var(--color-red);
-    transition: opacity 0.2s ease, background-color 0.2s ease;
-  }
+	.cursor-mark.is-active {
+		transform: translate(-50%, -50%) scale(1.35);
+	}
 
-  .cursor-ring {
-    width: 34px;
-    height: 34px;
-    border: 2px solid var(--color-teal);
-    transition: opacity 0.2s ease, transform 0.18s ease-out, width 0.2s ease, height 0.2s ease, border-color 0.2s ease;
-  }
+	.cursor-spritz {
+		filter: drop-shadow(0 2px 4px rgb(0 0 0 / 0.25));
+	}
+
+	.cursor-emoji {
+		font-size: 2.8rem;
+		line-height: 1;
+	}
+
+	.cursor-umbrella,
+	.cursor-orange {
+		width: 48px;
+		height: 48px;
+	}
 </style>
 
 <script>
-  const isFinePointer = window.matchMedia("(pointer: fine)").matches;
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+	const isFinePointer = window.matchMedia("(pointer: fine)").matches;
+	const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (isFinePointer && !prefersReducedMotion) {
-    document.body.classList.add("has-custom-cursor");
+	if (isFinePointer && !prefersReducedMotion) {
+		document.body.classList.add("has-custom-cursor");
 
-    const dot = document.querySelector<HTMLElement>(".cursor-dot")!;
-    const ring = document.querySelector<HTMLElement>(".cursor-ring")!;
+		const marks = [
+			{ el: document.querySelector<HTMLElement>(".cursor-spritz")!, lag: 1, x: 0, y: 0 },
+			{ el: document.querySelector<HTMLElement>(".cursor-umbrella")!, lag: 0.16, x: 0, y: 0 },
+			{ el: document.querySelector<HTMLElement>(".cursor-orange")!, lag: 0.1, x: 0, y: 0 },
+		];
 
-    let ringX = 0;
-    let ringY = 0;
-    let targetX = 0;
-    let targetY = 0;
+		let targetX = 0;
+		let targetY = 0;
 
-    const show = () => {
-      dot.style.opacity = "1";
-      ring.style.opacity = "1";
-    };
+		const show = () => {
+			marks.forEach((mark) => (mark.el.style.opacity = "1"));
+		};
 
-    window.addEventListener(
-      "pointermove",
-      (event) => {
-        show();
-        targetX = event.clientX;
-        targetY = event.clientY;
-        dot.style.left = `${targetX}px`;
-        dot.style.top = `${targetY}px`;
-      },
-      { passive: true }
-    );
+		window.addEventListener(
+			"pointermove",
+			(event) => {
+				show();
+				targetX = event.clientX;
+				targetY = event.clientY;
+			},
+			{ passive: true }
+		);
 
-    document.addEventListener("mouseleave", () => {
-      dot.style.opacity = "0";
-      ring.style.opacity = "0";
-    });
+		document.addEventListener("mouseleave", () => {
+			marks.forEach((mark) => (mark.el.style.opacity = "0"));
+		});
 
-    const interactiveSelector = "a, button, [data-hover-lift], [data-cursor-grow]";
+		const interactiveSelector = "a, button, [data-hover-lift], [data-cursor-grow]";
 
-    document.addEventListener("mouseover", (event) => {
-      if ((event.target as HTMLElement).closest(interactiveSelector)) {
-        ring.classList.add("cursor-ring--active");
-        ring.style.width = "52px";
-        ring.style.height = "52px";
-        ring.style.borderColor = "var(--color-red)";
-      }
-    });
+		document.addEventListener("mouseover", (event) => {
+			if ((event.target as HTMLElement).closest(interactiveSelector)) {
+				marks.forEach((mark) => mark.el.classList.add("is-active"));
+			}
+		});
 
-    document.addEventListener("mouseout", (event) => {
-      if ((event.target as HTMLElement).closest(interactiveSelector)) {
-        ring.style.width = "34px";
-        ring.style.height = "34px";
-        ring.style.borderColor = "var(--color-teal)";
-      }
-    });
+		document.addEventListener("mouseout", (event) => {
+			if ((event.target as HTMLElement).closest(interactiveSelector)) {
+				marks.forEach((mark) => mark.el.classList.remove("is-active"));
+			}
+		});
 
-    const animate = () => {
-      ringX += (targetX - ringX) * 0.18;
-      ringY += (targetY - ringY) * 0.18;
-      ring.style.left = `${ringX}px`;
-      ring.style.top = `${ringY}px`;
-      requestAnimationFrame(animate);
-    };
+		const animate = () => {
+			marks.forEach((mark) => {
+				mark.x += (targetX - mark.x) * mark.lag;
+				mark.y += (targetY - mark.y) * mark.lag;
+				mark.el.style.left = `${mark.x}px`;
+				mark.el.style.top = `${mark.y}px`;
+			});
+			requestAnimationFrame(animate);
+		};
 
-    requestAnimationFrame(animate);
-  }
+		requestAnimationFrame(animate);
+	}
 </script>

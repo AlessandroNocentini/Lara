@@ -1,4 +1,5 @@
 ---
+import { splitHighlighted } from "../utils/highlightText";
 import type { PainPointsContent } from "../types/content";
 
 interface Props {
@@ -8,10 +9,21 @@ interface Props {
 const { content } = Astro.props;
 
 const rotations = [-2, 1, -1.5, 2, -1, 1.5];
+const accentColors = ["var(--color-red)", "var(--color-ocher)"];
+const headingParts = splitHighlighted(content.heading, content.highlightWords);
 ---
 
 <section id="pain-points" class="pain-points">
 	<div class="container pain-points-inner">
+		<h2>
+			{headingParts.map((part, i) =>
+				part.highlight ? (
+					<span class="highlight" style={`--highlight-color: ${accentColors[i % accentColors.length]}`}>{part.text}</span>
+				) : (
+					<>{part.text}</>
+				)
+			)}
+		</h2>
 		<ul class="bubbles">
 			{content.questions.map((question, i) => (
 				<li
@@ -37,6 +49,17 @@ const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 		flex-direction: column;
 		align-items: center;
 		gap: 2.5rem;
+		text-align: center;
+	}
+
+	h2 {
+		font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+		color: var(--color-teal-dark);
+		max-width: 40rem;
+	}
+
+	.highlight {
+		color: var(--highlight-color);
 	}
 
 	.bubbles {
@@ -51,6 +74,7 @@ const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 	}
 
 	.bubble {
+		position: relative;
 		background: var(--color-white);
 		border: 2px solid var(--color-teal);
 		color: var(--color-teal-dark);
@@ -60,5 +84,19 @@ const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 		font-size: 1.05rem;
 		box-shadow: var(--shadow-soft);
 		transform: rotate(var(--rotate));
+	}
+
+	.bubble::after {
+		content: "";
+		position: absolute;
+		bottom: -0.55rem;
+		left: 1.6rem;
+		width: 1rem;
+		height: 1rem;
+		background: var(--color-white);
+		border-bottom: 2px solid var(--color-teal);
+		border-right: 2px solid var(--color-teal);
+		transform: rotate(45deg);
+		border-radius: 0 0 3px 0;
 	}
 </style>

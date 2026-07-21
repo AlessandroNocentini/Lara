@@ -2,13 +2,14 @@
 import "../styles/global.css";
 import CustomCursor from "../components/CustomCursor.astro";
 import Navbar from "../components/Navbar.astro";
-import type { SiteMeta } from "../types/content";
+import type { SiteMeta, CursorAssets } from "../types/content";
 
 interface Props {
   meta: SiteMeta;
+  cursor: CursorAssets;
 }
 
-const { meta } = Astro.props;
+const { meta, cursor } = Astro.props;
 ---
 
 <html lang={meta.language}>
@@ -21,7 +22,7 @@ const { meta } = Astro.props;
 		<title>{meta.siteName}</title>
 	</head>
 	<body>
-		<CustomCursor />
+		<CustomCursor cursor={cursor} />
 		<Navbar meta={meta} />
 		<slot />
 	</body>

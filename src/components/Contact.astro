@@ -1,4 +1,5 @@
 ---
+import SectionKicker from "./SectionKicker.astro";
 import type { ContactContent } from "../types/content";
 
 interface Props {
@@ -9,7 +10,22 @@ const { content } = Astro.props;
 ---
 
 <section id="contact" class="contact">
+	<svg class="contact-italy" viewBox="0 0 200 400" aria-hidden="true">
+		<path
+			d="M100 10 C130 10 140 40 130 70 C160 90 170 130 150 160 C170 180 165 210 140 230 C160 250 155 280 130 300 C140 320 130 350 100 360 C90 340 70 330 75 310 C50 300 40 270 55 250 C30 235 25 200 45 180 C25 165 30 130 55 115 C40 95 45 60 70 40 C75 20 90 10 100 10 Z"
+			fill="none"
+			stroke="var(--color-white)"
+			stroke-width="2"
+		/>
+		<path
+			d="M120 370 C135 365 145 375 140 390 C130 400 115 395 115 382 C115 375 118 372 120 370 Z"
+			fill="none"
+			stroke="var(--color-white)"
+			stroke-width="2"
+		/>
+	</svg>
 	<div class="container contact-inner">
+		<SectionKicker label="Contact" color="var(--color-red)" />
 		<h2>{content.heading}</h2>
 		{content.description && <p class="description">{content.description}</p>}
 
@@ -34,12 +50,28 @@ const { content } = Astro.props;
 
 <style>
 	.contact {
+		position: relative;
 		padding: var(--section-padding);
 		background: linear-gradient(160deg, var(--color-teal-dark) 0%, var(--color-teal) 100%);
 		color: var(--color-white);
+		overflow: hidden;
+	}
+
+	.contact-italy {
+		position: absolute;
+		top: 50%;
+		right: 4%;
+		width: 14rem;
+		height: 28rem;
+		transform: translateY(-50%);
+		opacity: 0.1;
+		pointer-events: none;
+		z-index: 0;
 	}
 
 	.contact-inner {
+		position: relative;
+		z-index: 1;
 		max-width: 32rem;
 		text-align: center;
 	}
