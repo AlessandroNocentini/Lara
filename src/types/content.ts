@@ -20,6 +20,7 @@ export interface HeroContent {
 export interface PainPointsContent {
   heading: string;
   highlightWords: string[];
+  image: string;
   questions: string[];
   cta: {
     label: string;
@@ -29,7 +30,7 @@ export interface PainPointsContent {
 
 export interface CursorAssets {
   spritzImage: string;
-  umbrellaImage: string;
+  iceImage: string;
   orangeSliceImage: string;
 }
 

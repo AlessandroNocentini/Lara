@@ -2,7 +2,7 @@
 interface Props {
   src?: string;
   alt: string;
-  variant?: "circle" | "rounded";
+  variant?: "circle" | "rounded" | "portrait";
   class?: string;
   frame?: boolean;
   rotate?: number;
@@ -63,6 +63,18 @@ const frameStyle = frame ? `--frame-rotate: ${rotate}deg; --tape-color: ${tapeCo
     border-radius: var(--radius-lg);
   }
 
+  .placeholder-image.portrait {
+    border-radius: var(--radius-sm);
+    aspect-ratio: 3 / 4;
+  }
+
+  /* Real photos keep their own aspect ratio — no cropping. The forced 3/4
+     box above is only a stand-in size while there's no photo yet. */
+  img.placeholder-image.portrait {
+    height: auto;
+    aspect-ratio: auto;
+  }
+
   .placeholder-empty {
     display: flex;
     flex-direction: column;
@@ -117,5 +129,16 @@ const frameStyle = frame ? `--frame-rotate: ${rotate}deg; --tape-color: ${tapeCo
 
   .photo-frame .placeholder-image.rounded {
     border-radius: var(--radius-sm);
+  }
+
+  .photo-frame .placeholder-image.portrait {
+    border-radius: var(--radius-sm);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .photo-frame::before {
+      --enter-opacity: 0.85;
+      animation: enter-fade-up 0.35s ease-out 0.55s both;
+    }
   }
 </style>

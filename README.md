@@ -49,11 +49,17 @@ not a visible placeholder.
 (all default off/unset, so existing callers are unaffected) that wrap the
 image in a white polaroid-style card with a rotated washi-tape accent —
 the "scrapbook" look inspired by `Ideas/style_1–3.jpeg`. It's applied to the
-Hero portrait, About portrait, and Results image (each with its own rotation
-angle and tape color). **Method's card images intentionally don't use it** —
-Method's cards are a half-image/half-text layout from an earlier design
-pass, and framing/rotating an image inside that layout would fight it rather
-than complement it.
+Hero, About, and Pain Points portraits (each its own rotation angle and tape
+color — ocher/yellow/red respectively) and to the Results image (light blue
+tape). `variant` picks the image's own shape independent of the frame:
+`"portrait"` (3:4, used for the three "photo of Lara" spots — no circular
+crop) or `"rounded"` (soft corners, no fixed ratio — used for Results' image,
+whose aspect-ratio is set per-section to match its actual photo, and for
+Method's card images, which don't use `frame`/`rotate`/`tapeColor` at all).
+**Method's card images intentionally don't use the frame** — Method's cards
+are a half-image/half-text layout from an earlier design pass, and
+framing/rotating an image inside that layout would fight it rather than
+complement it.
 
 ## Structure
 
@@ -106,10 +112,10 @@ A couple of content-modeling choices worth knowing before editing copy:
   content or layout.
 - **`CustomCursor`** takes a `cursor: CursorAssets` prop (threaded from
   `index.astro` → `Layout.astro`) and renders three trailing marks, each
-  48×48px: a spritz mark (no lag, leads), a cocktail umbrella (lag 0.16), and
-  an orange slice (lag 0.10, trails furthest). All three now have real SVG
-  art (`content/siteContent.json` → `cursor.spritzImage` / `umbrellaImage` /
-  `orangeSliceImage`, files in `public/images/`). Umbrella/orange-slice follow
+  48×48px: a spritz mark (no lag, leads), an ice cube (lag 0.13), and an
+  orange slice (lag 0.09, trails furthest). All three now have real SVG
+  art (`content/siteContent.json` → `cursor.spritzImage` / `iceImage` /
+  `orangeSliceImage`, files in `public/images/`). Ice/orange-slice follow
   the empty-string-means-placeholder convention: empty falls back to an
   inline hand-drawn SVG, a path renders an `<img>`. Spritz has no SVG
   fallback — empty falls back to a 🍹 emoji instead. Disabled on touch

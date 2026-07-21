@@ -24,7 +24,7 @@ const bioHtml = renderMarkdown(content.bio);
 			<PlaceholderImage
 				src={content.image || undefined}
 				alt={`Photo of ${content.name}`}
-				variant="circle"
+				variant="portrait"
 				frame
 				rotate={3}
 				tapeColor="var(--color-yellow)"
@@ -68,7 +68,7 @@ const bioHtml = renderMarkdown(content.bio);
 	}
 
 	.about-portrait {
-		width: min(260px, 70vw);
+		width: min(300px, 72vw);
 		margin-inline: auto;
 	}
 

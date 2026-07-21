@@ -132,6 +132,88 @@ button {
   }
 }
 
+/*
+  Motion vocabulary — "analog wow": elements arrive like physical objects
+  being placed, then settle into small perpetual idle motion. These
+  keyframes are the shared primitives; each component chooses its own
+  animation-delay/duration to choreograph a scene (see Hero.astro).
+
+  Deliberately uses the standalone `translate`/`rotate`/`scale` CSS
+  properties instead of the `transform` shorthand, so this motion can
+  layer on top of elements that already use `transform` for hover-lift
+  or a static base rotation (e.g. PlaceholderImage's polaroid frame)
+  without one clobbering the other.
+*/
+@keyframes enter-fade-drift {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+  to {
+    /* callers with a low resting opacity (e.g. a background blob) set
+       --enter-opacity on the element; defaults to fully opaque */
+    opacity: var(--enter-opacity, 1);
+    scale: 1;
+  }
+}
+
+@keyframes enter-drop {
+  0% {
+    opacity: 0;
+    translate: 0 -24px;
+  }
+  60% {
+    opacity: 1;
+    translate: 0 4px;
+  }
+  100% {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes enter-slide-left {
+  from {
+    opacity: 0;
+    translate: -24px 0;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes enter-fade-up {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+  to {
+    opacity: var(--enter-opacity, 1);
+    translate: 0 0;
+  }
+}
+
+@keyframes idle-sway {
+  0%,
+  100% {
+    rotate: -1.5deg;
+  }
+  50% {
+    rotate: 1.5deg;
+  }
+}
+
+@keyframes idle-breathe {
+  0%,
+  100% {
+    scale: 1;
+  }
+  50% {
+    scale: 1.04;
+  }
+}
+
 @media (pointer: fine) {
   body.has-custom-cursor,
   body.has-custom-cursor a,
