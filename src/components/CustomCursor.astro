@@ -8,13 +8,19 @@ interface Props {
 const { cursor } = Astro.props;
 ---
 
-<div class="cursor-mark cursor-spritz" aria-hidden="true">🍹</div>
+<div class="cursor-mark cursor-spritz" aria-hidden="true">
+	{cursor.spritzImage ? (
+		<img src={cursor.spritzImage} alt="" width="48" height="48" />
+	) : (
+		<span class="cursor-emoji">🍹</span>
+	)}
+</div>
 
 <div class="cursor-mark cursor-umbrella" aria-hidden="true">
 	{cursor.umbrellaImage ? (
-		<img src={cursor.umbrellaImage} alt="" width="24" height="24" />
+		<img src={cursor.umbrellaImage} alt="" width="48" height="48" />
 	) : (
-		<svg viewBox="0 0 24 24" width="24" height="24" fill="none">
+		<svg viewBox="0 0 24 24" width="48" height="48" fill="none">
 			<path
 				d="M12 3 C6 3 2 8 2 11 L6 9 L9 11 L12 8 L15 11 L18 9 L22 11 C22 8 18 3 12 3 Z"
 				fill="var(--color-ocher)"
@@ -27,9 +33,9 @@ const { cursor } = Astro.props;
 
 <div class="cursor-mark cursor-orange" aria-hidden="true">
 	{cursor.orangeSliceImage ? (
-		<img src={cursor.orangeSliceImage} alt="" width="24" height="24" />
+		<img src={cursor.orangeSliceImage} alt="" width="48" height="48" />
 	) : (
-		<svg viewBox="0 0 24 24" width="24" height="24" fill="none">
+		<svg viewBox="0 0 24 24" width="48" height="48" fill="none">
 			<circle cx="12" cy="12" r="10" fill="var(--color-yellow)" stroke="var(--color-ocher)" stroke-width="2" />
 			<g stroke="var(--color-white)" stroke-width="1" stroke-linecap="round">
 				<line x1="12" y1="12" x2="12" y2="3" />
@@ -63,14 +69,18 @@ const { cursor } = Astro.props;
 	}
 
 	.cursor-spritz {
-		font-size: 1.4rem;
 		filter: drop-shadow(0 2px 4px rgb(0 0 0 / 0.25));
+	}
+
+	.cursor-emoji {
+		font-size: 2.8rem;
+		line-height: 1;
 	}
 
 	.cursor-umbrella,
 	.cursor-orange {
-		width: 24px;
-		height: 24px;
+		width: 48px;
+		height: 48px;
 	}
 </style>
 

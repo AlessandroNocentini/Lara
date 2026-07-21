@@ -1,4 +1,5 @@
 ---
+import SpritzTitle from "./SpritzTitle.astro";
 import type { SiteMeta } from "../types/content";
 
 interface Props {
@@ -18,7 +19,9 @@ const links = [
 
 <header class="navbar">
 	<nav class="navbar-inner container">
-		<a href="#hero" class="brand" data-hover-lift>{meta.siteName}</a>
+		<a href="#hero" class="brand" data-hover-lift>
+				<SpritzTitle text={meta.siteName} image={meta.image} size="1.15em" gap="-0.05em" />
+			</a>
 		<ul class="nav-links">
 			{links.map((link) => (
 				<li>

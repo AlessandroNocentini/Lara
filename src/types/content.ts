@@ -1,5 +1,6 @@
 export interface SiteMeta {
   siteName: string;
+  image: string;
   language: string;
   themeColor: string;
 }
@@ -27,6 +28,7 @@ export interface PainPointsContent {
 }
 
 export interface CursorAssets {
+  spritzImage: string;
   umbrellaImage: string;
   orangeSliceImage: string;
 }

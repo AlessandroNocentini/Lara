@@ -78,15 +78,18 @@ A couple of content-modeling choices worth knowing before editing copy:
   `PainPointsContent`, not `HeroContent` — despite reading like a hero
   headline, it renders inside the PainPoints section.
 - **`CustomCursor`** takes a `cursor: CursorAssets` prop (threaded from
-  `index.astro` → `Layout.astro`) and renders three trailing marks: a 🍹
-  emoji (no lag, leads), a hand-drawn SVG cocktail umbrella (lag 0.16), and a
-  hand-drawn SVG orange slice (lag 0.10, trails furthest). `cursor.umbrellaImage`
-  / `cursor.orangeSliceImage` follow the same empty-string-means-placeholder
-  convention as other image fields: empty renders the inline SVG fallback;
-  a path renders an `<img>` instead. Disabled on touch devices and when
-  `prefers-reduced-motion` is set. If real art is supplied later, source it
-  square with a transparent background at roughly 128×128px (SVG preferred)
-  — it displays at only ~24–28px, so oversized/lossy raster art will look soft.
+  `index.astro` → `Layout.astro`) and renders three trailing marks, each
+  48×48px: a spritz mark (no lag, leads), a cocktail umbrella (lag 0.16), and
+  an orange slice (lag 0.10, trails furthest). All three now have real SVG
+  art (`content/siteContent.json` → `cursor.spritzImage` / `umbrellaImage` /
+  `orangeSliceImage`, files in `public/images/`). Umbrella/orange-slice follow
+  the empty-string-means-placeholder convention: empty falls back to an
+  inline hand-drawn SVG, a path renders an `<img>`. Spritz has no SVG
+  fallback — empty falls back to a 🍹 emoji instead. Disabled on touch
+  devices and when `prefers-reduced-motion` is set. Source new cursor art
+  square with a transparent background at roughly 128×128px (SVG
+  preferred) — it displays at 48px, so this is comfortable headroom, not a
+  tight crop.
 
 No UI framework (no React/Vue/Svelte) and no CSS framework — plain Astro
 components and hand-written CSS custom properties in `global.css`.
@@ -102,10 +105,10 @@ These are known, intentional gaps — not oversights:
   interactive, but submission is simulated client-side only (it calls
   `preventDefault()` and shows the success message without sending data
   anywhere). Web3Forms is the intended backend; not yet integrated.
-- **Real photos, cursor art, and final copy**: most `image` fields in
-  `siteContent.json` are empty (rendering as placeholders or SVG fallbacks),
-  and some copy (e.g. `results` intermediate/advanced levels) is still
-  placeholder text.
+- **Real photos and final copy**: most other `image` fields in
+  `siteContent.json` are still empty (rendering as placeholders); cursor art
+  is done (see `CustomCursor` above). Some copy (e.g. `results`
+  intermediate/advanced levels) is still placeholder text.
 
 ## Reference material
 

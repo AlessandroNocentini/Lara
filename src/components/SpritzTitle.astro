@@ -1,0 +1,23 @@
+---
+interface Props {
+  text: string;
+  image: string;
+  size?: string;
+  gap?: string;
+}
+
+const { text, image, size = "1em", gap = "0" } = Astro.props;
+
+const SPRITZ_EMOJI = "🍹";
+const [before, after] = text.split(SPRITZ_EMOJI);
+---
+
+{before}{after !== undefined && <img class="spritz-icon" src={image} alt="" style={`height:${size};margin:0 ${gap};`} />}{after}
+
+<style>
+	.spritz-icon {
+		display: inline-block;
+		width: auto;
+		vertical-align: -0.2em;
+	}
+</style>

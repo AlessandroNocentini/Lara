@@ -1,6 +1,7 @@
 {
   "meta": {
     "siteName": "Learn 🍹talian with Lara",
+    "image": "/images/spritz.svg",
     "language": "en",
     "themeColor": "#0f766e"
   },
@@ -57,7 +58,8 @@
     "successMessage": "Thanks! I'll get back to you soon."
   },
   "cursor": {
-    "umbrellaImage": "",
-    "orangeSliceImage": ""
+    "spritzImage": "/images/spritz.svg",
+    "umbrellaImage": "/images/umbrella.svg",
+    "orangeSliceImage": "/images/orangeslice.svg"
   }
 }
