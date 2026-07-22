@@ -38,7 +38,7 @@ async function request(path: string, init: RequestInit = {}): Promise<Response> 
 
   let response: Response;
   try {
-    response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/${path}`, {
+    response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}${path ? `/${path}` : ""}`, {
       ...init,
       headers: {
         Authorization: `Bearer ${token}`,
