@@ -6,12 +6,18 @@
     "themeColor": "#0f766e"
   },
   "hero": {
-    "eyebrow": "",
+    "eyebrow": "Ciao!",
     "image": "/images/lara_2.jpg",
     "backgroundImage": "",
     "socialLinks": [
-      { "platform": "instagram", "url": "https://www.instagram.com/laraduardo?igsh=MWJtbWFnaTJuN3Y3MA==" },
-      { "platform": "email", "url": "#" }
+      {
+        "platform": "instagram",
+        "url": "https://www.instagram.com/laraduardo?igsh=MWJtbWFnaTJuN3Y3MA=="
+      },
+      {
+        "platform": "email",
+        "url": "#"
+      }
     ]
   },
   "about": {
@@ -22,7 +28,10 @@
   },
   "painPoints": {
     "heading": "Learn Italian with a Native Italian Teacher",
-    "highlightWords": ["Native", "Italian"],
+    "highlightWords": [
+      "Native",
+      "Italian"
+    ],
     "image": "/images/lara_1.jpg",
     "questions": [
       "Does grammar feel overwhelming?",
@@ -38,12 +47,36 @@
   "method": {
     "title": "My Method",
     "items": [
-      { "title": "Speak from Day One", "description": "Start communicationg in Italian from your very first lesson.", "image": "" },
-      { "title": "Interactive & Fun", "description": "Games, activities, and engaging tasks that make learning enjoyable.", "image": "/images/interactive.jpg" },
-      { "title": "Authentic Italian", "description": "Learn with songs, videos, podcasts, and real-life materials.", "image": "" },
-      { "title": "Conversation-Based", "description": "Talk about a wide range of topics and build confidence naturally.", "image": "" },
-      { "title": "Tailored to You", "description": "Every lesson is adapted to your goals, interests, and learning style.", "image": "/images/tailored.jpg" },
-      { "title": "Italian for Real Life", "description": "Practice the language you'll actualy use in everyday situations.", "image": "" }
+      {
+        "title": "Speak from Day One",
+        "description": "Start communicationg in Italian from your very first lesson.",
+        "image": ""
+      },
+      {
+        "title": "Interactive & Fun",
+        "description": "Games, activities, and engaging tasks that make learning enjoyable.",
+        "image": "/images/interactive.jpg"
+      },
+      {
+        "title": "Authentic Italian",
+        "description": "Learn with songs, videos, podcasts, and real-life materials.",
+        "image": ""
+      },
+      {
+        "title": "Conversation-Based",
+        "description": "Talk about a wide range of topics and build confidence naturally.",
+        "image": ""
+      },
+      {
+        "title": "Tailored to You",
+        "description": "Every lesson is adapted to your goals, interests, and learning style.",
+        "image": "/images/tailored.jpg"
+      },
+      {
+        "title": "Italian for Real Life",
+        "description": "Practice the language you'll actualy use in everyday situations.",
+        "image": ""
+      }
     ],
     "section": "Interactive lessons with guided conversations, activities, and games to start using Italian from day one.\n\n**Why they work:**\n\n1. I don't focus on correcting 'mistakes'; instead I guide you step by step.\n2. You will learn to correct yourself naturally. building confidence and becoming more independent.\n3. Interactive, engaging, and personalized lessons.\n4. If needed, I can also explain complex concepts in English, French, or Russian."
   },
