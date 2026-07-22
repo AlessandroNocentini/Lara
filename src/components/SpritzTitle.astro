@@ -1,4 +1,6 @@
 ---
+import { withBase } from "../utils/baseUrl";
+
 interface Props {
   text: string;
   image: string;
@@ -12,7 +14,7 @@ const SPRITZ_EMOJI = "🍹";
 const [before, after] = text.split(SPRITZ_EMOJI);
 ---
 
-{before}{after !== undefined && <img class="spritz-icon" src={image} alt="" style={`height:${size};margin:0 ${gap};`} />}{after}
+{before}{after !== undefined && <img class="spritz-icon" src={withBase(image)} alt="" style={`height:${size};margin:0 ${gap};`} />}{after}
 
 <style>
 	.spritz-icon {

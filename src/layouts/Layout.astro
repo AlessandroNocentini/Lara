@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import CustomCursor from "../components/CustomCursor.astro";
 import Navbar from "../components/Navbar.astro";
+import { withBase } from "../utils/baseUrl";
 import type { SiteMeta, CursorAssets } from "../types/content";
 
 interface Props {
@@ -15,7 +16,7 @@ const { meta, cursor } = Astro.props;
 <html lang={meta.language}>
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="theme-color" content={meta.themeColor} />

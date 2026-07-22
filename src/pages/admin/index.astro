@@ -1,0 +1,694 @@
+---
+import "../../styles/global.css";
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="robots" content="noindex" />
+		<title>Learn Italian with Lara — Content Editor</title>
+	</head>
+	<body>
+		<div class="admin">
+			<header class="admin-header">
+				<h1>Content Editor</h1>
+				<div class="admin-header-actions">
+					<span id="status" class="status" role="status"></span>
+					<button id="save-btn" class="button button-primary" type="button" hidden>Save changes</button>
+					<button id="logout-btn" class="button button-ghost" type="button" hidden>Log out</button>
+				</div>
+			</header>
+
+			<section id="login-gate" class="panel">
+				<h2>Log in</h2>
+				<p>
+					Paste a GitHub personal access token with write access to this repository.
+					<a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">
+						Create a fine-grained token
+					</a>
+					scoped to just the <strong>Lara</strong> repository, with <strong>Contents: read and write</strong> permission.
+				</p>
+				<p class="warning">
+					This token is stored only in this browser and is never sent anywhere except GitHub. Anyone who has it can edit
+					the live site, so don't share it, and prefer a token that expires after a few months.
+				</p>
+				<div class="field-row">
+					<input id="token-input" type="password" placeholder="github_pat_..." autocomplete="off" />
+					<button id="login-btn" class="button button-primary" type="button">Log in</button>
+				</div>
+			</section>
+
+			<form id="editor" hidden>
+				<fieldset class="panel">
+					<legend>Site Info</legend>
+					<label>Site name<input data-field="meta.siteName" type="text" /></label>
+					<p class="hint">Keep the 🍹 emoji in place — it's replaced with the spritz icon, e.g. "Learn 🍹talian with Lara".</p>
+					<div class="image-field" data-image-field="meta.image">
+						<label>Brand icon (spritz mark)</label>
+						<img data-image-preview class="image-preview" alt="" />
+						<input type="file" accept="image/*" />
+					</div>
+					<label>Language code<input data-field="meta.language" type="text" /></label>
+					<label>Theme color<input data-field="meta.themeColor" type="color" /></label>
+				</fieldset>
+
+				<fieldset class="panel">
+					<legend>Hero Section</legend>
+					<label>Eyebrow (small label above the title)<input data-field="hero.eyebrow" type="text" /></label>
+					<div class="image-field" data-image-field="hero.image">
+						<label>Photo</label>
+						<p class="hint">Portrait photo, roughly 3:4. Shown as-is — never cropped.</p>
+						<img data-image-preview class="image-preview" alt="" />
+						<input type="file" accept="image/*" />
+					</div>
+					<div class="image-field" data-image-field="hero.backgroundImage">
+						<label>Background photo (optional)</label>
+						<p class="hint">Full-bleed photo behind the teal gradient. Leave empty to keep the plain gradient.</p>
+						<img data-image-preview class="image-preview" alt="" />
+						<input type="file" accept="image/*" />
+						<button type="button" class="button button-ghost clear-image-btn">Remove</button>
+					</div>
+					<div class="list-field" id="socialLinks-list">
+						<label>Social links</label>
+						<div class="list-items"></div>
+						<button type="button" class="button button-ghost add-btn" data-add="socialLinks">+ Add link</button>
+					</div>
+				</fieldset>
+
+				<fieldset class="panel">
+					<legend>About Section</legend>
+					<label>Greeting<input data-field="about.greeting" type="text" /></label>
+					<label>Name<input data-field="about.name" type="text" /></label>
+					<label>Bio<textarea data-field="about.bio" rows="6"></textarea></label>
+					<p class="hint">Supports **bold** text and paragraph breaks.</p>
+					<div class="image-field" data-image-field="about.image">
+						<label>Photo</label>
+						<p class="hint">Portrait photo, roughly 3:4. Shown as-is — never cropped.</p>
+						<img data-image-preview class="image-preview" alt="" />
+						<input type="file" accept="image/*" />
+					</div>
+				</fieldset>
+
+				<fieldset class="panel">
+					<legend>Pain Points Section</legend>
+					<label>Heading<input data-field="painPoints.heading" type="text" /></label>
+					<div class="list-field" id="highlightWords-list">
+						<label>Words to highlight in the heading</label>
+						<p class="hint">Must match words that appear in the heading above exactly.</p>
+						<div class="list-items"></div>
+						<button type="button" class="button button-ghost add-btn" data-add="highlightWords">+ Add word</button>
+					</div>
+					<div class="image-field" data-image-field="painPoints.image">
+						<label>Photo</label>
+						<p class="hint">Portrait photo, roughly 3:4. Shown as-is — never cropped.</p>
+						<img data-image-preview class="image-preview" alt="" />
+						<input type="file" accept="image/*" />
+					</div>
+					<div class="list-field" id="questions-list">
+						<label>Questions</label>
+						<div class="list-items"></div>
+						<button type="button" class="button button-ghost add-btn" data-add="questions">+ Add question</button>
+					</div>
+					<label>Button text<input data-field="painPoints.cta.label" type="text" /></label>
+					<label>Button links to<input data-field="painPoints.cta.target" type="text" /></label>
+				</fieldset>
+
+				<fieldset class="panel">
+					<legend>Method Section</legend>
+					<label>Title<input data-field="method.title" type="text" /></label>
+					<div class="list-field" id="methodItems-list">
+						<label>Method cards</label>
+						<div class="list-items"></div>
+						<button type="button" class="button button-ghost add-btn" data-add="methodItems">+ Add card</button>
+					</div>
+					<label>Intro text ("Why they work")<textarea data-field="method.section" rows="6"></textarea></label>
+					<p class="hint">Supports **bold** text and numbered lists.</p>
+				</fieldset>
+
+				<fieldset class="panel">
+					<legend>Results Section</legend>
+					<div class="image-field" data-image-field="results.image">
+						<label>Photo</label>
+						<p class="hint">Landscape photo, roughly 3:2. Shown as-is — never cropped.</p>
+						<img data-image-preview class="image-preview" alt="" />
+						<input type="file" accept="image/*" />
+					</div>
+					<label>Beginner outcome<textarea data-field="results.beginner" rows="3"></textarea></label>
+					<label>Intermediate outcome<textarea data-field="results.intermediate" rows="3"></textarea></label>
+					<label>Advanced outcome<textarea data-field="results.advanced" rows="3"></textarea></label>
+				</fieldset>
+
+				<fieldset class="panel">
+					<legend>Contact Section</legend>
+					<label>Heading<input data-field="contact.heading" type="text" /></label>
+					<label>Description<input data-field="contact.description" type="text" /></label>
+					<label>Success message<input data-field="contact.successMessage" type="text" /></label>
+					<p class="hint">Shown after someone submits the contact form.</p>
+				</fieldset>
+
+				<details class="panel">
+					<summary>Cursor icons (advanced, cosmetic)</summary>
+					<div class="image-field" data-image-field="cursor.spritzImage">
+						<label>Spritz icon</label>
+						<img data-image-preview class="image-preview" alt="" />
+						<input type="file" accept="image/*" />
+					</div>
+					<div class="image-field" data-image-field="cursor.iceImage">
+						<label>Ice icon</label>
+						<img data-image-preview class="image-preview" alt="" />
+						<input type="file" accept="image/*" />
+					</div>
+					<div class="image-field" data-image-field="cursor.orangeSliceImage">
+						<label>Orange slice icon</label>
+						<img data-image-preview class="image-preview" alt="" />
+						<input type="file" accept="image/*" />
+					</div>
+				</details>
+			</form>
+		</div>
+
+		<style>
+			.admin {
+				max-width: 44rem;
+				margin: 0 auto;
+				padding: clamp(1.5rem, 4vw, 3rem);
+				font-family: var(--font-body);
+				color: var(--color-ink);
+			}
+
+			.admin-header {
+				position: sticky;
+				top: 0;
+				z-index: 10;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 1rem;
+				background: var(--color-cream);
+				padding: 1rem 0;
+				border-bottom: 1px solid rgb(15 118 110 / 0.15);
+				margin-bottom: 1.5rem;
+			}
+
+			.admin-header h1 {
+				font-size: 1.4rem;
+				color: var(--color-teal-dark);
+			}
+
+			.admin-header-actions {
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+			}
+
+			.status {
+				font-size: 0.85rem;
+				font-weight: 700;
+				color: var(--color-ink-soft);
+				min-height: 1.2em;
+			}
+
+			.status.error {
+				color: var(--color-red);
+			}
+
+			.status.success {
+				color: var(--color-teal-dark);
+			}
+
+			.button-ghost {
+				background: transparent;
+				color: var(--color-teal-dark);
+				border: 2px solid var(--color-teal);
+				box-shadow: none;
+			}
+
+			.panel {
+				background: var(--color-white);
+				border: 1px solid rgb(15 118 110 / 0.15);
+				border-radius: var(--radius-md);
+				padding: 1.5rem;
+				margin-bottom: 1.5rem;
+			}
+
+			.panel legend,
+			.panel summary {
+				font-family: var(--font-heading);
+				font-weight: 600;
+				font-size: 1.15rem;
+				color: var(--color-teal-dark);
+				padding: 0 0.3rem;
+			}
+
+			.panel summary {
+				cursor: pointer;
+			}
+
+			.panel label {
+				display: block;
+				font-weight: 700;
+				font-size: 0.9rem;
+				margin: 1rem 0 0.4rem;
+			}
+
+			.panel input[type="text"],
+			.panel input[type="password"],
+			.panel textarea,
+			.panel input[type="color"] {
+				width: 100%;
+				font-family: var(--font-body);
+				font-size: 1rem;
+				padding: 0.6rem 0.8rem;
+				border-radius: var(--radius-sm);
+				border: 1px solid rgb(15 118 110 / 0.3);
+			}
+
+			.hint {
+				font-size: 0.8rem;
+				color: var(--color-ink-soft);
+				margin: 0.25rem 0 0;
+			}
+
+			.warning {
+				font-size: 0.85rem;
+				background: rgb(193 68 45 / 0.08);
+				border: 1px solid rgb(193 68 45 / 0.3);
+				border-radius: var(--radius-sm);
+				padding: 0.75rem 1rem;
+			}
+
+			.field-row {
+				display: flex;
+				gap: 0.75rem;
+			}
+
+			.field-row input {
+				flex: 1;
+			}
+
+			.image-field {
+				margin: 1rem 0;
+			}
+
+			.image-preview {
+				display: block;
+				max-width: 12rem;
+				max-height: 12rem;
+				object-fit: contain;
+				border: 1px solid rgb(15 118 110 / 0.2);
+				border-radius: var(--radius-sm);
+				margin: 0.5rem 0;
+				background: var(--color-cream);
+			}
+
+			.image-preview:not([src]),
+			.image-preview[src=""] {
+				display: none;
+			}
+
+			.list-items {
+				display: flex;
+				flex-direction: column;
+				gap: 0.6rem;
+				margin: 0.5rem 0;
+			}
+
+			.list-item {
+				display: flex;
+				gap: 0.5rem;
+				align-items: flex-start;
+			}
+
+			.list-item input,
+			.list-item select {
+				flex: 1;
+				font-family: var(--font-body);
+				font-size: 0.95rem;
+				padding: 0.5rem 0.7rem;
+				border-radius: var(--radius-sm);
+				border: 1px solid rgb(15 118 110 / 0.3);
+			}
+
+			.list-item .remove-btn {
+				flex-shrink: 0;
+				background: transparent;
+				border: 1px solid rgb(193 68 45 / 0.4);
+				color: var(--color-red);
+				border-radius: var(--radius-sm);
+				padding: 0.4rem 0.7rem;
+				cursor: pointer;
+			}
+
+			.method-item {
+				border: 1px solid rgb(15 118 110 / 0.15);
+				border-radius: var(--radius-sm);
+				padding: 0.75rem;
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+			}
+
+			.add-btn {
+				align-self: flex-start;
+			}
+		</style>
+
+		<script>
+			import {
+				getToken,
+				setToken,
+				clearToken,
+				getTextFile,
+				putFile,
+				verifyAccess,
+				utf8ToBase64,
+				GitHubApiError,
+			} from "../../scripts/githubClient";
+			import { withBase } from "../../utils/baseUrl";
+			import type { SiteContent } from "../../types/content";
+
+			const CONTENT_PATH = "content/siteContent.json";
+
+			const loginGate = document.getElementById("login-gate") as HTMLElement;
+			const editorForm = document.getElementById("editor") as HTMLFormElement;
+			const statusEl = document.getElementById("status") as HTMLElement;
+			const saveBtn = document.getElementById("save-btn") as HTMLButtonElement;
+			const logoutBtn = document.getElementById("logout-btn") as HTMLButtonElement;
+			const tokenInput = document.getElementById("token-input") as HTMLInputElement;
+			const loginBtn = document.getElementById("login-btn") as HTMLButtonElement;
+
+			// Pending uploads keyed by the field path they belong to (top-level image
+			// fields) or a synthetic "methodItems.<index>" key for list-item images.
+			const pendingUploads = new Map<string, File>();
+			// Image fields explicitly cleared via the "Remove" button (e.g. hero.backgroundImage).
+			const clearedFields = new Set<string>();
+
+			function setStatus(message: string, kind: "" | "error" | "success" = "") {
+				statusEl.textContent = message;
+				statusEl.className = `status ${kind}`;
+			}
+
+			function getPath(obj: any, path: string): any {
+				return path.split(".").reduce((o, k) => (o == null ? undefined : o[k]), obj);
+			}
+
+			function setPath(obj: any, path: string, value: any) {
+				const keys = path.split(".");
+				const last = keys.pop()!;
+				const target = keys.reduce((o, k) => (o[k] ??= {}), obj);
+				target[last] = value;
+			}
+
+			function slugifyFilename(name: string): string {
+				const dot = name.lastIndexOf(".");
+				const base = (dot > 0 ? name.slice(0, dot) : name)
+					.toLowerCase()
+					.replace(/[^a-z0-9]+/g, "-")
+					.replace(/(^-|-$)/g, "");
+				const ext = dot > 0 ? name.slice(dot) : "";
+				return `${base || "photo"}-${Date.now().toString(36)}${ext}`;
+			}
+
+			function fileToBase64(file: File): Promise<string> {
+				return new Promise((resolve, reject) => {
+					const reader = new FileReader();
+					reader.onload = () => {
+						const result = reader.result as string;
+						resolve(result.slice(result.indexOf(",") + 1));
+					};
+					reader.onerror = () => reject(reader.error);
+					reader.readAsDataURL(file);
+				});
+			}
+
+			// ---- Simple scalar fields (data-field="a.b.c") ----
+
+			function populateScalarFields(data: SiteContent) {
+				document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-field]").forEach((el) => {
+					const path = el.dataset.field!;
+					const value = getPath(data, path);
+					if (value !== undefined) el.value = value;
+				});
+			}
+
+			function readScalarFields(data: SiteContent) {
+				document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-field]").forEach((el) => {
+					setPath(data, el.dataset.field!, el.value);
+				});
+			}
+
+			// ---- Image fields (data-image-field="a.b") ----
+
+			function populateImageFields(data: SiteContent) {
+				document.querySelectorAll<HTMLElement>("[data-image-field]").forEach((container) => {
+					const path = container.dataset.imageField!;
+					const value = getPath(data, path) as string;
+					const preview = container.querySelector<HTMLImageElement>("[data-image-preview]")!;
+					preview.src = value ? withBase(value) : "";
+					preview.alt = value ? "Current photo" : "";
+
+					const fileInput = container.querySelector<HTMLInputElement>('input[type="file"]')!;
+					fileInput.addEventListener("change", () => {
+						const file = fileInput.files?.[0];
+						if (!file) return;
+						clearedFields.delete(path);
+						pendingUploads.set(path, file);
+						preview.src = URL.createObjectURL(file);
+						preview.alt = "New photo (not saved yet)";
+					});
+
+					const clearBtn = container.querySelector<HTMLButtonElement>(".clear-image-btn");
+					clearBtn?.addEventListener("click", () => {
+						pendingUploads.delete(path);
+						clearedFields.add(path);
+						fileInput.value = "";
+						preview.src = "";
+					});
+				});
+			}
+
+			async function uploadPendingImages(data: SiteContent) {
+				for (const path of clearedFields) {
+					if (!pendingUploads.has(path)) setPath(data, path, "");
+				}
+				for (const [path, file] of pendingUploads) {
+					if (path.startsWith("methodItems.")) continue; // handled separately in readMethodItems
+					setStatus(`Uploading ${file.name}...`);
+					const filename = `images/${slugifyFilename(file.name)}`;
+					const base64 = await fileToBase64(file);
+					await putFile(filename, base64, `Upload ${filename} via content editor`);
+					setPath(data, path, `/${filename}`);
+				}
+			}
+
+			// ---- List fields: simple string lists ----
+
+			function renderStringList(containerId: string, values: string[]) {
+				const container = document.getElementById(containerId)!;
+				const list = container.querySelector(".list-items")!;
+				list.innerHTML = "";
+				values.forEach((value) => addStringRow(list, value));
+			}
+
+			function addStringRow(list: Element, value: string) {
+				const row = document.createElement("div");
+				row.className = "list-item";
+				row.innerHTML = `<input type="text" value="${value.replace(/"/g, "&quot;")}" /><button type="button" class="remove-btn">Remove</button>`;
+				row.querySelector(".remove-btn")!.addEventListener("click", () => row.remove());
+				list.appendChild(row);
+			}
+
+			function readStringList(containerId: string): string[] {
+				const container = document.getElementById(containerId)!;
+				return Array.from(container.querySelectorAll<HTMLInputElement>(".list-item input"))
+					.map((input) => input.value.trim())
+					.filter(Boolean);
+			}
+
+			// ---- Social links (platform + url) ----
+
+			const SOCIAL_PLATFORMS = ["instagram", "facebook", "whatsapp", "tiktok", "email", "website"];
+
+			function renderSocialLinks(links: { platform: string; url: string }[]) {
+				const list = document.querySelector("#socialLinks-list .list-items")!;
+				list.innerHTML = "";
+				links.forEach((link) => addSocialRow(list, link));
+			}
+
+			function addSocialRow(list: Element, link: { platform: string; url: string }) {
+				const row = document.createElement("div");
+				row.className = "list-item";
+				const options = SOCIAL_PLATFORMS.map(
+					(p) => `<option value="${p}"${p === link.platform ? " selected" : ""}>${p}</option>`
+				).join("");
+				row.innerHTML = `
+					<select>${options}</select>
+					<input type="text" value="${link.url.replace(/"/g, "&quot;")}" placeholder="URL" />
+					<button type="button" class="remove-btn">Remove</button>
+				`;
+				row.querySelector(".remove-btn")!.addEventListener("click", () => row.remove());
+				list.appendChild(row);
+			}
+
+			function readSocialLinks(): { platform: string; url: string }[] {
+				return Array.from(document.querySelectorAll("#socialLinks-list .list-item")).map((row) => ({
+					platform: (row.querySelector("select") as HTMLSelectElement).value,
+					url: (row.querySelector("input") as HTMLInputElement).value.trim(),
+				}));
+			}
+
+			// ---- Method items (title + description + optional image) ----
+
+			function renderMethodItems(items: { title: string; description: string; image: string }[]) {
+				const list = document.querySelector("#methodItems-list .list-items")!;
+				list.innerHTML = "";
+				items.forEach((item, index) => addMethodItemRow(list, item, index));
+			}
+
+			let methodItemCounter = 0;
+
+			function addMethodItemRow(list: Element, item: { title: string; description: string; image: string }, index: number) {
+				const key = `methodItems.${index >= 0 ? index : `new-${methodItemCounter++}`}`;
+				const row = document.createElement("div");
+				row.className = "method-item";
+				row.dataset.uploadKey = key;
+				row.innerHTML = `
+					<input type="text" class="mi-title" value="${item.title.replace(/"/g, "&quot;")}" placeholder="Title" />
+					<input type="text" class="mi-description" value="${item.description.replace(/"/g, "&quot;")}" placeholder="Description" />
+					<img class="image-preview mi-preview" alt="" src="${item.image ? withBase(item.image) : ""}" data-saved-path="${item.image}" />
+					<input type="file" class="mi-file" accept="image/*" />
+					<button type="button" class="remove-btn">Remove card</button>
+				`;
+				row.querySelector<HTMLInputElement>(".mi-file")!.addEventListener("change", (e) => {
+					const file = (e.target as HTMLInputElement).files?.[0];
+					if (!file) return;
+					pendingUploads.set(row.dataset.uploadKey!, file);
+					row.querySelector<HTMLImageElement>(".mi-preview")!.src = URL.createObjectURL(file);
+				});
+				row.querySelector(".remove-btn")!.addEventListener("click", () => {
+					pendingUploads.delete(row.dataset.uploadKey!);
+					row.remove();
+				});
+				list.appendChild(row);
+			}
+
+			async function readMethodItems(): Promise<{ title: string; description: string; image: string }[]> {
+				const rows = Array.from(document.querySelectorAll<HTMLElement>("#methodItems-list .method-item"));
+				const items = [];
+				for (const row of rows) {
+					const title = row.querySelector<HTMLInputElement>(".mi-title")!.value.trim();
+					const description = row.querySelector<HTMLInputElement>(".mi-description")!.value.trim();
+					const preview = row.querySelector<HTMLImageElement>(".mi-preview")!;
+					let image = preview.getAttribute("data-saved-path") ?? "";
+
+					const pendingFile = pendingUploads.get(row.dataset.uploadKey!);
+					if (pendingFile) {
+						setStatus(`Uploading ${pendingFile.name}...`);
+						const filename = `images/${slugifyFilename(pendingFile.name)}`;
+						const base64 = await fileToBase64(pendingFile);
+						await putFile(filename, base64, `Upload ${filename} via content editor`);
+						image = `/${filename}`;
+					}
+
+					if (title || description) items.push({ title, description, image });
+				}
+				return items;
+			}
+
+			// ---- Add-item buttons ----
+
+			document.querySelectorAll<HTMLButtonElement>("[data-add]").forEach((btn) => {
+				btn.addEventListener("click", () => {
+					const kind = btn.dataset.add!;
+					if (kind === "questions") addStringRow(document.querySelector("#questions-list .list-items")!, "");
+					if (kind === "highlightWords") addStringRow(document.querySelector("#highlightWords-list .list-items")!, "");
+					if (kind === "socialLinks") addSocialRow(document.querySelector("#socialLinks-list .list-items")!, { platform: "instagram", url: "" });
+					if (kind === "methodItems") addMethodItemRow(document.querySelector("#methodItems-list .list-items")!, { title: "", description: "", image: "" }, -1);
+				});
+			});
+
+			// ---- Load / populate ----
+
+			async function loadContent() {
+				setStatus("Loading current content...");
+				const { content } = await getTextFile(CONTENT_PATH);
+				const data = JSON.parse(content) as SiteContent;
+
+				populateScalarFields(data);
+				populateImageFields(data);
+				renderStringList("questions-list", data.painPoints.questions);
+				renderStringList("highlightWords-list", data.painPoints.highlightWords);
+				renderSocialLinks(data.hero.socialLinks);
+				renderMethodItems(data.method.items);
+
+				editorForm.hidden = false;
+				saveBtn.hidden = false;
+				setStatus("Loaded.", "success");
+			}
+
+			// ---- Save ----
+
+			async function handleSave() {
+				saveBtn.disabled = true;
+				try {
+					setStatus("Saving...");
+					const { content } = await getTextFile(CONTENT_PATH);
+					const data = JSON.parse(content) as SiteContent;
+
+					readScalarFields(data);
+					data.painPoints.questions = readStringList("questions-list");
+					data.painPoints.highlightWords = readStringList("highlightWords-list");
+					data.hero.socialLinks = readSocialLinks();
+					data.method.items = await readMethodItems();
+
+					await uploadPendingImages(data);
+
+					const { sha: latestSha } = await getTextFile(CONTENT_PATH);
+					await putFile(CONTENT_PATH, utf8ToBase64(JSON.stringify(data, null, 2) + "\n"), "Update site content via editor", latestSha);
+
+					pendingUploads.clear();
+					setStatus("Saved! The live site will update in a minute or two.", "success");
+				} catch (error) {
+					const message = error instanceof GitHubApiError ? error.message : String(error);
+					setStatus(`Couldn't save: ${message}`, "error");
+				} finally {
+					saveBtn.disabled = false;
+				}
+			}
+
+			// ---- Login flow ----
+
+			async function tryEnterEditor() {
+				if (!getToken()) return;
+				try {
+					setStatus("Checking access...");
+					await verifyAccess();
+					loginGate.hidden = true;
+					logoutBtn.hidden = false;
+					await loadContent();
+				} catch (error) {
+					clearToken();
+					const message = error instanceof GitHubApiError ? error.message : String(error);
+					setStatus(`Login failed: ${message}`, "error");
+				}
+			}
+
+			loginBtn.addEventListener("click", async () => {
+				if (!tokenInput.value.trim()) return;
+				setToken(tokenInput.value);
+				tokenInput.value = "";
+				await tryEnterEditor();
+			});
+
+			logoutBtn.addEventListener("click", () => {
+				clearToken();
+				location.reload();
+			});
+
+			saveBtn.addEventListener("click", handleSave);
+
+			tryEnterEditor();
+		</script>
+	</body>
+</html>
