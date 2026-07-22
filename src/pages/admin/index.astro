@@ -422,6 +422,16 @@ import "../../styles/global.css";
 				});
 			}
 
+			/** Escapes a value before interpolating it into an innerHTML template string. */
+			function escapeHtml(value: string): string {
+				return value
+					.replace(/&/g, "&amp;")
+					.replace(/</g, "&lt;")
+					.replace(/>/g, "&gt;")
+					.replace(/"/g, "&quot;")
+					.replace(/'/g, "&#39;");
+			}
+
 			// ---- Simple scalar fields (data-field="a.b.c") ----
 
 			function populateScalarFields(data: SiteContent) {
@@ -472,13 +482,16 @@ import "../../styles/global.css";
 				for (const path of clearedFields) {
 					if (!pendingUploads.has(path)) setPath(data, path, "");
 				}
-				for (const [path, file] of pendingUploads) {
+				for (const [path, file] of Array.from(pendingUploads)) {
 					if (path.startsWith("methodItems.")) continue; // handled separately in readMethodItems
 					setStatus(`Uploading ${file.name}...`);
 					const filename = `images/${slugifyFilename(file.name)}`;
 					const base64 = await fileToBase64(file);
 					await putFile(filename, base64, `Upload ${filename} via content editor`);
 					setPath(data, path, `/${filename}`);
+					// Remove immediately so a later failure (e.g. a different image, or
+					// the final content.json commit) doesn't re-upload this one on retry.
+					pendingUploads.delete(path);
 				}
 			}
 
@@ -494,7 +507,7 @@ import "../../styles/global.css";
 			function addStringRow(list: Element, value: string) {
 				const row = document.createElement("div");
 				row.className = "list-item";
-				row.innerHTML = `<input type="text" value="${value.replace(/"/g, "&quot;")}" /><button type="button" class="remove-btn">Remove</button>`;
+				row.innerHTML = `<input type="text" value="${escapeHtml(value)}" /><button type="button" class="remove-btn">Remove</button>`;
 				row.querySelector(".remove-btn")!.addEventListener("click", () => row.remove());
 				list.appendChild(row);
 			}
@@ -524,7 +537,7 @@ import "../../styles/global.css";
 				).join("");
 				row.innerHTML = `
 					<select>${options}</select>
-					<input type="text" value="${link.url.replace(/"/g, "&quot;")}" placeholder="URL" />
+					<input type="text" value="${escapeHtml(link.url)}" placeholder="URL" />
 					<button type="button" class="remove-btn">Remove</button>
 				`;
 				row.querySelector(".remove-btn")!.addEventListener("click", () => row.remove());
@@ -554,9 +567,9 @@ import "../../styles/global.css";
 				row.className = "method-item";
 				row.dataset.uploadKey = key;
 				row.innerHTML = `
-					<input type="text" class="mi-title" value="${item.title.replace(/"/g, "&quot;")}" placeholder="Title" />
-					<input type="text" class="mi-description" value="${item.description.replace(/"/g, "&quot;")}" placeholder="Description" />
-					<img class="image-preview mi-preview" alt="" src="${item.image ? withBase(item.image) : ""}" data-saved-path="${item.image}" />
+					<input type="text" class="mi-title" value="${escapeHtml(item.title)}" placeholder="Title" />
+					<input type="text" class="mi-description" value="${escapeHtml(item.description)}" placeholder="Description" />
+					<img class="image-preview mi-preview" alt="" src="${item.image ? escapeHtml(withBase(item.image)) : ""}" data-saved-path="${escapeHtml(item.image)}" />
 					<input type="file" class="mi-file" accept="image/*" />
 					<button type="button" class="remove-btn">Remove card</button>
 				`;
@@ -579,19 +592,28 @@ import "../../styles/global.css";
 				for (const row of rows) {
 					const title = row.querySelector<HTMLInputElement>(".mi-title")!.value.trim();
 					const description = row.querySelector<HTMLInputElement>(".mi-description")!.value.trim();
+
+					// Skip cards that will be dropped for having no title/description
+					// entirely — never upload their photo in the first place, rather
+					// than uploading it and then discarding the card that referenced it.
+					if (!title && !description) continue;
+
 					const preview = row.querySelector<HTMLImageElement>(".mi-preview")!;
 					let image = preview.getAttribute("data-saved-path") ?? "";
 
-					const pendingFile = pendingUploads.get(row.dataset.uploadKey!);
+					const uploadKey = row.dataset.uploadKey!;
+					const pendingFile = pendingUploads.get(uploadKey);
 					if (pendingFile) {
 						setStatus(`Uploading ${pendingFile.name}...`);
 						const filename = `images/${slugifyFilename(pendingFile.name)}`;
 						const base64 = await fileToBase64(pendingFile);
 						await putFile(filename, base64, `Upload ${filename} via content editor`);
 						image = `/${filename}`;
+						// Remove immediately so a later failure doesn't re-upload this on retry.
+						pendingUploads.delete(uploadKey);
 					}
 
-					if (title || description) items.push({ title, description, image });
+					items.push({ title, description, image });
 				}
 				return items;
 			}
@@ -648,6 +670,7 @@ import "../../styles/global.css";
 					await putFile(CONTENT_PATH, utf8ToBase64(JSON.stringify(data, null, 2) + "\n"), "Update site content via editor", latestSha);
 
 					pendingUploads.clear();
+					clearedFields.clear();
 					setStatus("Saved! The live site will update in a minute or two.", "success");
 				} catch (error) {
 					const message = error instanceof GitHubApiError ? error.message : String(error);

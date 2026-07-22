@@ -4,9 +4,12 @@
 language teacher offering 1:1 lessons. Static, single-page site built with
 [Astro](https://astro.build).
 
+Live at **https://alessandronocentini.github.io/Lara/**.
+
 ## Status
 
-Working v1 codebase. Not yet deployed, not yet content-complete (see
+Deployed v1. Live on GitHub Pages, auto-deploying on every push to `main`.
+Not yet content-complete (see
 [What's deliberately missing](#whats-deliberately-missing) below).
 
 ## Getting started
@@ -20,6 +23,47 @@ npm run build     # production build -> dist/
 npm run preview   # serve the production build locally
 ```
 
+## Deployment
+
+`.github/workflows/deploy.yml` builds and deploys on every push to `main`
+(and via manual `workflow_dispatch`): `withastro/action@v3` builds the site,
+`actions/deploy-pages@v4` publishes it. The repo's **Settings → Pages →
+Source** is set to "GitHub Actions" (a one-time repo setting, not something
+in this codebase) — it used to default to the legacy Jekyll builder, which
+doesn't run this workflow at all.
+
+The build step pins `node-version: "22.12.0"` explicitly. **Don't remove
+that pin** — `withastro/action` defaults to Node 20, which Astro 7 (this
+project's version, see `package.json`) doesn't support; the deploy silently
+breaks without it.
+
+Because this is a GitHub Pages *project* page (not a user/org root page),
+`astro.config.mjs` sets `base: '/Lara'` — the whole site is served under
+`/Lara/...`, not domain root. This has one non-obvious consequence, see
+`withBase()` below.
+
+### `withBase()` — why every hardcoded image path must go through it
+
+Image paths stored in `content/siteContent.json` are absolute, site-root
+paths like `/images/lara_2.jpg`. Locally (`base: '/'` in dev) that resolves
+fine, but in production it needs to become `/Lara/images/lara_2.jpg` — Astro
+does this automatically for `src`/`href` attributes it controls (e.g. in
+`<Image>` or a plain `<link>`), but **not** for paths read out of JSON at
+render time or injected into CSS/JS.
+
+`src/utils/baseUrl.ts` exports `withBase(path)`, which prefixes any
+absolute `/`-rooted path with `import.meta.env.BASE_URL` (external
+`http(s)://` URLs pass through unchanged). It's applied everywhere an
+absolute path from `siteContent.json` (or a hardcoded asset path) gets
+rendered: `PlaceholderImage.astro`, `CustomCursor.astro`, `SpritzTitle.astro`,
+`Hero.astro` (the `backgroundImage` CSS `url()`), `Layout.astro` (favicon
+`href`), and the admin editor's image previews (`src/pages/admin/index.astro`).
+
+**If you add a new place that renders a `/`-rooted path from content (or
+hardcodes one), route it through `withBase()` or it will 404 once
+deployed** — it'll work fine in dev (where base-URL handling is more
+forgiving) and only break in production, which is an easy trap.
+
 ## Architecture: one JSON file drives the page
 
 The entire page's copy and content structure lives in
@@ -30,11 +74,11 @@ passes each section a typed slice of it as a `content` prop — components
 never reach into the JSON themselves, and never hardcode copy.
 
 **Why:** editing `siteContent.json` alone changes the rendered page — no
-component code has to change for a copy/content edit. This is deliberate
-groundwork for a future Git-based CMS (Sveltia or Decap CMS, not yet
-integrated) that would let Lara edit her own site's text and images by
-writing straight into this same JSON file, without touching any code. Until
-that CMS exists, editing the JSON by hand *is* the content workflow.
+component code has to change for a copy/content edit. This is what makes the
+`/admin` content editor (below) possible: it's just a form that reads and
+writes this one file, with no code changes required for Lara to update her
+own copy and photos. Editing the JSON by hand works too, and is the more
+direct path for a developer.
 
 Most `image`-type fields left as an empty string (`""`) render as a
 "Photo coming soon" placeholder ([`PlaceholderImage.astro`](src/components/PlaceholderImage.astro))
@@ -64,14 +108,18 @@ complement it.
 ## Structure
 
 ```
-content/siteContent.json   All page copy + structure (the CMS's future target file)
+content/siteContent.json   All page copy + structure (edited directly, or via /admin)
 src/types/content.ts       TypeScript contract for siteContent.json (SiteContent)
 src/pages/index.astro      Composes the page: Layout + one component per section
+src/pages/admin/index.astro Content editor UI (see "Content editing" below)
 src/layouts/Layout.astro   <html> shell, global CSS, Navbar, CustomCursor
 src/components/            One component per page section (see below) + shared UI
+src/scripts/githubClient.ts Browser-only GitHub Contents API client, used by /admin
+src/utils/baseUrl.ts       withBase() — see "Deployment" above
 src/styles/global.css      Design tokens (palette, type, spacing) as CSS custom properties
 src/utils/markdown.ts      Renders markdown-flavored content fields (marked)
 src/utils/highlightText.ts Splits a string into plain/highlighted parts (used by PainPoints)
+.github/workflows/deploy.yml Builds and deploys to GitHub Pages on push to main
 Ideas/                     Reference mockups that informed the design (see Ideas/README.md)
 ```
 
@@ -127,21 +175,54 @@ A couple of content-modeling choices worth knowing before editing copy:
 No UI framework (no React/Vue/Svelte) and no CSS framework — plain Astro
 components and hand-written CSS custom properties in `global.css`.
 
+## Content editing: `/admin`
+
+`/admin` (`src/pages/admin/index.astro`) is a hand-built form covering every
+field in `SiteContent` — text/textarea inputs, image upload-and-preview
+fields (with orientation hints like "Portrait photo, roughly 3:4 — shown
+as-is, never cropped"), and add/remove list editors for `hero.socialLinks`,
+`painPoints.questions`, `painPoints.highlightWords`, and `method.items`.
+
+**This replaced an earlier plan to use Sveltia CMS with a Cloudflare Worker
+OAuth broker.** That approach was scrapped before ever merging — it was more
+infrastructure (a separate OAuth app + a deployed broker service) than a
+single trusted editor (Lara) needs. If you find any reference to Sveltia,
+Decap, or a CMS OAuth broker elsewhere, it's stale — the current editor is
+entirely self-contained in this repo.
+
+**Auth model:** paste a GitHub personal access token (fine-grained, scoped
+to this repo, Contents read/write) into the login field. It's stored in
+`localStorage` and sent directly to `api.github.com` from the browser via
+`src/scripts/githubClient.ts` — no OAuth app, no server, no broker. This is
+a deliberate simplification: the tradeoff is a standing credential sitting
+in browser storage instead of a login flow, accepted because there's exactly
+one editor and the token can be scoped/rotated/revoked from GitHub at will.
+`githubClient.ts` is browser-only — it's imported from `/admin`'s
+`<script type="module">`, never from server-rendered Astro frontmatter.
+
+**Save flow:** re-fetches `content/siteContent.json` fresh right before
+writing (avoids clobbering concurrent edits with stale data), uploads any
+new photos to `public/images/` first (filenames get a timestamp suffix to
+stay unique), then commits the updated JSON straight to `main`. There is no
+draft or PR review step — saving publishes immediately, and the commit
+triggers `deploy.yml` automatically.
+
 ## What's deliberately missing
 
 These are known, intentional gaps — not oversights:
 
-- **CMS**: no Sveltia/Decap CMS wired up yet. The content-driven architecture
-  above exists specifically to make adding one later low-risk.
-- **Hosting**: not deployed. GitHub Pages is the intended target, not yet set up.
 - **Contact form backend**: `Contact.astro`'s form is fully styled and
-  interactive, but submission is simulated client-side only (it calls
-  `preventDefault()` and shows the success message without sending data
-  anywhere). Web3Forms is the intended backend; not yet integrated.
-- **Real photos and final copy**: most other `image` fields in
-  `siteContent.json` are still empty (rendering as placeholders); cursor art
-  is done (see `CustomCursor` above). Some copy (e.g. `results`
-  intermediate/advanced levels) is still placeholder text.
+  interactive, but submission is still simulated client-side only — its
+  submit handler just calls `preventDefault()` and toggles the success-state
+  CSS class; no `fetch`/`action` call sends the data anywhere, so it's
+  currently discarded. Web3Forms is the intended backend; not yet integrated.
+- **Real photos and final copy**: `hero.backgroundImage` and 3 of the 6
+  `method.items` images are still empty (rendering as placeholders or, for
+  `backgroundImage`, no background at all); cursor art is done (see
+  `CustomCursor` above). `results.intermediate` and `results.advanced` are
+  still literal `"placeholder description"` text — `results.beginner` is
+  real copy. `hero.socialLinks`' email entry is a placeholder `"#"` URL, not
+  a real mailto/contact link.
 
 ## Reference material
 
