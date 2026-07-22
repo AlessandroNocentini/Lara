@@ -201,16 +201,26 @@ one editor and the token can be scoped/rotated/revoked from GitHub at will.
 `<script type="module">`, never from server-rendered Astro frontmatter.
 
 **Save flow:** re-fetches `content/siteContent.json` fresh right before
-writing (avoids clobbering concurrent edits with stale data), uploads any
-new photos to `public/images/` first (filenames get a timestamp suffix to
-stay unique), then commits the updated JSON straight to `main`. There is no
-draft or PR review step — saving publishes immediately, and the commit
-triggers `deploy.yml` automatically.
+writing (GitHub's Contents API requires the current `sha` to write an
+existing file — this is just satisfying that requirement, not conflict
+detection; see "What's deliberately missing" below), uploads any new photos
+to `public/images/` first (filenames get a timestamp suffix to stay unique),
+then commits the updated JSON straight to `main`. There is no draft or PR
+review step — saving publishes immediately, and the commit triggers
+`deploy.yml` automatically. Each pending image upload is tracked in a
+`pendingUploads` map and removed as soon as its individual upload succeeds
+(not just bulk-cleared at the end), and method-item cards with no
+title/description are dropped *before* any upload is attempted — both to
+avoid orphaning images in `public/images/` on a partial failure or retry.
 
 ## What's deliberately missing
 
 These are known, intentional gaps — not oversights:
 
+- **Concurrent-edit protection**: saving is last-write-wins — two people
+  editing `/admin` at the same time can silently overwrite each other's
+  changes, with no conflict detection, merge, or warning. Not built because
+  there is exactly one editor (Lara); revisit only if that stops being true.
 - **Contact form backend**: `Contact.astro`'s form is fully styled and
   interactive, but submission is still simulated client-side only — its
   submit handler just calls `preventDefault()` and toggles the success-state
