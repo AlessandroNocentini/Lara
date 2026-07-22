@@ -1,4 +1,6 @@
 ---
+import { withBase } from "../utils/baseUrl";
+
 interface Props {
   src?: string;
   alt: string;
@@ -25,7 +27,7 @@ const frameStyle = frame ? `--frame-rotate: ${rotate}deg; --tape-color: ${tapeCo
 {(() => {
   const inner =
     src ? (
-      <img src={src} alt={alt} class={`placeholder-image ${variant} ${className}`} />
+      <img src={withBase(src)} alt={alt} class={`placeholder-image ${variant} ${className}`} />
     ) : (
       <div class={`placeholder-image placeholder-empty ${variant} ${className}`} role="img" aria-label={alt}>
         <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6">
