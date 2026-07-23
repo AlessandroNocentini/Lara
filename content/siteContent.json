@@ -3,11 +3,11 @@
     "siteName": "Learn 🍹talian with Lara",
     "image": "/images/full_spritz.svg",
     "language": "en",
-    "themeColor": "#0f766e"
+    "themeColor": "#25b672"
   },
   "hero": {
     "eyebrow": "",
-    "image": "/images/lara_2.jpg",
+    "image": "/images/whatsapp-image-2026-07-23-at-11-10-56-1-mrxaukhr.png",
     "backgroundImage": "",
     "socialLinks": [
       {
@@ -22,8 +22,8 @@
   },
   "about": {
     "greeting": "Ciao!",
-    "name": "Sono Lara",
-    "bio": "Hi! I'm Lara, a native Italian teacher and language enthusiast.\n\nI hold a Bachelor's degree in Linguistic and Cultural Mediation, a Master's degree in Languages and Cultures for Communication and International Cooperation, and a Master's in Interpreting - all driven by my passion for languages and intercultural communication.\n\nI've studied, lived and worked abroad, including in the UK and Russia.",
+    "name": "I'm Lara",
+    "bio": "a native Italian teacher and language enthusiast, \n\nMy love for languages has taken me to study, live, and work abroad, from the UK to Russia. Along the way, I've experienced all the ups and downs of learning a foreign language myself: the excitement of your first real conversation, the frustration of forgetting the simplest word, and that amazing feeling when everything finally clicks.\n\nSince 2022, I've been helping students from all over the world build confidence and speak Italian in real-life situations. My lessons are interactive, practical, and relaxed, because making mistakes is part of the journey and speaking is how you improve.\n\nBehind every lesson is a solid academic background in languages and interpreting, along with the DILS-PG Level II certification for teaching Italian as a foreign language. \n\nWhat matters most to me is creating lessons you'll actually enjoy and leave feeling more confident than when you joined.",
     "image": "/images/lara_about.jpg"
   },
   "painPoints": {
@@ -45,7 +45,7 @@
     }
   },
   "method": {
-    "title": "My Method",
+    "title": "How I Teach",
     "items": [
       {
         "title": "Speak from Day One",
