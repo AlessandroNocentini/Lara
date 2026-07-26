@@ -1,109 +1,163 @@
 ---
-import SpritzTitle from "./SpritzTitle.astro";
-import type { SiteMeta } from "../types/content";
-
-interface Props {
-  meta: SiteMeta;
-}
-
-const { meta } = Astro.props;
+import NavIcon from "./NavIcon.astro";
 
 const links = [
-  { href: "#hero", label: "Home" },
-  { href: "#about", label: "About" },
-  { href: "#method", label: "Method" },
-  { href: "#results", label: "Results" },
-  { href: "#contact", label: "Contact" },
+  { href: "#hero", id: "hero", label: "Home" },
+  { href: "#about", id: "about", label: "About" },
+  { href: "#pain-points", id: "pain-points", label: "Struggles" },
+  { href: "#method", id: "method", label: "Method" },
+  { href: "#results", id: "results", label: "Results" },
+  { href: "#contact", id: "contact", label: "Contact" },
 ];
 ---
 
-<header class="navbar">
-	<nav class="navbar-inner container">
-		<a href="#hero" class="brand" data-hover-lift>
-				<SpritzTitle text={meta.siteName} image={meta.image} size="1.15em" gap="-0.05em" />
-			</a>
-		<ul class="nav-links">
-			{links.map((link) => (
-				<li>
-					<a href={link.href} data-hover-lift>{link.label}</a>
-				</li>
-			))}
-		</ul>
-	</nav>
-</header>
+<nav class="navdock" aria-label="Section navigation">
+	<ul class="navdock-list">
+		{links.map((link) => (
+			<li>
+				<a href={link.href} class="navdock-item" data-section={link.id} data-hover-lift aria-label={link.label}>
+					<span class="navdock-circle">
+						<NavIcon section={link.id} />
+					</span>
+					<span class="navdock-tooltip">{link.label}</span>
+				</a>
+			</li>
+		))}
+	</ul>
+</nav>
 
 <style>
-	.navbar {
+	.navdock {
 		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
+		top: 50%;
+		left: clamp(0.75rem, 2vw, 1.5rem);
+		translate: 0 -50%;
 		z-index: 100;
-		background: rgb(11 91 84 / 0.92);
-		backdrop-filter: blur(10px);
-		box-shadow: 0 1px 0 rgb(255 255 255 / 0.08);
 	}
 
-	.navbar-inner {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1.5rem;
-		padding: 0.9rem clamp(1.5rem, 6vw, 4rem);
-	}
-
-	.brand {
-		font-family: var(--font-heading);
-		font-weight: 600;
-		font-size: 1.15rem;
-		color: var(--color-white);
-		text-decoration: none;
-		white-space: nowrap;
-	}
-
-	.nav-links {
+	.navdock-list {
 		list-style: none;
 		display: flex;
-		flex: 1;
-		min-width: 0;
-		align-items: center;
-		justify-content: flex-end;
-		gap: clamp(1rem, 3vw, 1.75rem);
+		flex-direction: column;
+		gap: 0.85rem;
 		margin: 0;
 		padding: 0;
-		overflow-x: auto;
 	}
 
-	.nav-links a {
+	.navdock-item {
+		position: relative;
+		display: flex;
+		align-items: center;
 		text-decoration: none;
-		font-weight: 700;
-		font-size: 0.92rem;
-		color: var(--color-white);
-		white-space: nowrap;
-		transition: color 0.2s ease;
 	}
 
-	.nav-links a:hover {
-		color: var(--color-yellow);
+	.navdock-circle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		flex-shrink: 0;
+		border-radius: var(--radius-full);
+		background: var(--color-white);
+		color: var(--color-teal);
+		box-shadow: var(--shadow-soft);
+		transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+	}
+
+	.navdock-tooltip {
+		position: absolute;
+		left: calc(100% + 0.6rem);
+		top: 50%;
+		translate: -8px -50%;
+		white-space: nowrap;
+		background: var(--color-teal-dark);
+		color: var(--color-white);
+		font-weight: 700;
+		font-size: 0.85rem;
+		padding: 0.35rem 0.85rem;
+		border-radius: var(--radius-full);
+		box-shadow: var(--shadow-soft);
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.2s ease, translate 0.2s ease;
+	}
+
+	@media (hover: hover) {
+		.navdock-item:hover .navdock-circle {
+			background: var(--color-teal);
+			color: var(--color-white);
+		}
+
+		.navdock-item:hover .navdock-tooltip {
+			opacity: 1;
+			translate: 0 -50%;
+		}
+	}
+
+	.navdock-item.is-active .navdock-circle {
+		background: var(--color-teal);
+		color: var(--color-white);
+		box-shadow: var(--shadow-soft), 0 0 0 3px rgb(15 118 110 / 0.25);
 	}
 
 	@media (max-width: 480px) {
-		.navbar-inner {
-			gap: 0.75rem;
-			padding: 0.75rem 1rem;
+		.navdock {
+			left: 0.5rem;
 		}
 
-		.brand {
-			font-size: 1rem;
+		.navdock-list {
+			gap: 0.5rem;
 		}
 
-		.nav-links {
-			justify-content: flex-start;
-			gap: 0.85rem;
+		.navdock-circle {
+			width: 2.1rem;
+			height: 2.1rem;
 		}
 
-		.nav-links a {
-			font-size: 0.85rem;
+		.navdock-circle :global(svg) {
+			width: 16px;
+			height: 16px;
+		}
+
+		.navdock-tooltip {
+			font-size: 0.75rem;
+			padding: 0.25rem 0.65rem;
 		}
 	}
 </style>
+
+<script>
+	const sectionIds = ["hero", "about", "pain-points", "method", "results", "contact"];
+	const items = new Map<string, HTMLElement>();
+	document.querySelectorAll<HTMLElement>(".navdock-item").forEach((el) => {
+		const id = el.dataset.section;
+		if (id) items.set(id, el);
+	});
+
+	const setActive = (id: string) => {
+		items.forEach((el, key) => el.classList.toggle("is-active", key === id));
+	};
+
+	const observer = new IntersectionObserver(
+		(entries) => {
+			const visible = entries
+				.filter((entry) => entry.isIntersecting)
+				.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+			if (visible.length > 0) {
+				const id = (visible[0].target as HTMLElement).id;
+				setActive(id);
+			}
+		},
+		{
+			root: null,
+			rootMargin: "-40% 0px -40% 0px",
+			threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
+		}
+	);
+
+	sectionIds.forEach((id) => {
+		const section = document.getElementById(id);
+		if (section) observer.observe(section);
+	});
+</script>
