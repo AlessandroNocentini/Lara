@@ -5,6 +5,7 @@ const links = [
   { href: "#hero", id: "hero", label: "Home" },
   { href: "#pain-points", id: "pain-points", label: "Struggles" },
   { href: "#method", id: "method", label: "Method" },
+  { href: "#services", id: "services", label: "Services" },
   { href: "#results", id: "results", label: "Results" },
   { href: "#testimonials", id: "testimonials", label: "Reviews" },
   { href: "#about", id: "about", label: "About" },
@@ -129,7 +130,7 @@ const links = [
 </style>
 
 <script>
-	const sectionIds = ["hero", "pain-points", "method", "results", "testimonials", "about", "contact"];
+	const sectionIds = ["hero", "pain-points", "method", "services", "results", "testimonials", "about", "contact"];
 	const items = new Map<string, HTMLElement>();
 	document.querySelectorAll<HTMLElement>(".navdock-item").forEach((el) => {
 		const id = el.dataset.section;

@@ -1,6 +1,5 @@
 ---
 import PlaceholderImage from "./PlaceholderImage.astro";
-import SectionKicker from "./SectionKicker.astro";
 import { renderMarkdown } from "../utils/markdown";
 import type { MethodContent } from "../types/content";
 
@@ -9,16 +8,27 @@ interface Props {
 }
 
 const { content } = Astro.props;
-const sectionHtml = renderMarkdown(content.section);
+const introHtml = renderMarkdown(content.intro);
+const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 ---
 
 <section id="method" class="method">
 	<div class="container">
 		<div class="method-heading">
-			<SectionKicker label="Method" color="var(--color-lightblue)" />
 			<h2>{content.title}</h2>
 		</div>
-		<div class="method-intro" set:html={sectionHtml} />
+		<div class="method-intro" set:html={introHtml} />
+		<ul class="method-steps">
+			{content.steps.map((step, i) => (
+				<li
+					class="method-step"
+					data-hover-wiggle
+					style={`--rotate: ${rotations[i % rotations.length]}deg`}
+				>
+					<span class="method-step-number">{i + 1}.</span> {step}
+				</li>
+			))}
+		</ul>
 		<div class="method-grid">
 			{content.items.map((item) => (
 				<article class="method-card" data-hover-lift>
@@ -52,7 +62,7 @@ const sectionHtml = renderMarkdown(content.section);
 
 	.method-intro {
 		max-width: 50rem;
-		margin: 1.5rem auto 3rem;
+		margin: 1.5rem auto 2.5rem;
 		text-align: center;
 		color: var(--color-ink-soft);
 	}
@@ -61,9 +71,46 @@ const sectionHtml = renderMarkdown(content.section);
 		color: var(--color-teal-dark);
 	}
 
-	.method-intro :global(ol) {
-		text-align: left;
-		padding-left: 1.25rem;
+	.method-steps {
+		list-style: none;
+		margin: 0 0 3rem;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 1.25rem;
+	}
+
+	.method-step {
+		position: relative;
+		max-width: 22rem;
+		background: var(--color-cream);
+		border: 2px solid var(--color-teal);
+		color: var(--color-teal-dark);
+		border-radius: var(--radius-lg);
+		padding: 1rem 1.5rem;
+		font-weight: 700;
+		font-size: 0.95rem;
+		box-shadow: var(--shadow-soft);
+		transform: rotate(var(--rotate));
+	}
+
+	.method-step-number {
+		color: var(--color-teal);
+	}
+
+	.method-step::after {
+		content: "";
+		position: absolute;
+		bottom: -0.55rem;
+		left: 1.6rem;
+		width: 1rem;
+		height: 1rem;
+		background: var(--color-cream);
+		border-bottom: 2px solid var(--color-teal);
+		border-right: 2px solid var(--color-teal);
+		transform: rotate(45deg);
+		border-radius: 0 0 3px 0;
 	}
 
 	.method-grid {
