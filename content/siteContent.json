@@ -90,22 +90,22 @@
     "title": "What My Students Say",
     "items": [
       {
+        "gender": "female",
         "name": "Sarah",
-        "text": "Lara made speaking Italian feel possible from lesson one. I finally had a real conversation on my trip to Rome!",
         "date": "2025-03-14",
-        "gender": "female"
+        "text": "Lara made speaking Italian feel possible from lesson one. I finally had a real conversation on my trip to Rome!"
       },
       {
+        "gender": "male",
         "name": "Marco",
-        "text": "Patient, structured, and genuinely fun. My grammar anxiety is gone.",
         "date": "2025-05-02",
-        "gender": "male"
+        "text": "Patient, structured, and genuinely fun. My grammar anxiety is gone."
       },
       {
+        "gender": "other",
         "name": "Alex",
-        "text": "Best investment in my Italian journey. Highly recommend to anyone stuck at the intermediate plateau.",
         "date": "2025-06-20",
-        "gender": "other"
+        "text": "Best investment in my Italian journey. Highly recommend to anyone stuck at the intermediate plateau."
       }
     ]
   },
