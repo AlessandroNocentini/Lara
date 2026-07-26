@@ -10,7 +10,7 @@ interface Props {
 const { content } = Astro.props;
 
 const rotations = [-2, 1, -1.5, 2, -1, 1.5];
-const accentColors = ["var(--color-red)", "var(--color-ocher)"];
+const accentColors = ["var(--color-tertiary)", "var(--color-secondary)"];
 const headingParts = splitHighlighted(content.heading, content.highlightWords);
 ---
 
@@ -40,14 +40,7 @@ const headingParts = splitHighlighted(content.heading, content.highlightWords);
 			<a class="button button-primary" href={content.cta.target} data-hover-lift>{content.cta.label}</a>
 		</div>
 		<div class="pain-points-portrait" data-hover-lift>
-			<PlaceholderImage
-				src={content.image || undefined}
-				alt="Photo of Lara"
-				variant="portrait"
-				frame
-				rotate={2}
-				tapeColor="var(--color-red)"
-			/>
+			<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="portrait" />
 		</div>
 	</div>
 </section>
@@ -55,6 +48,7 @@ const headingParts = splitHighlighted(content.heading, content.highlightWords);
 <style>
 	.pain-points {
 		padding: var(--section-padding);
+		background: var(--color-cream);
 	}
 
 	.pain-points-inner {
@@ -72,7 +66,7 @@ const headingParts = splitHighlighted(content.heading, content.highlightWords);
 
 	h2 {
 		font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-		color: var(--color-teal-dark);
+		color: var(--color-primary-dark);
 	}
 
 	.highlight {
@@ -91,8 +85,8 @@ const headingParts = splitHighlighted(content.heading, content.highlightWords);
 	.bubble {
 		position: relative;
 		background: var(--color-white);
-		border: 2px solid var(--color-teal);
-		color: var(--color-teal-dark);
+		border: 2px solid var(--color-primary);
+		color: var(--color-primary-dark);
 		border-radius: var(--radius-lg);
 		padding: 1rem 1.5rem;
 		font-weight: 700;
@@ -109,14 +103,14 @@ const headingParts = splitHighlighted(content.heading, content.highlightWords);
 		width: 1rem;
 		height: 1rem;
 		background: var(--color-white);
-		border-bottom: 2px solid var(--color-teal);
-		border-right: 2px solid var(--color-teal);
+		border-bottom: 2px solid var(--color-primary);
+		border-right: 2px solid var(--color-primary);
 		transform: rotate(45deg);
 		border-radius: 0 0 3px 0;
 	}
 
 	.pain-points-portrait {
-		width: min(350px, 50vw);
+		width: min(430px, 55vw);
 		margin-left: auto;
 	}
 

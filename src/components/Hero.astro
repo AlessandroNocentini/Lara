@@ -15,19 +15,16 @@ const { content, siteName, titleImage } = Astro.props;
 
 const [firstLine, ...rest] = siteName.split(" with ");
 const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
-
-const heroStyle = content.backgroundImage
-  ? `--hero-bg-image: url('${withBase(content.backgroundImage)}')`
-  : undefined;
 ---
 
-<section id="hero" class="hero" style={heroStyle}>
+<section id="hero" class="hero">
 	<svg class="hero-blob" viewBox="0 0 400 400" aria-hidden="true">
 		<path
-			fill="var(--color-yellow)"
+			fill="var(--color-secondary-light)"
 			d="M300 70 C360 130 350 250 280 310 C210 370 90 360 50 290 C10 220 30 100 110 60 C190 20 240 10 300 70 Z"
 		/>
 	</svg>
+	<img class="hero-italy" src={withBase("/images/italy.svg")} alt="" aria-hidden="true" />
 	<div class="hero-inner container">
 		<div class="hero-copy">
 			{content.eyebrow && <p class="eyebrow">{content.eyebrow}</p>}
@@ -57,14 +54,7 @@ const heroStyle = content.backgroundImage
 			)}
 		</div>
 		<div class="hero-portrait" data-hover-lift>
-			<PlaceholderImage
-				src={content.image || undefined}
-				alt="Photo of Lara"
-				variant="portrait"
-				frame
-				rotate={-4}
-				tapeColor="var(--color-ocher)"
-			/>
+			<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="portrait" />
 		</div>
 	</div>
 
@@ -76,8 +66,8 @@ const heroStyle = content.backgroundImage
 <style>
 	.hero {
 		position: relative;
-		background-color: var(--color-teal);
-		background-image: linear-gradient(160deg, rgb(15 118 110 / 0.88) 0%, rgb(11 91 84 / 0.94) 100%), var(--hero-bg-image, none);
+		background-color: var(--color-primary);
+		background-image: linear-gradient(160deg, color-mix(in srgb, var(--color-primary) 88%, transparent) 0%, color-mix(in srgb, var(--color-primary-dark) 94%, transparent) 100%);
 		background-size: cover;
 		background-position: center;
 		color: var(--color-white);
@@ -96,6 +86,17 @@ const heroStyle = content.backgroundImage
 		z-index: 0;
 	}
 
+	.hero-italy {
+		position: absolute;
+		top: 0;
+		right: -6%;
+		height: 110%;
+		width: auto;
+		opacity: 0.5;
+		pointer-events: none;
+		z-index: 0;
+	}
+
 	.hero-inner {
 		position: relative;
 		z-index: 1;
@@ -110,7 +111,7 @@ const heroStyle = content.backgroundImage
 		letter-spacing: 0.08em;
 		font-weight: 700;
 		font-size: 0.85rem;
-		color: var(--color-yellow);
+		color: var(--color-secondary-light);
 		margin-bottom: 0.75rem;
 	}
 
@@ -149,7 +150,7 @@ const heroStyle = content.backgroundImage
 	}
 
 	.title-line:last-child {
-		color: var(--color-yellow);
+		color: var(--color-secondary-light);
 	}
 
 	.social-links {
@@ -174,12 +175,12 @@ const heroStyle = content.backgroundImage
 	}
 
 	.social-links a:hover {
-		background: var(--color-red);
-		border-color: var(--color-red);
+		background: var(--color-tertiary);
+		border-color: var(--color-tertiary);
 	}
 
 	.hero-portrait {
-		width: min(330px, 64vw);
+		width: min(420px, 78vw);
 		margin-inline: auto;
 	}
 

@@ -62,7 +62,7 @@ const links = [
 		flex-shrink: 0;
 		border-radius: var(--radius-full);
 		background: var(--color-white);
-		color: var(--color-teal);
+		color: var(--color-primary);
 		box-shadow: var(--shadow-soft);
 		transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 	}
@@ -73,7 +73,7 @@ const links = [
 		top: 50%;
 		translate: -8px -50%;
 		white-space: nowrap;
-		background: var(--color-teal-dark);
+		background: var(--color-primary-dark);
 		color: var(--color-white);
 		font-weight: 700;
 		font-size: 0.85rem;
@@ -87,7 +87,7 @@ const links = [
 
 	@media (hover: hover) {
 		.navdock-item:hover .navdock-circle {
-			background: var(--color-teal);
+			background: var(--color-primary);
 			color: var(--color-white);
 		}
 
@@ -98,9 +98,9 @@ const links = [
 	}
 
 	.navdock-item.is-active .navdock-circle {
-		background: var(--color-teal);
+		background: var(--color-primary);
 		color: var(--color-white);
-		box-shadow: var(--shadow-soft), 0 0 0 3px rgb(15 118 110 / 0.25);
+		box-shadow: var(--shadow-soft), 0 0 0 3px color-mix(in srgb, var(--color-primary) 25%, transparent);
 	}
 
 	@media (max-width: 480px) {

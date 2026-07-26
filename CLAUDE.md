@@ -58,5 +58,33 @@ When adding a new social platform or page section, add its SVG fragment to the r
 
 Testimonial avatars are a deliberately separate, simpler convention — don't fold them into the `set:html` pattern above:
 
-- `Testimonials.astro` picks one of three static files (`public/images/testimonial_male.svg`, `_female.svg`, `_other.svg`) via a `Record<string, string>` lookup keyed by each testimonial's `gender` enum, and renders it as a normal `<img src>`.
+- `TestimonialAvatar.astro` renders one of three inline SVGs (originally `public/images/testimonial_{male,female,other}.svg`) keyed by each testimonial's `gender` enum, using `fill="currentColor"` so the avatar tracks `--color-primary-dark` via a `color:` CSS property set on `.testimonial-avatar` in `Testimonials.astro` — this is what makes the avatars respond to admin color changes instead of staying a hardcoded hex baked into the SVG file.
+- Its sizing CSS in `Testimonials.astro` uses `:global(.testimonial-avatar)` rather than a plain scoped selector, because Astro's scoped-style hashing doesn't cross into a child component's own template. Keep this in mind for any future child-component pattern — a plain (non-`:global`) selector targeting a child component's root element silently does nothing.
 - These are fixed placeholder avatars, not user-uploaded photos — `gender` is a closed 3-value enum edited via a `<select>` in the admin editor (same UI pattern as the social-platform select), so there's no upload/`pendingUploads` handling for this field.
+
+### No more polaroid photo treatment; photos are flat cutouts
+
+`PlaceholderImage.astro` only supports `src`/`alt`/`variant`/`class` — the earlier `frame`/`rotate`/`tapeColor` props and their CSS (photo-frame card, tape `::before`) are gone. All photo assets across the site are transparent-background cutouts now, shown as plain images sized by each caller's own wrapper class (`.hero-portrait`, `.pain-points-portrait`, `.results-image`, `.about-photo`) — don't reintroduce a card/tape frame without discussing it first.
+
+- `About.astro` is a full-bleed 2-column split: `.about-inner` is a grid (deliberately NOT wrapped in `.container`, so the photo spans full viewport width) with `.about-photo` (the image, forced to `width/height:100%; object-fit:cover; border-radius:0` via a `:global(.placeholder-image)` override, filling the section via `min-height: 40rem` on `.about-inner`) and `.about-copy` (wrapped in `.container`, keeps normal section padding). Collapses to one column with a fixed `aspect-ratio: 4/5` photo at ≤800px.
+- `Results.astro`'s image previously cropped because `.results-image { aspect-ratio: 4/3 }` fought `PlaceholderImage`'s base `object-fit:cover`. Fixed by dropping that aspect-ratio and adding `.results-image :global(.placeholder-image) { height:auto; aspect-ratio:auto; }` — scoped to Results only; the shared `.rounded` variant itself never forced an aspect-ratio.
+- Headings across `Services`, `Results`, `Testimonials`, `Contact`, and `About` all use the same `clamp(1.8rem, 3.5vw, 2.6rem)` as Pain Points/Method, for site-wide consistency.
+- `PainPoints.astro` and `Results.astro` each declare their background explicitly (`--color-cream` / `--color-white`) instead of inheriting the body background, to break up a run of same-colored sections.
+
+### Italy silhouette: one shared asset, two placements
+
+`public/images/italy.svg` (a white Italy-outline silhouette) is used as a plain `<img>` in two places — there is no more hand-drawn `<svg>` doodle:
+
+- `Hero.astro`: `.hero-italy`, absolutely positioned background overlay at `opacity: 0.5`.
+- `Contact.astro`: `.contact-italy`, sized to the file's real ~0.83:1 aspect ratio (`14.5rem × 17.4rem`).
+
+`HeroContent.backgroundImage` / `--hero-bg-image` (the old configurable hero background photo, including its admin editor field) was removed entirely — Hero's background is now just the solid gradient plus this silhouette overlay.
+
+### The 3-color brand system — read this before touching any color
+
+The entire palette is derived from exactly 3 admin-editable tokens. **Never hardcode a 4th brand color or a raw hex value in a component** — if you need a new tone, add it as a `color-mix()` derived token in `:root` (`src/styles/global.css`) so it inherits admin edits automatically.
+
+- Base tokens: `--color-primary`, `--color-secondary`, `--color-tertiary` (plus the fixed `--color-white`). Everything else is derived once in `:root`, e.g. `--color-primary-dark` (80% primary/black), `--color-primary-light` (35% primary/white), `--color-secondary-light` (65% secondary/white — used for accents that used to be "yellow": Hero's eyebrow, Method's subtitle/steps-label), `--color-cream` (6% **secondary**/white — deliberately derived from secondary, not primary), `--color-ink` (40% primary/black — body text is deliberately primary-tinted, not neutral grey), `--color-ink-soft` (70% primary/black). `--shadow-soft`/`--shadow-lift` are also `color-mix()` expressions so shadows track the live palette instead of being hardcoded `rgb()`.
+- The 3 base values live in content, not CSS: `SiteMeta` (`src/types/content.ts`) has `primaryColor`/`secondaryColor`/`tertiaryColor` (replacing an old single `themeColor`), seeded in `content/siteContent.json`. `src/layouts/Layout.astro` injects them as real custom properties via an inline `style` attribute on `<html>` (`--color-primary:${meta.primaryColor}; ...`) — inline style always wins the cascade, so this overrides the `:root` defaults, and every derived token recomputes automatically since they all reference these same var names. `<meta name="theme-color">` reads `primaryColor` directly.
+- The admin editor's Site Info fieldset exposes 3 `<input type="color">` pickers (`meta.primaryColor`/`secondaryColor`/`tertiaryColor`) — required no new JS, since scalar fields already go through the generic populate/read path.
+- Every component was mechanically renamed from the old ~10-color palette (`--color-teal`, `--color-yellow`, `--color-ocher`, `--color-red`, etc.) to the new var names. `CustomCursor.astro`'s ice/orange-slice fallback illustrations got the same var renames but are decorative and exempt from strict brand-contrast rules. Actual multi-color illustration image files (cursor sprites, hero brand mark) were left untouched — they keep their natural hues regardless of the brand tokens.
