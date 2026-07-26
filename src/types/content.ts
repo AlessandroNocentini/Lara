@@ -42,9 +42,12 @@ export interface MethodItem {
 
 export interface MethodContent {
   title: string;
-  items: MethodItem[];
-  intro: string;
+  introSubtitle: string;
+  introText: string;
+  stepsLabel: string;
   steps: string[];
+  lessonsSubtitle: string;
+  items: MethodItem[];
 }
 
 export interface ResultsContent {

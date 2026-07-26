@@ -45,7 +45,7 @@
     }
   },
   "method": {
-    "title": "How I Teach",
+    "title": "Method",
     "items": [
       {
         "title": "Speak from Day One",
@@ -78,13 +78,16 @@
         "image": ""
       }
     ],
-    "intro": "**Interactive lessons designed to help you speak Italian from day one**\n\nThrough guided conversations, practical activities, and fun exercises, you'll start using Italian naturally while building confidence step by step.\n\n**What makes my lessons different:**",
+    "introSubtitle": "Interactive lessons designed to help you speak from day one",
+    "introText": "Through guided conversations, practical activities, and fun exercises, you'll start using Italian naturally while building confidence step by step.",
+    "stepsLabel": "What makes my lessons different",
     "steps": [
       "I don't believe in stopping you every time you make a mistake. Instead, I guide you, support you, and help you improve naturally",
       "You'll learn to notice and correct your own mistakes, becoming a more confident and independent speaker",
       "Every lesson is interactive, engaging, and tailored to your goals, interests, and learning style",
       "When needed, I can also explain grammar and complex concepts in English, French, or Russian to make sure everything is clear"
-    ]
+    ],
+    "lessonsSubtitle": "How I teach"
   },
   "services": {
     "title": "Ways to Learn With Me",

@@ -1,6 +1,5 @@
 ---
 import PlaceholderImage from "./PlaceholderImage.astro";
-import { renderMarkdown } from "../utils/markdown";
 import type { MethodContent } from "../types/content";
 
 interface Props {
@@ -8,76 +7,112 @@ interface Props {
 }
 
 const { content } = Astro.props;
-const introHtml = renderMarkdown(content.intro);
 const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 ---
 
 <section id="method" class="method">
-	<div class="container">
-		<div class="method-heading">
-			<h2>{content.title}</h2>
+	<div class="method-intro-block">
+		<div class="container method-intro-inner">
+			<div class="method-intro-copy">
+				<p class="method-eyebrow">{content.title}</p>
+				<h2 class="method-lead">{content.introSubtitle}</h2>
+				<p class="method-intro-text">{content.introText}</p>
+			</div>
+			<div class="method-steps-col">
+				<p class="method-steps-label">{content.stepsLabel}:</p>
+				<ul class="method-steps">
+					{content.steps.map((step, i) => (
+						<li
+							class="method-step"
+							data-hover-wiggle
+							style={`--rotate: ${rotations[i % rotations.length]}deg`}
+						>
+							<span class="method-step-number">{i + 1}.</span> {step}
+						</li>
+					))}
+				</ul>
+			</div>
 		</div>
-		<div class="method-intro" set:html={introHtml} />
-		<ul class="method-steps">
-			{content.steps.map((step, i) => (
-				<li
-					class="method-step"
-					data-hover-wiggle
-					style={`--rotate: ${rotations[i % rotations.length]}deg`}
-				>
-					<span class="method-step-number">{i + 1}.</span> {step}
-				</li>
-			))}
-		</ul>
-		<div class="method-grid">
-			{content.items.map((item) => (
-				<article class="method-card" data-hover-lift>
-					<div class="method-card-media">
-						<PlaceholderImage src={item.image || undefined} alt={item.title} variant="rounded" />
-					</div>
-					<div class="method-card-body">
-						<h3>{item.title}</h3>
-						<p>{item.description}</p>
-					</div>
-				</article>
-			))}
+	</div>
+
+	<div class="method-lessons-block">
+		<div class="container">
+			<h3 class="method-lessons-subtitle">{content.lessonsSubtitle}</h3>
+			<div class="method-grid">
+				{content.items.map((item) => (
+					<article class="method-card" data-hover-lift>
+						<div class="method-card-media">
+							<PlaceholderImage src={item.image || undefined} alt={item.title} variant="rounded" />
+						</div>
+						<div class="method-card-body">
+							<h3>{item.title}</h3>
+							<p>{item.description}</p>
+						</div>
+					</article>
+				))}
+			</div>
 		</div>
 	</div>
 </section>
 
 <style>
-	.method {
+	.method-intro-block {
+		background: linear-gradient(160deg, var(--color-teal-dark) 0%, var(--color-teal) 100%);
+		color: var(--color-white);
 		padding: var(--section-padding);
-		background: var(--color-white);
 	}
 
-	.method-heading {
-		text-align: center;
+	.method-intro-inner {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: clamp(2rem, 5vw, 4rem);
+		align-items: start;
 	}
 
-	h2 {
+	.method-intro-copy {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.method-eyebrow {
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-weight: 700;
+		font-size: 0.85rem;
+		color: var(--color-yellow);
+		margin-bottom: 0.75rem;
+	}
+
+	.method-lead {
 		font-size: clamp(1.8rem, 3vw, 2.4rem);
-		color: var(--color-teal-dark);
+		margin-bottom: 1.25rem;
 	}
 
-	.method-intro {
-		max-width: 50rem;
-		margin: 1.5rem auto 2.5rem;
-		text-align: center;
-		color: var(--color-ink-soft);
+	.method-intro-text {
+		color: rgb(255 255 255 / 0.85);
+		max-width: 34rem;
 	}
 
-	.method-intro :global(strong) {
-		color: var(--color-teal-dark);
+	.method-steps-col {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.method-steps-label {
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		font-size: 0.85rem;
+		color: var(--color-yellow);
+		margin-bottom: 1rem;
 	}
 
 	.method-steps {
 		list-style: none;
-		margin: 0 0 3rem;
+		margin: 0;
 		padding: 0;
 		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
+		flex-direction: column;
 		gap: 1.25rem;
 	}
 
@@ -85,7 +120,7 @@ const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 		position: relative;
 		max-width: 22rem;
 		background: var(--color-cream);
-		border: 2px solid var(--color-teal);
+		border: 2px solid var(--color-white);
 		color: var(--color-teal-dark);
 		border-radius: var(--radius-lg);
 		padding: 1rem 1.5rem;
@@ -107,10 +142,45 @@ const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 		width: 1rem;
 		height: 1rem;
 		background: var(--color-cream);
-		border-bottom: 2px solid var(--color-teal);
-		border-right: 2px solid var(--color-teal);
+		border-bottom: 2px solid var(--color-white);
+		border-right: 2px solid var(--color-white);
 		transform: rotate(45deg);
 		border-radius: 0 0 3px 0;
+	}
+
+	@media (max-width: 800px) {
+		.method-intro-inner {
+			grid-template-columns: 1fr;
+			text-align: center;
+		}
+
+		.method-intro-copy {
+			align-items: center;
+		}
+
+		.method-intro-text {
+			max-width: none;
+		}
+
+		.method-steps-col {
+			align-items: center;
+		}
+
+		.method-steps {
+			align-items: center;
+		}
+	}
+
+	.method-lessons-block {
+		background: var(--color-white);
+		padding: var(--section-padding);
+	}
+
+	.method-lessons-subtitle {
+		font-size: clamp(1.8rem, 3vw, 2.4rem);
+		color: var(--color-teal-dark);
+		text-align: center;
+		margin-bottom: 2.5rem;
 	}
 
 	.method-grid {

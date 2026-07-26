@@ -116,19 +116,21 @@ import "../../styles/global.css";
 
 				<fieldset class="panel">
 					<legend>Method Section</legend>
-					<label>Title<input data-field="method.title" type="text" /></label>
+					<label>Section label<input data-field="method.title" type="text" /></label>
+					<label>Intro subtitle<input data-field="method.introSubtitle" type="text" /></label>
+					<label>Intro text<textarea data-field="method.introText" rows="4"></textarea></label>
 					<div class="list-field" id="methodItems-list">
 						<label>Method cards</label>
 						<div class="list-items"></div>
 						<button type="button" class="button button-ghost add-btn" data-add="methodItems">+ Add card</button>
 					</div>
-					<label>Intro text<textarea data-field="method.intro" rows="6"></textarea></label>
-					<p class="hint">Supports **bold** text.</p>
+					<label>Steps label<input data-field="method.stepsLabel" type="text" /></label>
 					<div class="list-field" id="methodSteps-list">
 						<label>What makes lessons different (shown as bubbles)</label>
 						<div class="list-items"></div>
 						<button type="button" class="button button-ghost add-btn" data-add="methodSteps">+ Add reason</button>
 					</div>
+					<label>Lessons subtitle<input data-field="method.lessonsSubtitle" type="text" /></label>
 				</fieldset>
 
 				<fieldset class="panel">
