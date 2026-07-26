@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
 import PainPoints from "../components/PainPoints.astro";
 import Method from "../components/Method.astro";
+import Services from "../components/Services.astro";
 import Results from "../components/Results.astro";
 import Testimonials from "../components/Testimonials.astro";
 import About from "../components/About.astro";
@@ -17,6 +18,7 @@ const content = siteContent as SiteContent;
 	<Hero content={content.hero} siteName={content.meta.siteName} titleImage={content.meta.image} />
 	<PainPoints content={content.painPoints} />
 	<Method content={content.method} />
+	<Services content={content.services} />
 	<Results content={content.results} />
 	<Testimonials content={content.testimonials} />
 	<About content={content.about} />

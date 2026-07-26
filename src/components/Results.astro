@@ -1,6 +1,5 @@
 ---
 import PlaceholderImage from "./PlaceholderImage.astro";
-import SectionKicker from "./SectionKicker.astro";
 import { renderMarkdown } from "../utils/markdown";
 import type { ResultsContent } from "../types/content";
 
@@ -10,15 +9,22 @@ interface Props {
 
 const { content } = Astro.props;
 
-const levels = [
-  { key: "beginner", label: "Beginner" },
-  { key: "intermediate", label: "Intermediate" },
-  { key: "advanced", label: "Advanced" },
-] as const;
+const levels = ["beginner", "intermediate"] as const;
+
+/** Splits a leading `**bold**` segment off a markdown string, using it as a
+ *  plain-text title and rendering the remainder as markdown body. */
+function splitLeadBold(markdown: string): { label: string; bodyHtml: string } {
+  const match = markdown.match(/^\s*\*\*(.+?)\*\*\s*/);
+  if (!match) return { label: "", bodyHtml: renderMarkdown(markdown) };
+  return {
+    label: match[1],
+    bodyHtml: renderMarkdown(markdown.slice(match[0].length)),
+  };
+}
 
 const activeLevels = levels
-  .filter((level) => Boolean(content[level.key]))
-  .map((level) => ({ ...level, html: renderMarkdown(content[level.key]) }));
+  .filter((key) => Boolean(content[key]))
+  .map((key) => splitLeadBold(content[key]));
 ---
 
 <section id="results" class="results">
@@ -40,12 +46,11 @@ const activeLevels = levels
 			/>
 		</div>
 		<div class="results-levels">
-			<SectionKicker label="Results" color="var(--color-ocher)" />
 			<h2>Results</h2>
 			{activeLevels.map((level) => (
 				<div class="results-card" data-hover-lift>
-					<span class="results-label">{level.label}</span>
-					<div set:html={level.html} />
+					{level.label && <span class="results-label">{level.label}</span>}
+					<div set:html={level.bodyHtml} />
 				</div>
 			))}
 		</div>

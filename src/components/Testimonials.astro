@@ -1,6 +1,5 @@
 ---
 import { withBase } from "../utils/baseUrl";
-import SectionKicker from "./SectionKicker.astro";
 import type { TestimonialsContent } from "../types/content";
 
 interface Props {
@@ -27,7 +26,6 @@ function formatDate(iso: string): string {
 	<section id="testimonials" class="testimonials">
 		<div class="container">
 			<div class="testimonials-heading">
-				<SectionKicker label="Reviews" color="var(--color-red)" />
 				<h2>{content.title}</h2>
 			</div>
 			<div class="testimonials-row" role="list">

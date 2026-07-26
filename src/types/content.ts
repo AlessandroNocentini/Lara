@@ -42,15 +42,29 @@ export interface MethodItem {
 
 export interface MethodContent {
   title: string;
+  introSubtitle: string;
+  introText: string;
+  stepsLabel: string;
+  steps: string[];
+  lessonsSubtitle: string;
   items: MethodItem[];
-  section: string;
 }
 
 export interface ResultsContent {
   image: string;
   beginner: string;
   intermediate: string;
-  advanced: string;
+}
+
+export interface ServiceItem {
+  title: string;
+  description: string;
+  icon: string;
+}
+
+export interface ServicesContent {
+  title: string;
+  items: ServiceItem[];
 }
 
 export interface Testimonial {
@@ -83,6 +97,7 @@ export interface SiteContent {
   hero: HeroContent;
   painPoints: PainPointsContent;
   method: MethodContent;
+  services: ServicesContent;
   results: ResultsContent;
   testimonials: TestimonialsContent;
   about: AboutContent;
