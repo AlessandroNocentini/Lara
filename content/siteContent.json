@@ -86,6 +86,29 @@
     "intermediate": "**Already have a good level of Italian?** You’ll expand your vocabulary, explore more complex and specialised topics, and learn to express your ideas with greater accuracy, confidence, and naturalness.",
     "advanced": "placeholder description"
   },
+  "testimonials": {
+    "title": "What My Students Say",
+    "items": [
+      {
+        "name": "Sarah",
+        "text": "Lara made speaking Italian feel possible from lesson one. I finally had a real conversation on my trip to Rome!",
+        "date": "2025-03-14",
+        "gender": "female"
+      },
+      {
+        "name": "Marco",
+        "text": "Patient, structured, and genuinely fun. My grammar anxiety is gone.",
+        "date": "2025-05-02",
+        "gender": "male"
+      },
+      {
+        "name": "Alex",
+        "text": "Best investment in my Italian journey. Highly recommend to anyone stuck at the intermediate plateau.",
+        "date": "2025-06-20",
+        "gender": "other"
+      }
+    ]
+  },
   "contact": {
     "heading": "Get in touch",
     "description": "",

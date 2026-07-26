@@ -53,6 +53,18 @@ export interface ResultsContent {
   advanced: string;
 }
 
+export interface Testimonial {
+  name: string;
+  text: string;
+  date: string;
+  gender: "male" | "female" | "other";
+}
+
+export interface TestimonialsContent {
+  title: string;
+  items: Testimonial[];
+}
+
 export interface AboutContent {
   greeting: string;
   name: string;
@@ -72,6 +84,7 @@ export interface SiteContent {
   painPoints: PainPointsContent;
   method: MethodContent;
   results: ResultsContent;
+  testimonials: TestimonialsContent;
   about: AboutContent;
   contact: ContactContent;
   cursor: CursorAssets;

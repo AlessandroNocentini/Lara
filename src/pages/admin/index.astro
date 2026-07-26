@@ -140,6 +140,16 @@ import "../../styles/global.css";
 				</fieldset>
 
 				<fieldset class="panel">
+					<legend>Testimonials Section</legend>
+					<label>Heading<input data-field="testimonials.title" type="text" /></label>
+					<div class="list-field" id="testimonials-list">
+						<label>Reviews</label>
+						<div class="list-items"></div>
+						<button type="button" class="button button-ghost add-btn" data-add="testimonials">+ Add review</button>
+					</div>
+				</fieldset>
+
+				<fieldset class="panel">
 					<legend>Contact Section</legend>
 					<label>Heading<input data-field="contact.heading" type="text" /></label>
 					<label>Description<input data-field="contact.description" type="text" /></label>
@@ -624,6 +634,44 @@ import "../../styles/global.css";
 				return items;
 			}
 
+			// ---- Testimonials (name + text + date + gender) ----
+
+			const TESTIMONIAL_GENDERS = ["female", "male", "other"];
+
+			function renderTestimonials(items: { name: string; text: string; date: string; gender: string }[]) {
+				const list = document.querySelector("#testimonials-list .list-items")!;
+				list.innerHTML = "";
+				items.forEach((item) => addTestimonialRow(list, item));
+			}
+
+			function addTestimonialRow(list: Element, item: { name: string; text: string; date: string; gender: string }) {
+				const row = document.createElement("div");
+				row.className = "method-item testimonial-item";
+				const options = TESTIMONIAL_GENDERS.map(
+					(g) => `<option value="${g}"${g === item.gender ? " selected" : ""}>${g}</option>`
+				).join("");
+				row.innerHTML = `
+					<select class="ti-gender">${options}</select>
+					<input type="text" class="ti-name" value="${escapeHtml(item.name)}" placeholder="Name" />
+					<input type="date" class="ti-date" value="${escapeHtml(item.date)}" />
+					<textarea class="ti-text" rows="3" placeholder="Review text">${escapeHtml(item.text)}</textarea>
+					<button type="button" class="remove-btn">Remove review</button>
+				`;
+				row.querySelector(".remove-btn")!.addEventListener("click", () => row.remove());
+				list.appendChild(row);
+			}
+
+			function readTestimonials(): { name: string; text: string; date: string; gender: "male" | "female" | "other" }[] {
+				return Array.from(document.querySelectorAll<HTMLElement>("#testimonials-list .testimonial-item"))
+					.map((row) => ({
+						gender: (row.querySelector(".ti-gender") as HTMLSelectElement).value as "male" | "female" | "other",
+						name: (row.querySelector(".ti-name") as HTMLInputElement).value.trim(),
+						date: (row.querySelector(".ti-date") as HTMLInputElement).value,
+						text: (row.querySelector(".ti-text") as HTMLTextAreaElement).value.trim(),
+					}))
+					.filter((item) => item.name || item.text);
+			}
+
 			// ---- Add-item buttons ----
 
 			document.querySelectorAll<HTMLButtonElement>("[data-add]").forEach((btn) => {
@@ -633,6 +681,7 @@ import "../../styles/global.css";
 					if (kind === "highlightWords") addStringRow(document.querySelector("#highlightWords-list .list-items")!, "");
 					if (kind === "socialLinks") addSocialRow(document.querySelector("#socialLinks-list .list-items")!, { platform: "instagram", url: "" });
 					if (kind === "methodItems") addMethodItemRow(document.querySelector("#methodItems-list .list-items")!, { title: "", description: "", image: "" }, -1);
+					if (kind === "testimonials") addTestimonialRow(document.querySelector("#testimonials-list .list-items")!, { name: "", text: "", date: "", gender: "female" });
 				});
 			});
 
@@ -649,6 +698,7 @@ import "../../styles/global.css";
 				renderStringList("highlightWords-list", data.painPoints.highlightWords);
 				renderSocialLinks(data.hero.socialLinks);
 				renderMethodItems(data.method.items);
+				renderTestimonials(data.testimonials.items);
 
 				editorForm.hidden = false;
 				saveBtn.hidden = false;
@@ -669,6 +719,7 @@ import "../../styles/global.css";
 					data.painPoints.highlightWords = readStringList("highlightWords-list");
 					data.hero.socialLinks = readSocialLinks();
 					data.method.items = await readMethodItems();
+					data.testimonials.items = readTestimonials();
 
 					await uploadPendingImages(data);
 
