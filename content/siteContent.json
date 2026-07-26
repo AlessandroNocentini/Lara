@@ -7,7 +7,7 @@
   },
   "hero": {
     "eyebrow": "",
-    "image": "/images/whatsapp-image-2026-07-23-at-11-10-56-1-mrxaukhr-ms1rr2pb.png",
+    "image": "/images/whatsapp-image-2026-07-23-at-11-10-56-1-mrxaukhr-ms1rr2pb-ms2a50el.png",
     "backgroundImage": "/images/bg-ms1kmnwk.png",
     "socialLinks": [
       {
@@ -45,7 +45,7 @@
     }
   },
   "method": {
-    "title": "Method",
+    "title": "How I Teach",
     "items": [
       {
         "title": "Speak from Day One",
@@ -86,7 +86,8 @@
       "Every lesson is interactive, engaging, and tailored to your goals, interests, and learning style.",
       "When needed, I can also explain grammar and complex concepts in English, French, or Russian to make sure everything is clear."
     ],
-    "lessonsSubtitle": "How I teach"
+    "lessonsSubtitle": "How I teach",
+    "section": "**Interactive lessons designed to help you speak Italian from day one**\n\nThrough guided conversations, practical activities, and fun exercises, you'll start using Italian naturally while building confidence step by step.\n\n**What makes my lessons different:**\n\n1. I don't believe in stopping you every time you make a mistake. Instead, I guide you, support you, and help you improve naturally\n2. You'll learn to notice and correct your own mistakes, becoming a more confident and independent speaker\n3. Every lesson is interactive, engaging, and tailored to your goals, interests, and learning style\n4. When needed, I can also explain grammar and complex concepts in English, French, or Russian to make sure everything is clear"
   },
   "services": {
     "title": "Ways to Learn With Me",
@@ -116,7 +117,8 @@
   "results": {
     "image": "/images/results-ms1o6yey.png",
     "beginner": "**Starting from zero?** In few months you'll be able to handle many everyday situations, ask directions, express needs, desires and simple opinions.",
-    "intermediate": "**Already have a good level of Italian?** You’ll expand your vocabulary, explore more complex and specialised topics, and learn to express your ideas with greater accuracy, confidence, and naturalness."
+    "intermediate": "**Already have a good level of Italian?** You’ll expand your vocabulary, explore more complex and specialised topics, and learn to express your ideas with greater accuracy, confidence, and naturalness.",
+    "advanced": "placeholder description"
   },
   "testimonials": {
     "title": "What My Students Say",
