@@ -90,7 +90,7 @@ function formatDate(iso: string): string {
 		align-items: flex-start;
 		flex: 0 0 auto;
 		scroll-snap-align: start;
-		width: clamp(260px, 34vw, 320px);
+		width: clamp(416px, 54vw, 512px);
 	}
 
 	.testimonial-avatar {
@@ -180,7 +180,7 @@ function formatDate(iso: string): string {
 
 	@media (max-width: 560px) {
 		.testimonial-card {
-			width: clamp(220px, 78vw, 280px);
+			width: clamp(320px, 90vw, 400px);
 		}
 
 		.testimonial-avatar {
@@ -205,15 +205,4 @@ function formatDate(iso: string): string {
 			toggle.textContent = expanded ? "Show less" : "Read more";
 		});
 	});
-
-	const row = document.querySelector<HTMLElement>(".testimonials-row");
-	row?.addEventListener(
-		"wheel",
-		(event) => {
-			if (event.deltaY === 0) return;
-			row.scrollLeft += event.deltaY;
-			event.preventDefault();
-		},
-		{ passive: false }
-	);
 </script>
