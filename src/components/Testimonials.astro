@@ -205,4 +205,15 @@ function formatDate(iso: string): string {
 			toggle.textContent = expanded ? "Show less" : "Read more";
 		});
 	});
+
+	const row = document.querySelector<HTMLElement>(".testimonials-row");
+	row?.addEventListener(
+		"wheel",
+		(event) => {
+			if (event.deltaY === 0) return;
+			row.scrollLeft += event.deltaY;
+			event.preventDefault();
+		},
+		{ passive: false }
+	);
 </script>
