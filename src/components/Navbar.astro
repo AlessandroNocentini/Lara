@@ -3,10 +3,11 @@ import NavIcon from "./NavIcon.astro";
 
 const links = [
   { href: "#hero", id: "hero", label: "Home" },
-  { href: "#about", id: "about", label: "About" },
   { href: "#pain-points", id: "pain-points", label: "Struggles" },
   { href: "#method", id: "method", label: "Method" },
   { href: "#results", id: "results", label: "Results" },
+  { href: "#testimonials", id: "testimonials", label: "Reviews" },
+  { href: "#about", id: "about", label: "About" },
   { href: "#contact", id: "contact", label: "Contact" },
 ];
 ---
@@ -128,7 +129,7 @@ const links = [
 </style>
 
 <script>
-	const sectionIds = ["hero", "about", "pain-points", "method", "results", "contact"];
+	const sectionIds = ["hero", "pain-points", "method", "results", "testimonials", "about", "contact"];
 	const items = new Map<string, HTMLElement>();
 	document.querySelectorAll<HTMLElement>(".navdock-item").forEach((el) => {
 		const id = el.dataset.section;
