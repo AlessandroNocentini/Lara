@@ -42,6 +42,7 @@ function formatDate(iso: string): string {
 						/>
 						<div class="testimonial-bubble">
 							<p class="testimonial-text">{item.text}</p>
+							<button type="button" class="testimonial-toggle">Read more</button>
 							<footer class="testimonial-meta">
 								<span class="testimonial-name">{item.name}</span>
 								<time class="testimonial-date" datetime={item.date}>{formatDate(item.date)}</time>
@@ -73,10 +74,11 @@ function formatDate(iso: string): string {
 
 	.testimonials-row {
 		display: flex;
-		gap: 1.5rem;
+		align-items: flex-start;
+		gap: 2rem;
 		overflow-x: auto;
 		scroll-snap-type: x proximity;
-		padding: 1.5rem 0.25rem 1rem;
+		padding: 1rem 0.25rem 1.5rem;
 		margin: 0 -0.25rem;
 		scrollbar-width: thin;
 		scrollbar-color: var(--color-teal) transparent;
@@ -84,36 +86,76 @@ function formatDate(iso: string): string {
 
 	.testimonial-card {
 		position: relative;
+		display: flex;
+		align-items: flex-start;
 		flex: 0 0 auto;
 		scroll-snap-align: start;
-		width: clamp(240px, 70vw, 320px);
-		padding-top: 2.25rem;
+		width: clamp(260px, 34vw, 320px);
 	}
 
 	.testimonial-avatar {
-		position: absolute;
-		top: 0;
-		left: 1.5rem;
-		width: 3.5rem;
-		height: auto;
+		position: relative;
 		z-index: 1;
+		width: 4.5rem;
+		height: auto;
+		flex-shrink: 0;
+		margin-top: 0.75rem;
+		margin-right: -1rem;
+		filter: drop-shadow(0 4px 6px rgb(15 118 110 / 0.2));
 	}
 
 	.testimonial-bubble {
+		position: relative;
+		flex: 1;
+		min-width: 0;
 		background: var(--color-white);
 		border-radius: var(--radius-md);
 		box-shadow: var(--shadow-soft);
-		padding: 2rem 1.5rem 1.25rem;
-		height: 100%;
+		padding: 1.25rem 1.25rem 1rem 1.75rem;
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
+		gap: 0.6rem;
+		min-height: 9rem;
+	}
+
+	.testimonial-bubble::before {
+		content: "";
+		position: absolute;
+		left: 1.75rem;
+		bottom: -0.7rem;
+		width: 0;
+		height: 0;
+		border-left: 0.7rem solid transparent;
+		border-right: 0.7rem solid transparent;
+		border-top: 0.7rem solid var(--color-white);
 	}
 
 	.testimonial-text {
 		color: var(--color-ink-soft);
-		font-size: 0.95rem;
+		font-size: 0.9rem;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
 		flex: 1;
+	}
+
+	.testimonial-card.is-expanded .testimonial-text {
+		-webkit-line-clamp: unset;
+		overflow: visible;
+	}
+
+	.testimonial-toggle {
+		align-self: flex-start;
+		background: none;
+		border: none;
+		padding: 0;
+		font-family: var(--font-body);
+		font-weight: 700;
+		font-size: 0.8rem;
+		color: var(--color-teal-dark);
+		text-decoration: underline;
+		cursor: pointer;
 	}
 
 	.testimonial-meta {
@@ -138,7 +180,40 @@ function formatDate(iso: string): string {
 
 	@media (max-width: 560px) {
 		.testimonial-card {
-			width: clamp(200px, 78vw, 280px);
+			width: clamp(220px, 78vw, 280px);
+		}
+
+		.testimonial-avatar {
+			width: 3.5rem;
 		}
 	}
 </style>
+
+<script>
+	document.querySelectorAll<HTMLElement>(".testimonial-card").forEach((card) => {
+		const text = card.querySelector<HTMLElement>(".testimonial-text");
+		const toggle = card.querySelector<HTMLButtonElement>(".testimonial-toggle");
+		if (!text || !toggle) return;
+
+		if (text.scrollHeight <= text.clientHeight + 1) {
+			toggle.hidden = true;
+			return;
+		}
+
+		toggle.addEventListener("click", () => {
+			const expanded = card.classList.toggle("is-expanded");
+			toggle.textContent = expanded ? "Show less" : "Read more";
+		});
+	});
+
+	const row = document.querySelector<HTMLElement>(".testimonials-row");
+	row?.addEventListener(
+		"wheel",
+		(event) => {
+			if (event.deltaY === 0) return;
+			row.scrollLeft += event.deltaY;
+			event.preventDefault();
+		},
+		{ passive: false }
+	);
+</script>

@@ -25,6 +25,11 @@ Consult these guides before working on related tasks:
 
 `src/pages/index.astro` composes the one-page site from section components, in this order: Hero → PainPoints → Method → Results → Testimonials → About → Contact. About sits just before Contact by design (it reads better as a "who's behind this" beat right before the CTA, rather than as a second impression right after Hero). Testimonials renders nothing (no `<section>` at all) when `content.testimonials.items` is empty, so the section can be emptied out via the admin editor without leaving a gap in the page or the nav.
 
+`Testimonials.astro`'s card is a speech-bubble treatment matching the original `Ideas/testimonials.jpg` mockup: each `.testimonial-card` is a flex row where a small avatar (`.testimonial-avatar`, ~4.5rem) overlaps the left edge of a rounded `.testimonial-bubble` via negative margin, with a CSS-triangle `::before` as the bubble's "tail". (An earlier attempt on this branch tried a large background-silhouette treatment instead — abandoned in favor of the bubble, don't resurrect it.)
+
+- Review text is clamped to 3 lines (`-webkit-line-clamp: 3`) with a "Read more" button that toggles `.is-expanded` to lift the clamp and grow the card ("Show less" to re-collapse). An inline `<script>` compares each card's `scrollHeight`/`clientHeight` on load and hides the toggle entirely when a review doesn't actually overflow 3 lines, so short reviews never show a pointless button.
+- The same script also redirects vertical wheel input on `.testimonials-row` into horizontal scrolling (`row.scrollLeft += event.deltaY`, with `preventDefault()`), since the row is a horizontally-scrolling strip and requiring shift+scroll or a scrollbar drag to browse it would be unintuitive.
+
 ### Navigation: left-edge icon dock
 
 `src/components/Navbar.astro` is a fixed vertical dock of circular icon buttons pinned to the left viewport edge (not a traditional top bar) — one button per page section, including `pain-points` ("Struggles"). There is no logo/brand element; the Home icon is considered sufficient wayfinding, so don't re-add a logo without discussing it first.
