@@ -485,10 +485,13 @@ import "../../styles/global.css";
 				for (const [path, file] of Array.from(pendingUploads)) {
 					if (path.startsWith("methodItems.")) continue; // handled separately in readMethodItems
 					setStatus(`Uploading ${file.name}...`);
-					const filename = `images/${slugifyFilename(file.name)}`;
+					const slug = slugifyFilename(file.name);
+					// Commit to public/images (Astro's static dir) so the build copies it
+					// to the site root; the value stored in JSON is the served path /images/…
+					const repoPath = `public/images/${slug}`;
 					const base64 = await fileToBase64(file);
-					await putFile(filename, base64, `Upload ${filename} via content editor`);
-					setPath(data, path, `/${filename}`);
+					await putFile(repoPath, base64, `Upload ${repoPath} via content editor`);
+					setPath(data, path, `/images/${slug}`);
 					// Remove immediately so a later failure (e.g. a different image, or
 					// the final content.json commit) doesn't re-upload this one on retry.
 					pendingUploads.delete(path);
@@ -605,10 +608,13 @@ import "../../styles/global.css";
 					const pendingFile = pendingUploads.get(uploadKey);
 					if (pendingFile) {
 						setStatus(`Uploading ${pendingFile.name}...`);
-						const filename = `images/${slugifyFilename(pendingFile.name)}`;
+						const slug = slugifyFilename(pendingFile.name);
+						// Commit to public/images (Astro's static dir) so the build copies it
+						// to the site root; the value stored in JSON is the served path /images/…
+						const repoPath = `public/images/${slug}`;
 						const base64 = await fileToBase64(pendingFile);
-						await putFile(filename, base64, `Upload ${filename} via content editor`);
-						image = `/${filename}`;
+						await putFile(repoPath, base64, `Upload ${repoPath} via content editor`);
+						image = `/images/${slug}`;
 						// Remove immediately so a later failure doesn't re-upload this on retry.
 						pendingUploads.delete(uploadKey);
 					}

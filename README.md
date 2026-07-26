@@ -142,6 +142,14 @@ A couple of content-modeling choices worth knowing before editing copy:
   `splitHighlighted()` from `src/utils/highlightText.ts`. It lives on
   `PainPointsContent`, not `HeroContent` — despite reading like a hero
   headline, it renders inside the PainPoints section.
+- **`meta.themeColor` only tints mobile browser chrome — it is not the
+  site's palette.** It's saved by `/admin` and consumed exactly once, by
+  `Layout.astro`'s `<meta name="theme-color" content={meta.themeColor} />`,
+  which colors the address bar / status bar on Chrome for Android and iOS
+  Safari. The site's actual visible colors are hardcoded CSS custom
+  properties in `src/styles/global.css`, entirely independent of this field.
+  Changing it in the editor will not recolor the page — that's a common
+  point of confusion given the "Theme color" label, not a bug.
 - **`SectionKicker` labels are hardcoded, not content-driven** — a deliberate
   exception to this project's usual rule that components never hardcode
   copy. `SectionKicker` renders a small rotated sticker-style label
@@ -212,6 +220,20 @@ review step — saving publishes immediately, and the commit triggers
 (not just bulk-cleared at the end), and method-item cards with no
 title/description are dropped *before* any upload is attempted — both to
 avoid orphaning images in `public/images/` on a partial failure or retry.
+
+**Uploads must be committed under `public/images/`, not a repo-root
+`images/`.** `astro.config.mjs` doesn't override `publicDir`, so Astro's
+default applies: only files under `public/` get copied into `dist/` at build
+time and served live — this is the same assumption `withBase()` (above)
+relies on for every other hardcoded/content-driven image path. Both upload
+call sites in `src/pages/admin/index.astro` (`uploadPendingImages`, for
+top-level image fields, and the per-item upload inside `readMethodItems`,
+for method-card photos) commit to `public/images/<slug>` while storing the
+served-style path `/images/<slug>` in the JSON. Getting this wrong is a
+silent failure mode worth knowing about: the git commit still succeeds and
+the JSON field still gets updated, so the editor reports "Saved!" — the only
+symptom is the new image 404ing on the live site, because it was committed
+somewhere the build never reads from.
 
 ## What's deliberately missing
 
