@@ -43,8 +43,8 @@
 }
 
 html {
+  font-size: 108%;
   scroll-behavior: smooth;
-  scroll-padding-top: var(--navbar-height);
 }
 
 body {
