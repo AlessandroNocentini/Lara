@@ -36,14 +36,7 @@ const activeLevels = levels
 	</svg>
 	<div class="container results-inner">
 		<div class="results-image" data-hover-lift>
-			<PlaceholderImage
-				src={content.image || undefined}
-				alt="Results of learning Italian with Lara"
-				variant="rounded"
-				frame
-				rotate={-3}
-				tapeColor="var(--color-lightblue)"
-			/>
+			<PlaceholderImage src={content.image || undefined} alt="Results of learning Italian with Lara" variant="rounded" />
 		</div>
 		<div class="results-levels">
 			<h2>Results</h2>
@@ -61,6 +54,7 @@ const activeLevels = levels
 	.results {
 		position: relative;
 		padding: var(--section-padding);
+		background: var(--color-white);
 		overflow: hidden;
 	}
 
@@ -79,17 +73,17 @@ const activeLevels = levels
 		position: relative;
 		z-index: 1;
 		display: grid;
-		grid-template-columns: 1fr 1.4fr;
+		grid-template-columns: 1.15fr 1fr;
 		gap: clamp(2rem, 5vw, 3.5rem);
 		align-items: start;
 	}
 
 	.results-image {
-		aspect-ratio: 3 / 2;
+		aspect-ratio: 4 / 3;
 	}
 
 	h2 {
-		font-size: clamp(1.8rem, 3vw, 2.4rem);
+		font-size: clamp(1.8rem, 3.5vw, 2.6rem);
 		color: var(--color-teal-dark);
 		margin-bottom: 1.5rem;
 	}
@@ -101,7 +95,7 @@ const activeLevels = levels
 	}
 
 	.results-card {
-		background: var(--color-white);
+		background: var(--color-cream);
 		border-left: 4px solid var(--color-ocher);
 		border-radius: var(--radius-sm);
 		padding: 1.25rem 1.5rem;
@@ -132,7 +126,7 @@ const activeLevels = levels
 		}
 
 		.results-image {
-			max-width: 20rem;
+			max-width: 26rem;
 			margin-inline: auto;
 		}
 	}

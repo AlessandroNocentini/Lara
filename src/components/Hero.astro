@@ -57,14 +57,7 @@ const heroStyle = content.backgroundImage
 			)}
 		</div>
 		<div class="hero-portrait" data-hover-lift>
-			<PlaceholderImage
-				src={content.image || undefined}
-				alt="Photo of Lara"
-				variant="portrait"
-				frame
-				rotate={-4}
-				tapeColor="var(--color-ocher)"
-			/>
+			<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="portrait" />
 		</div>
 	</div>
 
@@ -179,7 +172,7 @@ const heroStyle = content.backgroundImage
 	}
 
 	.hero-portrait {
-		width: min(330px, 64vw);
+		width: min(420px, 78vw);
 		margin-inline: auto;
 	}
 

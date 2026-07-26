@@ -141,7 +141,7 @@ button {
   Deliberately uses the standalone `translate`/`rotate`/`scale` CSS
   properties instead of the `transform` shorthand, so this motion can
   layer on top of elements that already use `transform` for hover-lift
-  or a static base rotation (e.g. PlaceholderImage's polaroid frame)
+  or a static base rotation (e.g. a hover-lift wrapper)
   without one clobbering the other.
 */
 @keyframes enter-fade-drift {

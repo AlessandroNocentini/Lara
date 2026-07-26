@@ -40,14 +40,7 @@ const headingParts = splitHighlighted(content.heading, content.highlightWords);
 			<a class="button button-primary" href={content.cta.target} data-hover-lift>{content.cta.label}</a>
 		</div>
 		<div class="pain-points-portrait" data-hover-lift>
-			<PlaceholderImage
-				src={content.image || undefined}
-				alt="Photo of Lara"
-				variant="portrait"
-				frame
-				rotate={2}
-				tapeColor="var(--color-red)"
-			/>
+			<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="portrait" />
 		</div>
 	</div>
 </section>
@@ -55,6 +48,7 @@ const headingParts = splitHighlighted(content.heading, content.highlightWords);
 <style>
 	.pain-points {
 		padding: var(--section-padding);
+		background: var(--color-cream);
 	}
 
 	.pain-points-inner {
@@ -116,7 +110,7 @@ const headingParts = splitHighlighted(content.heading, content.highlightWords);
 	}
 
 	.pain-points-portrait {
-		width: min(350px, 50vw);
+		width: min(430px, 55vw);
 		margin-left: auto;
 	}
 
