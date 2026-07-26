@@ -14,12 +14,12 @@ const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 	<div class="method-intro-block">
 		<div class="container method-intro-inner">
 			<div class="method-intro-copy">
-				<p class="method-eyebrow">{content.title}</p>
-				<h2 class="method-lead">{content.introSubtitle}</h2>
+				<h2 class="method-title">{content.title}</h2>
+				<p class="method-subtitle">{content.introSubtitle}</p>
 				<p class="method-intro-text">{content.introText}</p>
+				<p class="method-steps-label">{content.stepsLabel}:</p>
 			</div>
 			<div class="method-steps-col">
-				<p class="method-steps-label">{content.stepsLabel}:</p>
 				<ul class="method-steps">
 					{content.steps.map((step, i) => (
 						<li
@@ -74,23 +74,22 @@ const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 		flex-direction: column;
 	}
 
-	.method-eyebrow {
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		font-weight: 700;
-		font-size: 0.85rem;
-		color: var(--color-yellow);
+	.method-title {
+		font-size: clamp(1.8rem, 3.5vw, 2.6rem);
 		margin-bottom: 0.75rem;
 	}
 
-	.method-lead {
-		font-size: clamp(1.8rem, 3vw, 2.4rem);
-		margin-bottom: 1.25rem;
+	.method-subtitle {
+		font-weight: 700;
+		font-size: 1.1rem;
+		color: var(--color-yellow);
+		margin-bottom: 1rem;
 	}
 
 	.method-intro-text {
 		color: rgb(255 255 255 / 0.85);
 		max-width: 34rem;
+		margin-bottom: 1.5rem;
 	}
 
 	.method-steps-col {
@@ -104,7 +103,6 @@ const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 		letter-spacing: 0.04em;
 		font-size: 0.85rem;
 		color: var(--color-yellow);
-		margin-bottom: 1rem;
 	}
 
 	.method-steps {
