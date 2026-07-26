@@ -50,7 +50,12 @@ import "../../styles/global.css";
 						<input type="file" accept="image/*" />
 					</div>
 					<label>Language code<input data-field="meta.language" type="text" /></label>
-					<label>Theme color<input data-field="meta.themeColor" type="color" /></label>
+					<label>Primary color<input data-field="meta.primaryColor" type="color" /></label>
+					<p class="hint">Main brand color — buttons, headers, dark backgrounds.</p>
+					<label>Secondary color<input data-field="meta.secondaryColor" type="color" /></label>
+					<p class="hint">Accent color — highlights, section backgrounds.</p>
+					<label>Tertiary color<input data-field="meta.tertiaryColor" type="color" /></label>
+					<p class="hint">Second accent — call-to-action buttons, highlights.</p>
 				</fieldset>
 
 				<fieldset class="panel">
@@ -61,13 +66,6 @@ import "../../styles/global.css";
 						<p class="hint">Portrait photo, roughly 3:4. Shown as-is — never cropped.</p>
 						<img data-image-preview class="image-preview" alt="" />
 						<input type="file" accept="image/*" />
-					</div>
-					<div class="image-field" data-image-field="hero.backgroundImage">
-						<label>Background photo (optional)</label>
-						<p class="hint">Full-bleed photo behind the teal gradient. Leave empty to keep the plain gradient.</p>
-						<img data-image-preview class="image-preview" alt="" />
-						<input type="file" accept="image/*" />
-						<button type="button" class="button button-ghost clear-image-btn">Remove</button>
 					</div>
 					<div class="list-field" id="socialLinks-list">
 						<label>Social links</label>
@@ -214,13 +212,13 @@ import "../../styles/global.css";
 				gap: 1rem;
 				background: var(--color-cream);
 				padding: 1rem 0;
-				border-bottom: 1px solid rgb(15 118 110 / 0.15);
+				border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 15%, transparent);
 				margin-bottom: 1.5rem;
 			}
 
 			.admin-header h1 {
 				font-size: 1.4rem;
-				color: var(--color-teal-dark);
+				color: var(--color-primary-dark);
 			}
 
 			.admin-header-actions {
@@ -237,23 +235,23 @@ import "../../styles/global.css";
 			}
 
 			.status.error {
-				color: var(--color-red);
+				color: var(--color-tertiary);
 			}
 
 			.status.success {
-				color: var(--color-teal-dark);
+				color: var(--color-primary-dark);
 			}
 
 			.button-ghost {
 				background: transparent;
-				color: var(--color-teal-dark);
-				border: 2px solid var(--color-teal);
+				color: var(--color-primary-dark);
+				border: 2px solid var(--color-primary);
 				box-shadow: none;
 			}
 
 			.panel {
 				background: var(--color-white);
-				border: 1px solid rgb(15 118 110 / 0.15);
+				border: 1px solid color-mix(in srgb, var(--color-primary) 15%, transparent);
 				border-radius: var(--radius-md);
 				padding: 1.5rem;
 				margin-bottom: 1.5rem;
@@ -264,7 +262,7 @@ import "../../styles/global.css";
 				font-family: var(--font-heading);
 				font-weight: 600;
 				font-size: 1.15rem;
-				color: var(--color-teal-dark);
+				color: var(--color-primary-dark);
 				padding: 0 0.3rem;
 			}
 
@@ -288,7 +286,7 @@ import "../../styles/global.css";
 				font-size: 1rem;
 				padding: 0.6rem 0.8rem;
 				border-radius: var(--radius-sm);
-				border: 1px solid rgb(15 118 110 / 0.3);
+				border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
 			}
 
 			.hint {
@@ -299,8 +297,8 @@ import "../../styles/global.css";
 
 			.warning {
 				font-size: 0.85rem;
-				background: rgb(193 68 45 / 0.08);
-				border: 1px solid rgb(193 68 45 / 0.3);
+				background: color-mix(in srgb, var(--color-tertiary) 8%, transparent);
+				border: 1px solid color-mix(in srgb, var(--color-tertiary) 30%, transparent);
 				border-radius: var(--radius-sm);
 				padding: 0.75rem 1rem;
 			}
@@ -323,7 +321,7 @@ import "../../styles/global.css";
 				max-width: 12rem;
 				max-height: 12rem;
 				object-fit: contain;
-				border: 1px solid rgb(15 118 110 / 0.2);
+				border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
 				border-radius: var(--radius-sm);
 				margin: 0.5rem 0;
 				background: var(--color-cream);
@@ -354,21 +352,21 @@ import "../../styles/global.css";
 				font-size: 0.95rem;
 				padding: 0.5rem 0.7rem;
 				border-radius: var(--radius-sm);
-				border: 1px solid rgb(15 118 110 / 0.3);
+				border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
 			}
 
 			.list-item .remove-btn {
 				flex-shrink: 0;
 				background: transparent;
-				border: 1px solid rgb(193 68 45 / 0.4);
-				color: var(--color-red);
+				border: 1px solid color-mix(in srgb, var(--color-tertiary) 40%, transparent);
+				color: var(--color-tertiary);
 				border-radius: var(--radius-sm);
 				padding: 0.4rem 0.7rem;
 				cursor: pointer;
 			}
 
 			.method-item {
-				border: 1px solid rgb(15 118 110 / 0.15);
+				border: 1px solid color-mix(in srgb, var(--color-primary) 15%, transparent);
 				border-radius: var(--radius-sm);
 				padding: 0.75rem;
 				display: flex;
@@ -408,7 +406,7 @@ import "../../styles/global.css";
 			// Pending uploads keyed by the field path they belong to (top-level image
 			// fields) or a synthetic "methodItems.<index>" key for list-item images.
 			const pendingUploads = new Map<string, File>();
-			// Image fields explicitly cleared via the "Remove" button (e.g. hero.backgroundImage).
+			// Image fields explicitly cleared via the "Remove" button (e.g. an optional photo field).
 			const clearedFields = new Set<string>();
 
 			function setStatus(message: string, kind: "" | "error" | "success" = "") {

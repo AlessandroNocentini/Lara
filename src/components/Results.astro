@@ -30,7 +30,7 @@ const activeLevels = levels
 <section id="results" class="results">
 	<svg class="results-blob" viewBox="0 0 400 400" aria-hidden="true">
 		<path
-			fill="var(--color-ocher)"
+			fill="var(--color-secondary)"
 			d="M300 70 C360 130 350 250 280 310 C210 370 90 360 50 290 C10 220 30 100 110 60 C190 20 240 10 300 70 Z"
 		/>
 	</svg>
@@ -78,13 +78,14 @@ const activeLevels = levels
 		align-items: start;
 	}
 
-	.results-image {
-		aspect-ratio: 4 / 3;
+	.results-image :global(.placeholder-image) {
+		height: auto;
+		aspect-ratio: auto;
 	}
 
 	h2 {
 		font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-		color: var(--color-teal-dark);
+		color: var(--color-primary-dark);
 		margin-bottom: 1.5rem;
 	}
 
@@ -96,7 +97,7 @@ const activeLevels = levels
 
 	.results-card {
 		background: var(--color-cream);
-		border-left: 4px solid var(--color-ocher);
+		border-left: 4px solid var(--color-secondary);
 		border-radius: var(--radius-sm);
 		padding: 1.25rem 1.5rem;
 		box-shadow: var(--shadow-soft);
@@ -108,12 +109,12 @@ const activeLevels = levels
 		letter-spacing: 0.06em;
 		font-size: 0.75rem;
 		font-weight: 700;
-		color: var(--color-ocher);
+		color: var(--color-secondary);
 		margin-bottom: 0.4rem;
 	}
 
 	.results-card :global(strong) {
-		color: var(--color-teal-dark);
+		color: var(--color-primary-dark);
 	}
 
 	.results-card :global(p) {

@@ -6,17 +6,20 @@
 @import "@fontsource/nunito/700.css";
 
 :root {
-  /* Palette */
+  /* Brand palette — the only 3 colors + white; every other tone below is
+     derived from these via color-mix() so admin edits propagate site-wide. */
   --color-white: #ffffff;
-  --color-cream: #fffbf4;
-  --color-teal: #0f766e;
-  --color-teal-dark: #0b5b54;
-  --color-lightblue: #8ecae6;
-  --color-yellow: #f5c244;
-  --color-ocher: #d98e31;
-  --color-red: #c1442d;
-  --color-ink: #1f2937;
-  --color-ink-soft: #4b5563;
+  --color-primary: #0f766e;
+  --color-secondary: #d98e31;
+  --color-tertiary: #c1442d;
+
+  /* Derived tones */
+  --color-primary-dark: color-mix(in srgb, var(--color-primary) 80%, black);
+  --color-primary-light: color-mix(in srgb, var(--color-primary) 35%, white);
+  --color-secondary-light: color-mix(in srgb, var(--color-secondary) 65%, white);
+  --color-cream: color-mix(in srgb, var(--color-secondary) 6%, white);
+  --color-ink: color-mix(in srgb, var(--color-primary) 40%, black);
+  --color-ink-soft: color-mix(in srgb, var(--color-primary) 70%, black);
 
   /* Typography */
   --font-heading: "Fraunces", Georgia, serif;
@@ -31,8 +34,8 @@
   --content-max-width: 72rem;
 
   /* Shadow */
-  --shadow-soft: 0 12px 30px -12px rgb(15 118 110 / 0.25);
-  --shadow-lift: 0 20px 40px -16px rgb(31 41 55 / 0.25);
+  --shadow-soft: 0 12px 30px -12px color-mix(in srgb, var(--color-primary) 25%, transparent);
+  --shadow-lift: 0 20px 40px -16px color-mix(in srgb, var(--color-ink) 25%, transparent);
 
   /* Layout */
   --navbar-height: 4.25rem;
@@ -95,7 +98,7 @@ button {
 }
 
 .button-primary {
-  background: var(--color-red);
+  background: var(--color-tertiary);
   color: var(--color-white);
   box-shadow: var(--shadow-soft);
 }

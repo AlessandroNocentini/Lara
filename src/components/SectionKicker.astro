@@ -4,7 +4,7 @@ interface Props {
   color?: string;
 }
 
-const { label, color = "var(--color-ocher)" } = Astro.props;
+const { label, color = "var(--color-secondary)" } = Astro.props;
 ---
 
 <span class="section-kicker" style={`--kicker-color: ${color}`}>{label}</span>
@@ -12,7 +12,7 @@ const { label, color = "var(--color-ocher)" } = Astro.props;
 <style>
 	.section-kicker {
 		display: inline-block;
-		background: var(--kicker-color, var(--color-ocher));
+		background: var(--kicker-color, var(--color-secondary));
 		color: var(--color-ink);
 		font-weight: 700;
 		font-size: 0.75rem;

@@ -11,15 +11,17 @@ interface Props {
 }
 
 const { meta, cursor } = Astro.props;
+
+const brandColorStyle = `--color-primary:${meta.primaryColor}; --color-secondary:${meta.secondaryColor}; --color-tertiary:${meta.tertiaryColor};`;
 ---
 
-<html lang={meta.language}>
+<html lang={meta.language} style={brandColorStyle}>
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<meta name="theme-color" content={meta.themeColor} />
+		<meta name="theme-color" content={meta.primaryColor} />
 		<title>{meta.siteName}</title>
 	</head>
 	<body>

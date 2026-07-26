@@ -2,7 +2,9 @@ export interface SiteMeta {
   siteName: string;
   image: string;
   language: string;
-  themeColor: string;
+  primaryColor: string;
+  secondaryColor: string;
+  tertiaryColor: string;
 }
 
 export interface SocialLink {
@@ -13,7 +15,6 @@ export interface SocialLink {
 export interface HeroContent {
   eyebrow: string;
   image: string;
-  backgroundImage: string;
   socialLinks: SocialLink[];
 }
 
