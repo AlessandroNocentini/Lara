@@ -31,7 +31,7 @@ const bioHtml = renderMarkdown(content.bio);
 			/>
 		</div>
 		<div class="about-copy">
-			<SectionKicker label="About" color="var(--color-yellow)" />
+			<SectionKicker label="About Me" color="var(--color-yellow)" />
 			<p class="greeting">{content.greeting}</p>
 			<h2>{content.name}</h2>
 			<div class="bio" set:html={bioHtml} />
