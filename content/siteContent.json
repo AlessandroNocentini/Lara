@@ -5,7 +5,8 @@
     "language": "en",
     "primaryColor": "#25b686",
     "secondaryColor": "#f9c80e",
-    "tertiaryColor": "#e3170a"
+    "tertiaryColor": "#e3170a",
+    "themeColor": "#8e908f"
   },
   "hero": {
     "eyebrow": "",
@@ -46,7 +47,7 @@
     }
   },
   "method": {
-    "title": "How I Teach",
+    "title": "My Method",
     "items": [
       {
         "title": "Speak from Day One",
