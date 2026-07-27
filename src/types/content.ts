@@ -27,6 +27,7 @@ export interface PainPointsContent {
     label: string;
     target: string;
   };
+  visible: boolean;
 }
 
 export interface CursorAssets {
@@ -49,12 +50,15 @@ export interface MethodContent {
   steps: string[];
   lessonsSubtitle: string;
   items: MethodItem[];
+  visible: boolean;
 }
 
 export interface ResultsContent {
+  title: string;
   image: string;
   beginner: string;
   intermediate: string;
+  visible: boolean;
 }
 
 export interface ServiceItem {
@@ -66,6 +70,7 @@ export interface ServiceItem {
 export interface ServicesContent {
   title: string;
   items: ServiceItem[];
+  visible: boolean;
 }
 
 export interface Testimonial {
@@ -78,6 +83,7 @@ export interface Testimonial {
 export interface TestimonialsContent {
   title: string;
   items: Testimonial[];
+  visible: boolean;
 }
 
 export interface AboutContent {
@@ -85,6 +91,7 @@ export interface AboutContent {
   name: string;
   bio: string;
   image: string;
+  visible: boolean;
 }
 
 export interface ContactContent {

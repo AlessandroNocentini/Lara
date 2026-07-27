@@ -26,7 +26,8 @@
     "greeting": "Ciao!",
     "name": "I'm Lara",
     "bio": "a native Italian teacher and language enthusiast, \n\nMy love for languages has taken me to study, live, and work abroad, from the UK to Russia. Along the way, I've experienced all the ups and downs of learning a foreign language myself: the excitement of your first real conversation, the frustration of forgetting the simplest word, and that amazing feeling when everything finally clicks.\n\nSince 2022, I've been helping students from all over the world build confidence and speak Italian in real-life situations. My lessons are interactive, practical, and relaxed, because making mistakes is part of the journey and speaking is how you improve.\n\nBehind every lesson is a solid academic background in languages and interpreting, along with the DILS-PG Level II certification for teaching Italian as a foreign language. \n\nWhat matters most to me is creating lessons you'll actually enjoy and leave feeling more confident than when you joined.",
-    "image": "/images/lara_about.jpg"
+    "image": "/images/lara_about.jpg",
+    "visible": true
   },
   "painPoints": {
     "heading": "Learn Italian with a Native Italian Teacher",
@@ -44,7 +45,8 @@
     "cta": {
       "label": "Tell me more",
       "target": "#contact"
-    }
+    },
+    "visible": true
   },
   "method": {
     "title": "My Method",
@@ -89,7 +91,8 @@
       "When needed, I can also explain grammar and complex concepts in English, French, or Russian to make sure everything is clear."
     ],
     "lessonsSubtitle": "How I teach",
-    "section": "**Interactive lessons designed to help you speak Italian from day one**\n\nThrough guided conversations, practical activities, and fun exercises, you'll start using Italian naturally while building confidence step by step.\n\n**What makes my lessons different:**\n\n1. I don't believe in stopping you every time you make a mistake. Instead, I guide you, support you, and help you improve naturally\n2. You'll learn to notice and correct your own mistakes, becoming a more confident and independent speaker\n3. Every lesson is interactive, engaging, and tailored to your goals, interests, and learning style\n4. When needed, I can also explain grammar and complex concepts in English, French, or Russian to make sure everything is clear"
+    "section": "**Interactive lessons designed to help you speak Italian from day one**\n\nThrough guided conversations, practical activities, and fun exercises, you'll start using Italian naturally while building confidence step by step.\n\n**What makes my lessons different:**\n\n1. I don't believe in stopping you every time you make a mistake. Instead, I guide you, support you, and help you improve naturally\n2. You'll learn to notice and correct your own mistakes, becoming a more confident and independent speaker\n3. Every lesson is interactive, engaging, and tailored to your goals, interests, and learning style\n4. When needed, I can also explain grammar and complex concepts in English, French, or Russian to make sure everything is clear",
+    "visible": true
   },
   "services": {
     "title": "Ways to Learn With Me",
@@ -114,16 +117,20 @@
         "title": "Lessons for Companies",
         "description": "Italian training for teams and professionals, focused on the vocabulary and situations your work requires."
       }
-    ]
+    ],
+    "visible": true
   },
   "results": {
+    "title": "Results",
     "image": "/images/results-ms1o6yey.png",
     "beginner": "**Starting from zero?** In few months you'll be able to handle many everyday situations, ask directions, express needs, desires and simple opinions.",
     "intermediate": "**Already have a good level of Italian?** You’ll expand your vocabulary, explore more complex and specialised topics, and learn to express your ideas with greater accuracy, confidence, and naturalness.",
-    "advanced": "placeholder description"
+    "advanced": "placeholder description",
+    "visible": true
   },
   "testimonials": {
     "title": "What My Students Say",
+    "visible": true,
     "items": [
       {
         "gender": "male",

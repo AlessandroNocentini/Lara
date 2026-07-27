@@ -76,6 +76,7 @@ import "../../styles/global.css";
 
 				<fieldset class="panel">
 					<legend>About Section</legend>
+					<label class="checkbox-label"><input type="checkbox" data-field="about.visible" /> Show this section on the website</label>
 					<label>Greeting<input data-field="about.greeting" type="text" /></label>
 					<label>Name<input data-field="about.name" type="text" /></label>
 					<label>Bio<textarea data-field="about.bio" rows="6"></textarea></label>
@@ -90,6 +91,7 @@ import "../../styles/global.css";
 
 				<fieldset class="panel">
 					<legend>Pain Points Section</legend>
+					<label class="checkbox-label"><input type="checkbox" data-field="painPoints.visible" /> Show this section on the website</label>
 					<label>Heading<input data-field="painPoints.heading" type="text" /></label>
 					<div class="list-field" id="highlightWords-list">
 						<label>Words to highlight in the heading</label>
@@ -114,6 +116,7 @@ import "../../styles/global.css";
 
 				<fieldset class="panel">
 					<legend>Method Section</legend>
+					<label class="checkbox-label"><input type="checkbox" data-field="method.visible" /> Show this section on the website</label>
 					<label>Section label<input data-field="method.title" type="text" /></label>
 					<label>Intro subtitle<input data-field="method.introSubtitle" type="text" /></label>
 					<label>Intro text<textarea data-field="method.introText" rows="4"></textarea></label>
@@ -133,6 +136,7 @@ import "../../styles/global.css";
 
 				<fieldset class="panel">
 					<legend>Services Section</legend>
+					<label class="checkbox-label"><input type="checkbox" data-field="services.visible" /> Show this section on the website</label>
 					<label>Heading<input data-field="services.title" type="text" /></label>
 					<div class="list-field" id="services-list">
 						<label>Services</label>
@@ -143,6 +147,8 @@ import "../../styles/global.css";
 
 				<fieldset class="panel">
 					<legend>Results Section</legend>
+					<label class="checkbox-label"><input type="checkbox" data-field="results.visible" /> Show this section on the website</label>
+					<label>Heading<input data-field="results.title" type="text" /></label>
 					<div class="image-field" data-image-field="results.image">
 						<label>Photo</label>
 						<p class="hint">Landscape photo, roughly 3:2. Shown as-is — never cropped.</p>
@@ -156,6 +162,7 @@ import "../../styles/global.css";
 
 				<fieldset class="panel">
 					<legend>Testimonials Section</legend>
+					<label class="checkbox-label"><input type="checkbox" data-field="testimonials.visible" /> Show this section on the website</label>
 					<label>Heading<input data-field="testimonials.title" type="text" /></label>
 					<div class="list-field" id="testimonials-list">
 						<label>Reviews</label>
@@ -279,14 +286,35 @@ import "../../styles/global.css";
 
 			.panel input[type="text"],
 			.panel input[type="password"],
-			.panel textarea,
-			.panel input[type="color"] {
+			.panel textarea {
 				width: 100%;
 				font-family: var(--font-body);
 				font-size: 1rem;
 				padding: 0.6rem 0.8rem;
 				border-radius: var(--radius-sm);
 				border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+			}
+
+			.panel input[type="color"] {
+				width: 4.5rem;
+				height: 3rem;
+				padding: 0.25rem;
+				border-radius: var(--radius-sm);
+				border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+				cursor: pointer;
+			}
+
+			.panel .checkbox-label {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+				margin: 0 0 1rem;
+			}
+
+			.panel .checkbox-label input[type="checkbox"] {
+				width: 1.15rem;
+				height: 1.15rem;
+				cursor: pointer;
 			}
 
 			.hint {
@@ -463,13 +491,22 @@ import "../../styles/global.css";
 				document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-field]").forEach((el) => {
 					const path = el.dataset.field!;
 					const value = getPath(data, path);
-					if (value !== undefined) el.value = value;
+					if (value === undefined) return;
+					if (el instanceof HTMLInputElement && el.type === "checkbox") {
+						el.checked = Boolean(value);
+					} else {
+						el.value = value;
+					}
 				});
 			}
 
 			function readScalarFields(data: SiteContent) {
 				document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-field]").forEach((el) => {
-					setPath(data, el.dataset.field!, el.value);
+					if (el instanceof HTMLInputElement && el.type === "checkbox") {
+						setPath(data, el.dataset.field!, el.checked);
+					} else {
+						setPath(data, el.dataset.field!, el.value);
+					}
 				});
 			}
 
