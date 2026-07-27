@@ -16,11 +16,11 @@ const content = siteContent as SiteContent;
 
 <Layout meta={content.meta} cursor={content.cursor}>
 	<Hero content={content.hero} siteName={content.meta.siteName} titleImage={content.meta.image} />
-	<PainPoints content={content.painPoints} />
-	<Method content={content.method} />
-	<Services content={content.services} />
-	<Results content={content.results} />
-	<Testimonials content={content.testimonials} />
-	<About content={content.about} />
+	{content.painPoints.visible && <PainPoints content={content.painPoints} />}
+	{content.method.visible && <Method content={content.method} />}
+	{content.services.visible && <Services content={content.services} />}
+	{content.results.visible && <Results content={content.results} />}
+	{content.testimonials.visible && <Testimonials content={content.testimonials} />}
+	{content.about.visible && <About content={content.about} />}
 	<Contact content={content.contact} />
 </Layout>
