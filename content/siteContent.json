@@ -3,9 +3,9 @@
     "siteName": "Learn 🍹talian with Lara",
     "image": "/images/spritz-ms1o6xgs.svg",
     "language": "en",
-    "primaryColor": "#0f766e",
-    "secondaryColor": "#d98e31",
-    "tertiaryColor": "#c1442d"
+    "primaryColor": "#cc6f18",
+    "secondaryColor": "#f590ec",
+    "tertiaryColor": "#0000ff"
   },
   "hero": {
     "eyebrow": "",
@@ -94,24 +94,24 @@
     "title": "Ways to Learn With Me",
     "items": [
       {
+        "icon": "private",
         "title": "Private Lessons",
-        "description": "One-on-one lessons tailored entirely to your goals, pace, and interests — the fastest way to build confidence.",
-        "icon": "private"
+        "description": "One-on-one lessons tailored entirely to your goals, pace, and interests — the fastest way to build confidence."
       },
       {
+        "icon": "group",
         "title": "Group Lessons",
-        "description": "Learn alongside other students in small groups, practicing real conversation together at a shared level.",
-        "icon": "group"
+        "description": "Learn alongside other students in small groups, practicing real conversation together at a shared level."
       },
       {
+        "icon": "club",
         "title": "Speaking Club",
-        "description": "A relaxed, conversation-only space to practice speaking Italian on fun topics with other learners.",
-        "icon": "club"
+        "description": "A relaxed, conversation-only space to practice speaking Italian on fun topics with other learners."
       },
       {
+        "icon": "company",
         "title": "Lessons for Companies",
-        "description": "Italian training for teams and professionals, focused on the vocabulary and situations your work requires.",
-        "icon": "company"
+        "description": "Italian training for teams and professionals, focused on the vocabulary and situations your work requires."
       }
     ]
   },
