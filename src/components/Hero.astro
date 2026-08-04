@@ -24,43 +24,40 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 			d="M300 70 C360 130 350 250 280 310 C210 370 90 360 50 290 C10 220 30 100 110 60 C190 20 240 10 300 70 Z"
 		/>
 	</svg>
-	<img class="hero-italy" src={withBase("/images/italy.svg")} alt="" aria-hidden="true" />
-	<div class="hero-inner container">
-		<div class="hero-copy">
-			{content.eyebrow && <p class="eyebrow">{content.eyebrow}</p>}
+	{content.socialLinks.length > 0 && (
+		<ul class="social-links">
+			{content.socialLinks.map((social) => (
+				<li>
+					<a
+						href={social.url}
+						data-hover-lift
+						data-platform={social.platform}
+						aria-label={social.platform}
+						target={social.platform === "email" ? undefined : "_blank"}
+						rel={social.platform === "email" ? undefined : "noopener noreferrer"}
+					>
+						<SocialIcon platform={social.platform} />
+					</a>
+				</li>
+			))}
+		</ul>
+	)}
+	<div class="hero-inner">
+		<div class="hero-copy container">
+			<span class="hero-italy" aria-hidden="true" style={`mask-image:url(${withBase("/images/italy.svg")});-webkit-mask-image:url(${withBase("/images/italy.svg")});`}></span>
 			<h1>
 				<span class="title-line">
 					<SpritzTitle text={firstLine} image={titleImage} size="1.25em" gap="-0.08em" />
 				</span>
 				{secondLine && <span class="title-line">{secondLine}</span>}
 			</h1>
-			<a class="button button-primary hero-cta" href="#contact" data-hover-lift>Book a first lesson</a>
-			{content.socialLinks.length > 0 && (
-				<ul class="social-links">
-					{content.socialLinks.map((social) => (
-						<li>
-							<a
-								href={social.url}
-								data-hover-lift
-								aria-label={social.platform}
-								target={social.platform === "email" ? undefined : "_blank"}
-								rel={social.platform === "email" ? undefined : "noopener noreferrer"}
-							>
-								<SocialIcon platform={social.platform} />
-							</a>
-						</li>
-					))}
-				</ul>
-			)}
+			{content.text && <p class="hero-text">{content.text}</p>}
+			<a class="button button-primary hero-cta" href="#contact" data-hover-lift>Let's learn together →</a>
 		</div>
-		<div class="hero-portrait" data-hover-lift>
-			<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="portrait" />
+		<div class="hero-portrait">
+			<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="rounded" />
 		</div>
 	</div>
-
-	<svg class="hero-wave" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true">
-		<path d="M0,50 C320,-20 1120,110 1440,40 L1440,100 L0,100 Z" fill="var(--color-cream)" />
-	</svg>
 </section>
 
 <style>
@@ -71,7 +68,6 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 		background-size: cover;
 		background-position: center;
 		color: var(--color-white);
-		padding: calc(var(--navbar-height) + clamp(2.5rem, 6vw, 5rem)) clamp(1.5rem, 6vw, 4rem) 6rem;
 		overflow: hidden;
 	}
 
@@ -86,40 +82,69 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 		z-index: 0;
 	}
 
+	.hero-inner {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		grid-template-columns: minmax(320px, 50%) 1fr;
+		align-items: stretch;
+		min-height: 34rem;
+	}
+
+	.hero-copy {
+		position: relative;
+		padding: calc(var(--navbar-height) + clamp(2.5rem, 6vw, 5rem)) clamp(1.5rem, 6vw, 4rem) clamp(2.5rem, 6vw, 4rem) clamp(1.5rem, 6vw, 4rem);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
 	.hero-italy {
+		display: block;
 		position: absolute;
-		top: 0;
-		right: -6%;
-		height: 110%;
-		width: auto;
+		left: 3rem;
+		top: calc(var(--navbar-height) + 10rem);
+		width: 12rem;
+		aspect-ratio: 287.9 / 346.2;
+		background-color: var(--color-secondary-light);
+		mask-repeat: no-repeat;
+		mask-position: center;
+		mask-size: contain;
+		-webkit-mask-repeat: no-repeat;
+		-webkit-mask-position: center;
+		-webkit-mask-size: contain;
 		opacity: 0.5;
 		pointer-events: none;
 		z-index: 0;
 	}
 
-	.hero-inner {
+	h1 {
 		position: relative;
 		z-index: 1;
-		display: grid;
-		grid-template-columns: 1.3fr 1fr;
-		gap: clamp(2rem, 5vw, 4rem);
-		align-items: center;
-	}
-
-	.eyebrow {
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		font-weight: 700;
-		font-size: 0.85rem;
-		color: var(--color-secondary-light);
-		margin-bottom: 0.75rem;
-	}
-
-	h1 {
 		display: flex;
 		flex-direction: column;
-		font-size: clamp(2.4rem, 5.5vw, 4rem);
+		align-items: center;
+		text-transform: uppercase;
+		font-family: var(--font-display);
+		letter-spacing: 0.015em;
+		font-size: clamp(3.6rem, 7.5vw, 6.2rem);
+		line-height: 1.05;
+		margin-bottom: 1.25rem;
+	}
+
+	.hero-text {
+		position: relative;
+		z-index: 1;
+		white-space: pre-line;
+		font-size: 1.1rem;
+		line-height: 1.5;
 		margin-bottom: 2rem;
+		max-width: 26rem;
+	}
+
+	.hero-cta {
+		align-self: flex-start;
+		padding: 0.65rem 1.5rem;
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
@@ -128,16 +153,12 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 			animation: enter-fade-drift 1.1s ease-out both, idle-breathe 11s ease-in-out 1.1s infinite;
 		}
 
-		.eyebrow {
-			animation: enter-fade-up 0.4s ease-out 0.1s both;
-		}
-
 		h1 {
 			animation: enter-slide-left 0.5s ease-out 0.23s both;
 		}
 
-		.hero-portrait {
-			animation: enter-drop 0.7s cubic-bezier(0.34, 1.15, 0.64, 1) 0.15s both, idle-sway 9s ease-in-out 0.85s infinite;
+		.hero-text {
+			animation: enter-fade-up 0.4s ease-out 0.32s both;
 		}
 
 		.hero-cta {
@@ -150,14 +171,23 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 	}
 
 	.title-line:last-child {
+		text-transform: none;
+		font-family: var(--font-script);
+		font-weight: 400;
+		font-size: 0.65em;
+		letter-spacing: 0;
 		color: var(--color-secondary-light);
 	}
 
 	.social-links {
+		position: absolute;
+		top: calc(var(--navbar-height) + clamp(1rem, 3vw, 1.5rem));
+		right: clamp(1.25rem, 4vw, 2rem);
+		z-index: 2;
 		list-style: none;
 		display: flex;
-		gap: 0.9rem;
-		margin: 1.5rem 0 0;
+		gap: 0.75rem;
+		margin: 0;
 		padding: 0;
 	}
 
@@ -165,42 +195,77 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 2.6rem;
-		height: 2.6rem;
+		width: 3.5rem;
+		height: 3.5rem;
 		border-radius: var(--radius-full);
-		background: rgb(255 255 255 / 0.12);
-		color: var(--color-white);
-		border: 1px solid rgb(255 255 255 / 0.3);
-		transition: background-color 0.2s ease, transform 0.2s ease;
+		background: var(--color-white);
+		box-shadow: var(--shadow-soft);
+		transition: background-color 0.2s ease, color 0.2s ease;
 	}
 
-	.social-links a:hover {
+	.social-links :global(svg) {
+		width: 28px;
+		height: 28px;
+	}
+
+	.social-links a[data-platform="email"] {
+		color: var(--color-primary);
+	}
+
+	.social-links a[data-platform="instagram"] {
+		color: var(--color-tertiary);
+	}
+
+	.social-links a[data-platform="email"]:hover {
+		background: var(--color-primary);
+		color: var(--color-white);
+	}
+
+	.social-links a[data-platform="instagram"]:hover {
 		background: var(--color-tertiary);
-		border-color: var(--color-tertiary);
+		color: var(--color-white);
 	}
 
 	.hero-portrait {
-		width: min(420px, 78vw);
-		margin-inline: auto;
+		position: relative;
+		height: 100%;
 	}
 
-	.hero-wave {
-		position: absolute;
-		bottom: -2px;
-		left: 0;
+	.hero-portrait :global(.placeholder-image) {
 		width: 100%;
-		height: 90px;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 0;
 		display: block;
+		mask-image: linear-gradient(to left, black 55%, transparent 100%);
+		-webkit-mask-image: linear-gradient(to left, black 55%, transparent 100%);
 	}
 
 	@media (max-width: 800px) {
 		.hero-inner {
 			grid-template-columns: 1fr;
+			min-height: auto;
 			text-align: center;
 		}
 
-		.social-links {
-			justify-content: center;
+		.hero-italy {
+			left: 50%;
+			translate: -50% 0;
+		}
+
+		.hero-text {
+			max-width: none;
+			margin-inline: auto;
+		}
+
+		.hero-portrait {
+			height: auto;
+			aspect-ratio: 4 / 5;
+		}
+
+		.hero-portrait :global(.placeholder-image) {
+			mask-image: none;
+			-webkit-mask-image: none;
 		}
 	}
 </style>

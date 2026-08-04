@@ -13,7 +13,7 @@ export interface SocialLink {
 }
 
 export interface HeroContent {
-  eyebrow: string;
+  text: string;
   image: string;
   socialLinks: SocialLink[];
 }
