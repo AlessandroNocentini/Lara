@@ -120,18 +120,37 @@ import "../../styles/global.css";
 					<label>Section label<input data-field="method.title" type="text" /></label>
 					<label>Intro subtitle<input data-field="method.introSubtitle" type="text" /></label>
 					<label>Intro text<textarea data-field="method.introText" rows="4"></textarea></label>
+					<div class="image-field" data-image-field="method.heroImage">
+						<label>Intro photo</label>
+						<p class="hint">Landscape or square photo. Shown as-is — never cropped.</p>
+						<img data-image-preview class="image-preview" alt="" />
+						<input type="file" accept="image/*" />
+					</div>
+					<label>Intro button text<input data-field="method.heroCta.label" type="text" /></label>
+					<label>Intro button links to<input data-field="method.heroCta.target" type="text" /></label>
+					<label>Steps label<input data-field="method.stepsLabel" type="text" /></label>
+					<div class="list-field" id="methodSteps-list">
+						<label>What makes lessons different (shown as 3 cards, each with its own photo)</label>
+						<div class="list-items"></div>
+						<button type="button" class="button button-ghost add-btn" data-add="methodSteps">+ Add reason</button>
+					</div>
+					<label>Lessons subtitle<input data-field="method.lessonsSubtitle" type="text" /></label>
+					<div class="image-field" data-image-field="method.teachingImage">
+						<label>"How I teach" photo</label>
+						<p class="hint">Landscape or square photo. Shown as-is — never cropped.</p>
+						<img data-image-preview class="image-preview" alt="" />
+						<input type="file" accept="image/*" />
+					</div>
+					<label>"How I teach" text<textarea data-field="method.teachingText" rows="3"></textarea></label>
 					<div class="list-field" id="methodItems-list">
 						<label>Method cards</label>
 						<div class="list-items"></div>
 						<button type="button" class="button button-ghost add-btn" data-add="methodItems">+ Add card</button>
 					</div>
-					<label>Steps label<input data-field="method.stepsLabel" type="text" /></label>
-					<div class="list-field" id="methodSteps-list">
-						<label>What makes lessons different (shown as bubbles)</label>
-						<div class="list-items"></div>
-						<button type="button" class="button button-ghost add-btn" data-add="methodSteps">+ Add reason</button>
-					</div>
-					<label>Lessons subtitle<input data-field="method.lessonsSubtitle" type="text" /></label>
+					<label>Closing heading<input data-field="method.closingHeading" type="text" /></label>
+					<label>Closing text<input data-field="method.closingText" type="text" /></label>
+					<label>Closing button text<input data-field="method.closingCta.label" type="text" /></label>
+					<label>Closing button links to<input data-field="method.closingCta.target" type="text" /></label>
 				</fieldset>
 
 				<fieldset class="panel">
@@ -545,7 +564,7 @@ import "../../styles/global.css";
 					if (!pendingUploads.has(path)) setPath(data, path, "");
 				}
 				for (const [path, file] of Array.from(pendingUploads)) {
-					if (path.startsWith("methodItems.")) continue; // handled separately in readMethodItems
+					if (path.startsWith("methodItems.") || path.startsWith("methodSteps.")) continue; // handled separately in readMethodItems/readMethodSteps
 					setStatus(`Uploading ${file.name}...`);
 					const slug = slugifyFilename(file.name);
 					// Commit to public/images (Astro's static dir) so the build copies it
@@ -686,6 +705,69 @@ import "../../styles/global.css";
 				return items;
 			}
 
+			// ---- Method steps (text + optional photo) ----
+
+			function renderMethodSteps(steps: { text: string; image: string }[]) {
+				const list = document.querySelector("#methodSteps-list .list-items")!;
+				list.innerHTML = "";
+				steps.forEach((step, index) => addMethodStepRow(list, step, index));
+			}
+
+			let methodStepCounter = 0;
+
+			function addMethodStepRow(list: Element, step: { text: string; image: string }, index: number) {
+				const key = `methodSteps.${index >= 0 ? index : `new-${methodStepCounter++}`}`;
+				const row = document.createElement("div");
+				row.className = "method-item";
+				row.dataset.uploadKey = key;
+				row.innerHTML = `
+					<textarea class="ms-text" rows="2" placeholder="Reason">${escapeHtml(step.text)}</textarea>
+					<img class="image-preview ms-preview" alt="" src="${step.image ? escapeHtml(withBase(step.image)) : ""}" data-saved-path="${escapeHtml(step.image)}" />
+					<input type="file" class="ms-file" accept="image/*" />
+					<button type="button" class="remove-btn">Remove</button>
+				`;
+				row.querySelector<HTMLInputElement>(".ms-file")!.addEventListener("change", (e) => {
+					const file = (e.target as HTMLInputElement).files?.[0];
+					if (!file) return;
+					pendingUploads.set(row.dataset.uploadKey!, file);
+					row.querySelector<HTMLImageElement>(".ms-preview")!.src = URL.createObjectURL(file);
+				});
+				row.querySelector(".remove-btn")!.addEventListener("click", () => {
+					pendingUploads.delete(row.dataset.uploadKey!);
+					row.remove();
+				});
+				list.appendChild(row);
+			}
+
+			async function readMethodSteps(): Promise<{ text: string; image: string }[]> {
+				const rows = Array.from(document.querySelectorAll<HTMLElement>("#methodSteps-list .method-item"));
+				const steps = [];
+				for (const row of rows) {
+					const text = row.querySelector<HTMLTextAreaElement>(".ms-text")!.value.trim();
+
+					// Skip rows dropped for having no text — never upload their photo either.
+					if (!text) continue;
+
+					const preview = row.querySelector<HTMLImageElement>(".ms-preview")!;
+					let image = preview.getAttribute("data-saved-path") ?? "";
+
+					const uploadKey = row.dataset.uploadKey!;
+					const pendingFile = pendingUploads.get(uploadKey);
+					if (pendingFile) {
+						setStatus(`Uploading ${pendingFile.name}...`);
+						const slug = slugifyFilename(pendingFile.name);
+						const repoPath = `public/images/${slug}`;
+						const base64 = await fileToBase64(pendingFile);
+						await putFile(repoPath, base64, `Upload ${repoPath} via content editor`);
+						image = `/images/${slug}`;
+						pendingUploads.delete(uploadKey);
+					}
+
+					steps.push({ text, image });
+				}
+				return steps;
+			}
+
 			// ---- Testimonials (name + text + date + gender) ----
 
 			const TESTIMONIAL_GENDERS = ["female", "male", "other"];
@@ -769,7 +851,7 @@ import "../../styles/global.css";
 					if (kind === "highlightWords") addStringRow(document.querySelector("#highlightWords-list .list-items")!, "");
 					if (kind === "socialLinks") addSocialRow(document.querySelector("#socialLinks-list .list-items")!, { platform: "instagram", url: "" });
 					if (kind === "methodItems") addMethodItemRow(document.querySelector("#methodItems-list .list-items")!, { title: "", description: "", image: "" }, -1);
-					if (kind === "methodSteps") addStringRow(document.querySelector("#methodSteps-list .list-items")!, "");
+					if (kind === "methodSteps") addMethodStepRow(document.querySelector("#methodSteps-list .list-items")!, { text: "", image: "" }, -1);
 					if (kind === "services") addServiceRow(document.querySelector("#services-list .list-items")!, { title: "", description: "", icon: "private" });
 					if (kind === "testimonials") addTestimonialRow(document.querySelector("#testimonials-list .list-items")!, { name: "", text: "", date: "", gender: "female" });
 				});
@@ -788,7 +870,7 @@ import "../../styles/global.css";
 				renderStringList("highlightWords-list", data.painPoints.highlightWords);
 				renderSocialLinks(data.hero.socialLinks);
 				renderMethodItems(data.method.items);
-				renderStringList("methodSteps-list", data.method.steps);
+				renderMethodSteps(data.method.steps);
 				renderServices(data.services.items);
 				renderTestimonials(data.testimonials.items);
 
@@ -811,7 +893,7 @@ import "../../styles/global.css";
 					data.painPoints.highlightWords = readStringList("highlightWords-list");
 					data.hero.socialLinks = readSocialLinks();
 					data.method.items = await readMethodItems();
-					data.method.steps = readStringList("methodSteps-list");
+					data.method.steps = await readMethodSteps();
 					data.services.items = readServices();
 					data.testimonials.items = readTestimonials();
 

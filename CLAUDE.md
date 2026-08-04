@@ -23,16 +23,19 @@ Consult these guides before working on related tasks:
 
 ## Landing Page Architecture
 
-`src/pages/index.astro` composes the one-page site from section components, in this order: Hero → PainPoints → Method → Results → Testimonials → About → Contact. About sits just before Contact by design (it reads better as a "who's behind this" beat right before the CTA, rather than as a second impression right after Hero). Testimonials renders nothing (no `<section>` at all) when `content.testimonials.items` is empty, so the section can be emptied out via the admin editor without leaving a gap in the page or the nav.
+`src/pages/index.astro` composes the one-page site from section components, in this order: Hero → PainPoints → Method → Services → Results → Testimonials → About → Contact. About sits just before Contact by design (it reads better as a "who's behind this" beat right before the CTA, rather than as a second impression right after Hero). Testimonials renders nothing (no `<section>` at all) when `content.testimonials.items` is empty, so the section can be emptied out via the admin editor without leaving a gap in the page or the nav.
 
 Sections no longer show a small "eyebrow" pill above their `<h2>` — `Services.astro`, `Testimonials.astro`, `About.astro`, and `Contact.astro` each render only their real heading now. `SectionKicker.astro` still exists as a component but nothing imports it; it was kept in case the pattern is wanted again rather than deleted outright.
 
-`Method.astro` is a single `<section id="method">` (one nav-dock/scroll-spy entry, same as before) split into two visually distinct halves via `MethodContent` (`src/types/content.ts`: `{ title, introSubtitle, introText, stepsLabel, steps, lessonsSubtitle, items }` — no markdown fields, so the component no longer imports `renderMarkdown`):
+`Method.astro` is a single `<section id="method">` (one nav-dock/scroll-spy entry), rebuilt as **5 stacked bands** — this superseded an earlier two-block layout (teal-gradient intro + white lessons grid) that a previous session had built and documented here; that version is gone, don't resurrect it from git history without checking why it changed. `MethodContent` (`src/types/content.ts`) grew to match: `steps` changed from `string[]` to `{ text: string; image: string }[]`, and `heroImage`/`heroCta`/`teachingImage`/`teachingText`/`closingHeading`/`closingText`/`closingCta` were added (a dead `section` field from an even earlier iteration was dropped). `introText` is markdown again — the component re-imports `renderMarkdown`.
 
-- `.method-intro-block`: teal gradient background (same treatment as `Contact.astro`), white text, two-column layout. Left column stacks `<h2 class="method-title">` (deliberately sized with the same `clamp(1.8rem, 3.5vw, 2.6rem)` as PainPoints' heading, for visual consistency between the two sections), a yellow `<p class="method-subtitle">`, the intro paragraph, and `<p class="method-steps-label">` (moved here from above the bubble list). The right column holds only `<ul class="method-steps">` (the bubble list, unlabeled). Because the bubbles now sit on a teal background instead of white, `.method-step`/its `::after` tail use `var(--color-white)` for the border instead of `var(--color-teal)` — a teal border would have nearly disappeared against teal.
-- `.method-lessons-block`: white background, centered `<h3 class="method-lessons-subtitle">` above the unchanged 6-card `.method-grid`.
+- **Band A `.method-hero`**: `content.title` rendered with `.section-heading` (see the shared-heading note below — Method no longer has its own oversized title treatment), `introSubtitle` tagline, a `heroImage` photo, markdown `introText`, and a `heroCta` button. A background blob SVG sits behind the copy.
+- **Band B `.method-steps-block`** ("what makes my lessons different"): `stepsLabel` heading + 3 `steps`, each a photo stacked above a tilted card (`step.text`) that overlaps it via negative margin — tilt is set per-card via an inline `style="--rotate: ...deg"` custom property (values `[-3, 2, -2.5]`), the same technique `PainPoints.astro` uses for its bubbles. The heading sits layered behind the card row (negative margin/z-index) — kept from an earlier pass, but now subtler since the heading itself is standard `.section-heading` size instead of a bespoke oversized one.
+- **Band C `.method-teaching-block`** ("how I teach"): 2-column, `teachingImage` beside `lessonsSubtitle` + `teachingText`. No `SectionKicker` here — it was removed as redundant once the heading right below it already says "How I teach".
+- **Band D `.method-lessons-block`**: the original 6-card `items` grid — kept as-is.
+- **Band E `.method-closing-block`**: `closingHeading`/`closingText`/`closingCta`, centered CTA.
 
-The admin editor's Method fieldset (`src/pages/admin/index.astro`) mirrors this flatter shape with separate inputs for `method.title`, `method.introSubtitle`, `method.introText`, `method.stepsLabel`, and `method.lessonsSubtitle`, alongside the existing repeatable `methodItems`/`methodSteps` lists — no new JS was needed since scalar fields go through the generic `populateScalarFields`/`readScalarFields` path.
+The admin editor's Method fieldset (`src/pages/admin/index.astro`) has a matching input for every new scalar field, plus a new `methodSteps` list editor (text + image per row, upload-key `methodSteps.<index>`) that mirrors the pre-existing `methodItems` editor (title + description + image) — same upload/preview/remove pattern, just without the title input. No new generic JS was needed; both lists reuse the same `pendingUploads`-tracked per-row upload pattern.
 
 `Testimonials.astro`'s card is a speech-bubble treatment matching the original `Ideas/testimonials.jpg` mockup: each `.testimonial-card` is a flex row where a small avatar (`.testimonial-avatar`, ~4.5rem) overlaps the left edge of a rounded `.testimonial-bubble` via negative margin, with a CSS-triangle `::before` as the bubble's "tail". (An earlier attempt on this branch tried a large background-silhouette treatment instead — abandoned in favor of the bubble, don't resurrect it.)
 
@@ -44,7 +47,7 @@ The admin editor's Method fieldset (`src/pages/admin/index.astro`) mirrors this 
 `src/components/Navbar.astro` is a fixed vertical dock of circular icon buttons pinned to the left viewport edge (not a traditional top bar) — one button per page section, including `pain-points` ("Struggles"). There is no logo/brand element; the Home icon is considered sufficient wayfinding, so don't re-add a logo without discussing it first.
 
 - Idle state: white circle, teal icon. Hover: inverts to teal circle/white icon and slides out a text label.
-- The active section is tracked with a from-scratch `IntersectionObserver` in an inline `<script>` inside `Navbar.astro` (rootMargin `-40% 0px -40% 0px`, so a section counts as "active" once it crosses the middle 20% of the viewport). The observed section IDs (`sectionIds`) and the nav `links` array are both hardcoded in `Navbar.astro` and must be kept in the same order the sections actually render in `index.astro` — they previously drifted (`about` was listed 2nd despite rendering near the end); current order is hero, pain-points, method, results, testimonials, about, contact.
+- The active section is tracked with a from-scratch `IntersectionObserver` in an inline `<script>` inside `Navbar.astro` (rootMargin `-40% 0px -40% 0px`, so a section counts as "active" once it crosses the middle 20% of the viewport). The observed section IDs (`sectionIds`) and the nav `links` array are both hardcoded in `Navbar.astro` and must be kept in the same order the sections actually render in `index.astro` — they previously drifted (`about` was listed 2nd despite rendering near the end); current order is hero, pain-points, method, services, results, testimonials, about, contact.
 - `--navbar-height` in `src/styles/global.css` is a leftover custom property from the old top-bar layout; it's unused now that nav is a side dock (no scroll-padding-top compensation is needed), but is still defined for potential reuse.
 
 ### Icon components
@@ -52,7 +55,7 @@ The admin editor's Method fieldset (`src/pages/admin/index.astro`) mirrors this 
 Two components share one convention — an inline SVG wrapper (`viewBox 0 0 24 24`, `stroke=currentColor`, path fragments injected via `set:html`) keyed by a string prop through a `Record<string, string>` lookup, with a safe fallback if the key is unrecognized:
 
 - `SocialIcon.astro` — keyed by social platform (`platform` prop): instagram, facebook, whatsapp, tiktok, email, website.
-- `NavIcon.astro` — keyed by section id (`section` prop): hero, about, pain-points, method, results, testimonials, contact.
+- `NavIcon.astro` — keyed by section id (`section` prop): hero, about, pain-points, method, services, results, testimonials, contact.
 
 When adding a new social platform or page section, add its SVG fragment to the relevant component's `icons` map rather than creating a new icon component.
 
@@ -68,8 +71,15 @@ Testimonial avatars are a deliberately separate, simpler convention — don't fo
 
 - `About.astro` is a full-bleed 2-column split: `.about-inner` is a grid (deliberately NOT wrapped in `.container`, so the photo spans full viewport width) with `.about-photo` (the image, forced to `width/height:100%; object-fit:cover; border-radius:0` via a `:global(.placeholder-image)` override, filling the section via `min-height: 40rem` on `.about-inner`) and `.about-copy` (wrapped in `.container`, keeps normal section padding). Collapses to one column with a fixed `aspect-ratio: 4/5` photo at ≤800px.
 - `Results.astro`'s image previously cropped because `.results-image { aspect-ratio: 4/3 }` fought `PlaceholderImage`'s base `object-fit:cover`. Fixed by dropping that aspect-ratio and adding `.results-image :global(.placeholder-image) { height:auto; aspect-ratio:auto; }` — scoped to Results only; the shared `.rounded` variant itself never forced an aspect-ratio.
-- Headings across `Services`, `Results`, `Testimonials`, `Contact`, and `About` all use the same `clamp(1.8rem, 3.5vw, 2.6rem)` as Pain Points/Method, for site-wide consistency.
 - `PainPoints.astro` and `Results.astro` each declare their background explicitly (`--color-cream` / `--color-white`) instead of inheriting the body background, to break up a run of same-colored sections.
+
+### One shared `.section-heading` class, not per-component duplication
+
+Every section's main heading (`PainPoints`, `Services`, `Results`, `Testimonials`, `About`, `Contact`, and all 4 headings in `Method`) used to carry its own copy of an identical `h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); }` rule. That duplication is gone: `src/styles/global.css` now defines `.section-heading { font-size: clamp(2.1rem, 4.5vw, 3.2rem); }` once, applied via `class="section-heading"` on each section's heading element (some sections use `<h2>`, some `<h3>`, so it's a class rather than a tag rule). Color stays a per-component `<style>` declaration (or, in `Contact`'s case, inherited from `.contact`'s own `color: var(--color-white)`) — color is legitimately contextual to each section's background, size no longer needs to be.
+
+**`Hero.astro`'s `<h1>` is the one deliberate exception**, not a leftover inconsistency: it keeps its own local `font-size: clamp(2.3rem, 5vw, 3.6rem)`, sized slightly above `.section-heading`'s max, because it's meant to read as the single biggest heading on the page. Don't "fix" it into `.section-heading` without discussing it first.
+
+Method's old giant two-line-stacked "My Method" title (`clamp(3rem, 9vw, 6.5rem)`, split into stacked `<span>` per word) was removed as part of this same pass — `content.title` now just renders as plain text with `.section-heading`, like every other section.
 
 ### Italy silhouette: one shared asset, two placements
 

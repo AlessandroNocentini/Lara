@@ -118,7 +118,9 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 	h1 {
 		display: flex;
 		flex-direction: column;
-		font-size: clamp(2.4rem, 5.5vw, 4rem);
+		/* Slightly bigger than the shared .section-heading scale (2.1–3.2rem) —
+		   the one deliberately-largest heading on the page. */
+		font-size: clamp(2.3rem, 5vw, 3.6rem);
 		margin-bottom: 2rem;
 	}
 

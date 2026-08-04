@@ -66,6 +66,15 @@ h3 {
   margin: 0;
 }
 
+/* Shared size/weight for every section's main heading (Hero's own title is
+   deliberately bigger and excluded; card-level h3s inside a section keep
+   their own smaller size). Applied via class rather than the h2/h3 tag
+   directly, since sections use either tag for their main heading — color
+   stays a per-component choice tied to that section's own background. */
+.section-heading {
+  font-size: clamp(2.1rem, 4.5vw, 3.2rem);
+}
+
 p {
   margin: 0;
 }

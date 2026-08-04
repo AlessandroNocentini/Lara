@@ -89,21 +89,20 @@ translucent teal gradient in `Hero.astro`), not rendered through
 `PlaceholderImage`, so an empty value there just means "no background image,"
 not a visible placeholder.
 
-`PlaceholderImage` also takes optional `frame` / `rotate` / `tapeColor` props
-(all default off/unset, so existing callers are unaffected) that wrap the
-image in a white polaroid-style card with a rotated washi-tape accent —
-the "scrapbook" look inspired by `Ideas/style_1–3.jpeg`. It's applied to the
-Hero, About, and Pain Points portraits (each its own rotation angle and tape
-color — ocher/yellow/red respectively) and to the Results image (light blue
-tape). `variant` picks the image's own shape independent of the frame:
-`"portrait"` (3:4, used for the three "photo of Lara" spots — no circular
-crop) or `"rounded"` (soft corners, no fixed ratio — used for Results' image,
-whose aspect-ratio is set per-section to match its actual photo, and for
-Method's card images, which don't use `frame`/`rotate`/`tapeColor` at all).
-**Method's card images intentionally don't use the frame** — Method's cards
-are a half-image/half-text layout from an earlier design pass, and
-framing/rotating an image inside that layout would fight it rather than
-complement it.
+`PlaceholderImage` only takes `src` / `alt` / `variant` / `class` — an
+earlier `frame`/`rotate`/`tapeColor` "polaroid tape" treatment (a white card
+with a rotated washi-tape accent, inspired by `Ideas/style_1–3.jpeg`) existed
+at one point and has since been fully retired, CSS included. If you find any
+doc or memory of it elsewhere, it's stale — don't reintroduce a card/tape
+frame without discussing it first. `variant` picks the image's own shape:
+`"circle"` (avatars), `"portrait"` (3:4, no crop), or `"rounded"` (soft
+corners, no fixed ratio — used almost everywhere else, including every photo
+in Method). Photos across the site are plain rounded/cropped images now;
+where a section wants visual energy it reaches for other current patterns
+instead of a frame — background blob SVGs (About, Results, Method's hero
+band), or a slight tilt applied via an inline `--rotate` CSS custom property
+per card (`PainPoints`' bubbles, Method's 3 "what makes my lessons different"
+step cards).
 
 ## Structure
 
@@ -123,11 +122,13 @@ src/utils/highlightText.ts Splits a string into plain/highlighted parts (used by
 Ideas/                     Reference mockups that informed the design (see Ideas/README.md)
 ```
 
-Page sections, in render order: Hero → About → PainPoints → Method → Results
-→ Contact, each its own component in `src/components/`. Shared/non-section
-components: `Navbar` (fixed nav), `CustomCursor`, `PlaceholderImage`,
-`SectionKicker` (small rotated tab/sticker-style label, see below), and
-`SocialIcon` (a small hand-authored icon set — no icon library dependency).
+Page sections, in render order: Hero → PainPoints → Method → Services →
+Results → Testimonials → About → Contact, each its own component in
+`src/components/`. Shared/non-section components: `Navbar` (fixed nav),
+`CustomCursor`, `PlaceholderImage`, `SectionKicker` (a small rotated
+tab/sticker-style label component — still exists but currently unused, see
+below), and `SocialIcon`/`NavIcon`/`TestimonialAvatar` (hand-authored icon
+sets — no icon library dependency).
 
 A couple of content-modeling choices worth knowing before editing copy:
 
@@ -136,6 +137,18 @@ A couple of content-modeling choices worth knowing before editing copy:
   — there's no separate `hero.headline` field. This is deliberate: the brand
   name and the hero title are the same string, kept as one source of truth
   instead of two fields that could drift out of sync.
+- **`Method.astro` is 5 stacked bands, not one uniform layout** — a hero
+  intro (`heroImage`/`heroCta`/markdown `introText`), a 3-card "what makes my
+  lessons different" band (`steps`, each `{ text, image }` — a photo stacked
+  above a tilted card, tilt set per-card via an inline `--rotate` CSS custom
+  property), a 2-column "how I teach" band (`teachingImage`/`teachingText`),
+  the original 6-card lessons grid (`items`, unchanged), and a closing CTA
+  band (`closingHeading`/`closingText`/`closingCta`). `MethodContent`
+  (`src/types/content.ts`) has a field for each of these; the admin editor's
+  Method fieldset has a matching input for every scalar field plus two list
+  editors — the pre-existing `methodItems` (title + description + image, for
+  the lessons grid) and a newer `methodSteps` (text + image only, for the
+  3-card band).
 - **The highlighted heading above the pain-point bubbles** ("Learn Italian
   with a Native Italian Teacher", with accent-colored words) is
   `painPoints.heading` / `painPoints.highlightWords`, rendered via
@@ -150,15 +163,25 @@ A couple of content-modeling choices worth knowing before editing copy:
   properties in `src/styles/global.css`, entirely independent of this field.
   Changing it in the editor will not recolor the page — that's a common
   point of confusion given the "Theme color" label, not a bug.
-- **`SectionKicker` labels are hardcoded, not content-driven** — a deliberate
-  exception to this project's usual rule that components never hardcode
-  copy. `SectionKicker` renders a small rotated sticker-style label
-  (`label`/`color` props) above the `<h2>` in About, Method, Results, and
-  Contact; each caller passes a literal string ("About", "Method", etc.)
-  inline rather than reading it from `siteContent.json`. There is no
-  `kicker` field in `SiteContent` — don't go looking for one. Hero skips it
-  entirely since `hero.eyebrow` already fills that role from content.
-  Treated as decoration (like the blob SVGs below), not editable copy.
+- **`SectionKicker` exists but nothing currently imports it.** It renders a
+  small rotated sticker-style label (`label`/`color` props, hardcoded per
+  caller rather than content-driven — the one deliberate exception to this
+  project's "components never hardcode copy" rule, from when it was in use).
+  Sections went through a heading-consistency pass and dropped their kicker
+  labels in favor of a plain heading (see `.section-heading` below); it was
+  kept in the codebase rather than deleted in case the pattern is wanted
+  again. There is no `kicker` field in `SiteContent` — don't go looking for
+  one.
+- **Every section's main heading shares one `.section-heading` class**
+  (`src/styles/global.css`: `font-size: clamp(2.1rem, 4.5vw, 3.2rem)`) —
+  the single source of truth for heading size, replacing what used to be an
+  identical `h2 { font-size: ... }` rule duplicated inside every section
+  component. Color stays a per-component `<style>` declaration (or is
+  inherited from the section's own background, as in `Contact`), since
+  color is legitimately contextual to each section, but size isn't. **Only
+  `Hero.astro`'s `<h1>` opts out**, with its own slightly larger
+  `clamp(2.3rem, 5vw, 3.6rem)` — a deliberate exception (it's the single
+  biggest heading on the page), not a leftover inconsistency to fix.
 - Soft, near-transparent background shapes — blob SVGs in About/Results, a
   faint Italy-outline watermark in Contact (reprising the Italy motif from
   `Ideas/hero_v2.jpeg`) — sit behind section content at `z-index: 0` with
@@ -189,7 +212,8 @@ components and hand-written CSS custom properties in `global.css`.
 field in `SiteContent` — text/textarea inputs, image upload-and-preview
 fields (with orientation hints like "Portrait photo, roughly 3:4 — shown
 as-is, never cropped"), and add/remove list editors for `hero.socialLinks`,
-`painPoints.questions`, `painPoints.highlightWords`, and `method.items`.
+`painPoints.questions`, `painPoints.highlightWords`, `method.steps`,
+`method.items`, `services.items`, and `testimonials.items`.
 
 **This replaced an earlier plan to use Sveltia CMS with a Cloudflare Worker
 OAuth broker.** That approach was scrapped before ever merging — it was more
@@ -217,18 +241,20 @@ then commits the updated JSON straight to `main`. There is no draft or PR
 review step — saving publishes immediately, and the commit triggers
 `deploy.yml` automatically. Each pending image upload is tracked in a
 `pendingUploads` map and removed as soon as its individual upload succeeds
-(not just bulk-cleared at the end), and method-item cards with no
-title/description are dropped *before* any upload is attempted — both to
-avoid orphaning images in `public/images/` on a partial failure or retry.
+(not just bulk-cleared at the end), and list rows with no text (`methodItems`
+cards with no title/description, `methodSteps` rows with no text) are dropped
+*before* any upload is attempted — both to avoid orphaning images in
+`public/images/` on a partial failure or retry.
 
 **Uploads must be committed under `public/images/`, not a repo-root
 `images/`.** `astro.config.mjs` doesn't override `publicDir`, so Astro's
 default applies: only files under `public/` get copied into `dist/` at build
 time and served live — this is the same assumption `withBase()` (above)
-relies on for every other hardcoded/content-driven image path. Both upload
-call sites in `src/pages/admin/index.astro` (`uploadPendingImages`, for
-top-level image fields, and the per-item upload inside `readMethodItems`,
-for method-card photos) commit to `public/images/<slug>` while storing the
+relies on for every other hardcoded/content-driven image path. The upload
+call sites in `src/pages/admin/index.astro` (`uploadPendingImages` for
+top-level image fields, plus the per-item upload inside the two list editors
+that carry a photo per row — `readMethodItems` and `readMethodSteps`) all
+commit to `public/images/<slug>` while storing the
 served-style path `/images/<slug>` in the JSON. Getting this wrong is a
 silent failure mode worth knowing about: the git commit still succeeds and
 the JSON field still gets updated, so the editor reports "Saved!" — the only
@@ -248,13 +274,13 @@ These are known, intentional gaps — not oversights:
   submit handler just calls `preventDefault()` and toggles the success-state
   CSS class; no `fetch`/`action` call sends the data anywhere, so it's
   currently discarded. Web3Forms is the intended backend; not yet integrated.
-- **Real photos and final copy**: `hero.backgroundImage` and 3 of the 6
-  `method.items` images are still empty (rendering as placeholders or, for
-  `backgroundImage`, no background at all); cursor art is done (see
-  `CustomCursor` above). `results.intermediate` and `results.advanced` are
-  still literal `"placeholder description"` text — `results.beginner` is
-  real copy. `hero.socialLinks`' email entry is a placeholder `"#"` URL, not
-  a real mailto/contact link.
+- **Real photos and final copy**: several Method image fields are still
+  empty and render as "Photo coming soon" placeholders — `heroImage`,
+  `teachingImage`, all 3 `steps[].image`, and 4 of the 6 `items[].image`;
+  cursor art is done (see `CustomCursor` above). `results.advanced` is still
+  literal `"placeholder description"` text — `results.beginner` and
+  `results.intermediate` are real copy. `hero.socialLinks`' email entry is a
+  placeholder `"#"` URL, not a real mailto/contact link.
 
 ## Reference material
 

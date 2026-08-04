@@ -12,7 +12,7 @@ const { content } = Astro.props;
 <section id="contact" class="contact">
 	<img src={withBase("/images/italy.svg")} class="contact-italy" alt="" aria-hidden="true" />
 	<div class="container contact-inner">
-		<h2>{content.heading}</h2>
+		<h2 class="section-heading">{content.heading}</h2>
 		{content.description && <p class="description">{content.description}</p>}
 
 		<form class="contact-form" data-contact-form>
@@ -63,7 +63,6 @@ const { content } = Astro.props;
 	}
 
 	h2 {
-		font-size: clamp(1.8rem, 3.5vw, 2.6rem);
 		margin-bottom: 0.75rem;
 	}
 

@@ -24,7 +24,7 @@ const bioHtml = renderMarkdown(content.bio);
 		</div>
 		<div class="container about-copy">
 			<p class="greeting">{content.greeting}</p>
-			<h2>{content.name}</h2>
+			<h2 class="section-heading">{content.name}</h2>
 			<div class="bio" set:html={bioHtml} />
 		</div>
 	</div>
@@ -86,7 +86,6 @@ const bioHtml = renderMarkdown(content.bio);
 	}
 
 	h2 {
-		font-size: clamp(1.8rem, 3.5vw, 2.6rem);
 		color: var(--color-primary-dark);
 		margin-bottom: 1.25rem;
 	}
