@@ -60,10 +60,11 @@ import "../../styles/global.css";
 
 				<fieldset class="panel">
 					<legend>Hero Section</legend>
-					<label>Eyebrow (small label above the title)<input data-field="hero.eyebrow" type="text" /></label>
+					<label>Body text<textarea data-field="hero.text" rows="3"></textarea></label>
+					<p class="hint">Shown under the title. Line breaks are preserved.</p>
 					<div class="image-field" data-image-field="hero.image">
 						<label>Photo</label>
-						<p class="hint">Portrait photo, roughly 3:4. Shown as-is — never cropped.</p>
+						<p class="hint">Square-ish photo — cropped to a square with a fade effect on one edge.</p>
 						<img data-image-preview class="image-preview" alt="" />
 						<input type="file" accept="image/*" />
 					</div>

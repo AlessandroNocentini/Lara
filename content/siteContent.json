@@ -5,12 +5,11 @@
     "language": "en",
     "primaryColor": "#25b686",
     "secondaryColor": "#f9c80e",
-    "tertiaryColor": "#e3170a",
-    "themeColor": "#8e908f"
+    "tertiaryColor": "#e3170a"
   },
   "hero": {
-    "eyebrow": "",
-    "image": "/images/whatsapp-image-2026-07-23-at-11-10-56-1-mrxaukhr-ms1rr2pb-ms2a50el.png",
+    "text": "Fun, interactive lessons tailored to you.\nFor real conversations and real life.",
+    "image": "/images/lara_about.jpg",
     "socialLinks": [
       {
         "platform": "instagram",

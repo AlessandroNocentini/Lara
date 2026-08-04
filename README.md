@@ -56,8 +56,9 @@ absolute `/`-rooted path with `import.meta.env.BASE_URL` (external
 `http(s)://` URLs pass through unchanged). It's applied everywhere an
 absolute path from `siteContent.json` (or a hardcoded asset path) gets
 rendered: `PlaceholderImage.astro`, `CustomCursor.astro`, `SpritzTitle.astro`,
-`Hero.astro` (the `backgroundImage` CSS `url()`), `Layout.astro` (favicon
-`href`), and the admin editor's image previews (`src/pages/admin/index.astro`).
+`Hero.astro` (the Italy silhouette's `mask-image: url(...)`), `Navbar.astro`
+(the brand icon fed into `SpritzTitle`), `Layout.astro` (favicon `href`), and
+the admin editor's image previews (`src/pages/admin/index.astro`).
 
 **If you add a new place that renders a `/`-rooted path from content (or
 hardcodes one), route it through `withBase()` or it will 404 once
@@ -83,11 +84,13 @@ direct path for a developer.
 Most `image`-type fields left as an empty string (`""`) render as a
 "Photo coming soon" placeholder ([`PlaceholderImage.astro`](src/components/PlaceholderImage.astro))
 instead of a broken `<img>` — so real photos can be dropped in later by
-filling in a path, with no code change. The one exception is
-`hero.backgroundImage`: it's applied as a CSS background (layered under a
-translucent teal gradient in `Hero.astro`), not rendered through
-`PlaceholderImage`, so an empty value there just means "no background image,"
-not a visible placeholder.
+filling in a path, with no code change. There used to be an exception for a
+configurable `hero.backgroundImage` field (a photo layered under Hero's
+gradient, applied as a CSS background rather than through
+`PlaceholderImage`); that field was removed entirely — Hero's background is
+now just the gradient plus the Italy silhouette flourish, and `hero.image`
+(the portrait photo) goes through `PlaceholderImage` like every other photo
+field.
 
 `PlaceholderImage` also takes optional `frame` / `rotate` / `tapeColor` props
 (all default off/unset, so existing callers are unaffected) that wrap the
@@ -142,23 +145,15 @@ A couple of content-modeling choices worth knowing before editing copy:
   `splitHighlighted()` from `src/utils/highlightText.ts`. It lives on
   `PainPointsContent`, not `HeroContent` — despite reading like a hero
   headline, it renders inside the PainPoints section.
-- **`meta.themeColor` only tints mobile browser chrome — it is not the
-  site's palette.** It's saved by `/admin` and consumed exactly once, by
-  `Layout.astro`'s `<meta name="theme-color" content={meta.themeColor} />`,
-  which colors the address bar / status bar on Chrome for Android and iOS
-  Safari. The site's actual visible colors are hardcoded CSS custom
-  properties in `src/styles/global.css`, entirely independent of this field.
-  Changing it in the editor will not recolor the page — that's a common
-  point of confusion given the "Theme color" label, not a bug.
-- **`SectionKicker` labels are hardcoded, not content-driven** — a deliberate
-  exception to this project's usual rule that components never hardcode
-  copy. `SectionKicker` renders a small rotated sticker-style label
-  (`label`/`color` props) above the `<h2>` in About, Method, Results, and
-  Contact; each caller passes a literal string ("About", "Method", etc.)
-  inline rather than reading it from `siteContent.json`. There is no
-  `kicker` field in `SiteContent` — don't go looking for one. Hero skips it
-  entirely since `hero.eyebrow` already fills that role from content.
-  Treated as decoration (like the blob SVGs below), not editable copy.
+- **There is no `meta.themeColor` field.** `<meta name="theme-color">` in
+  `Layout.astro` reads `meta.primaryColor` directly — the same token that
+  drives the rest of the palette. An earlier, separate `themeColor` field
+  existed for this one purpose, drifted into an orphaned JSON key with no
+  type and no reader, and was removed; don't reintroduce it.
+- **There is no `hero.eyebrow` field.** Hero had a small label-above-the-title
+  slot at one point; it was unused (empty string) and had no place in the
+  current Hero layout, so it was removed from `HeroContent`, the JSON, and
+  the admin editor along with it.
 - Soft, near-transparent background shapes — blob SVGs in About/Results, a
   faint Italy-outline watermark in Contact (reprising the Italy motif from
   `Ideas/hero_v2.jpeg`) — sit behind section content at `z-index: 0` with
@@ -248,13 +243,11 @@ These are known, intentional gaps — not oversights:
   submit handler just calls `preventDefault()` and toggles the success-state
   CSS class; no `fetch`/`action` call sends the data anywhere, so it's
   currently discarded. Web3Forms is the intended backend; not yet integrated.
-- **Real photos and final copy**: `hero.backgroundImage` and 3 of the 6
-  `method.items` images are still empty (rendering as placeholders or, for
-  `backgroundImage`, no background at all); cursor art is done (see
-  `CustomCursor` above). `results.intermediate` and `results.advanced` are
-  still literal `"placeholder description"` text — `results.beginner` is
-  real copy. `hero.socialLinks`' email entry is a placeholder `"#"` URL, not
-  a real mailto/contact link.
+- **Real photos and final copy**: 3 of the 6 `method.items` images are still
+  empty (rendering as placeholders); cursor art is done (see `CustomCursor`
+  above). `hero.image` currently points at the same photo as `about.image`
+  as a placeholder, pending a dedicated hero photo. `hero.socialLinks`'
+  email entry is a placeholder `"#"` URL, not a real mailto/contact link.
 
 ## Reference material
 
