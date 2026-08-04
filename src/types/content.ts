@@ -42,14 +42,32 @@ export interface MethodItem {
   image: string;
 }
 
+export interface MethodStep {
+  text: string;
+  image: string;
+}
+
 export interface MethodContent {
   title: string;
   introSubtitle: string;
   introText: string;
+  heroImage: string;
+  heroCta: {
+    label: string;
+    target: string;
+  };
   stepsLabel: string;
-  steps: string[];
+  steps: MethodStep[];
   lessonsSubtitle: string;
+  teachingImage: string;
+  teachingText: string;
   items: MethodItem[];
+  closingHeading: string;
+  closingText: string;
+  closingCta: {
+    label: string;
+    target: string;
+  };
   visible: boolean;
 }
 

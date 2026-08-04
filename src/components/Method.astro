@@ -1,5 +1,6 @@
 ---
 import PlaceholderImage from "./PlaceholderImage.astro";
+import { renderMarkdown } from "../utils/markdown";
 import type { MethodContent } from "../types/content";
 
 interface Props {
@@ -7,37 +8,82 @@ interface Props {
 }
 
 const { content } = Astro.props;
-const rotations = [-2, 1, -1.5, 2, -1, 1.5];
+
+const introHtml = renderMarkdown(content.introText);
+
+const stepBadgeColors = ["var(--color-primary)", "var(--color-secondary)", "var(--color-tertiary)"];
+const stepRotations = [-3, 2, -2.5];
 ---
 
 <section id="method" class="method">
-	<div class="method-intro-block">
-		<div class="container method-intro-inner">
-			<div class="method-intro-copy">
-				<h2 class="method-title">{content.title}</h2>
-				<p class="method-subtitle">{content.introSubtitle}</p>
-				<p class="method-intro-text">{content.introText}</p>
-				<p class="method-steps-label">{content.stepsLabel}:</p>
+	<!-- Band A: hero intro -->
+	<div class="method-hero">
+		<svg class="method-hero-blob" viewBox="0 0 400 400" aria-hidden="true">
+			<path
+				fill="var(--color-secondary-light)"
+				d="M300 70 C360 130 350 250 280 310 C210 370 90 360 50 290 C10 220 30 100 110 60 C190 20 240 10 300 70 Z"
+			/>
+		</svg>
+		<div class="container method-hero-inner">
+			<div class="method-hero-copy">
+				<div class="method-hero-title-row">
+					<h2 class="method-hero-title section-heading">{content.title}</h2>
+					<svg class="method-sparkle" viewBox="0 0 24 24" fill="none" stroke="var(--color-tertiary)" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+						<path d="M12 2v6M12 16v6M2 12h6M16 12h6M4.5 4.5l4 4M15.5 15.5l4 4M19.5 4.5l-4 4M8.5 15.5l-4 4" />
+					</svg>
+				</div>
+				<p class="method-hero-tagline">{content.introSubtitle}</p>
 			</div>
-			<div class="method-steps-col">
-				<ul class="method-steps">
-					{content.steps.map((step, i) => (
-						<li
-							class="method-step"
-							data-hover-wiggle
-							style={`--rotate: ${rotations[i % rotations.length]}deg`}
-						>
-							<span class="method-step-number">{i + 1}.</span> {step}
-						</li>
-					))}
-				</ul>
+			<div class="method-hero-photo" data-hover-lift>
+				<PlaceholderImage src={content.heroImage || undefined} alt="Lara teaching" variant="rounded" />
+			</div>
+			<div class="method-hero-text">
+				<div class="method-hero-body" set:html={introHtml} />
+				<a class="button button-primary" href={content.heroCta.target} data-hover-lift>{content.heroCta.label}</a>
 			</div>
 		</div>
 	</div>
 
+	<!-- Band B: what makes my lessons different -->
+	<div class="method-steps-block">
+		<div class="container">
+			<h3 class="method-steps-heading section-heading">{content.stepsLabel}</h3>
+			<div class="method-steps-grid">
+				{content.steps.map((step, i) => (
+					<div class="method-step-stack">
+						<div class="method-step-photo">
+							<PlaceholderImage src={step.image || undefined} alt="" variant="rounded" />
+						</div>
+						<div
+							class="method-step-card"
+							data-hover-wiggle
+							style={`--rotate: ${stepRotations[i % stepRotations.length]}deg`}
+						>
+							<span class="method-step-badge" style={`background: ${stepBadgeColors[i % stepBadgeColors.length]}`}>
+								{String(i + 1).padStart(2, "0")}
+							</span>
+							<p>{step.text}</p>
+						</div>
+					</div>
+				))}
+			</div>
+		</div>
+	</div>
+
+	<!-- Band C: how I teach -->
+	<div class="method-teaching-block">
+		<div class="method-teaching-photo" data-hover-lift>
+			<PlaceholderImage src={content.teachingImage || undefined} alt="Lara teaching a lesson" variant="rounded" />
+		</div>
+		<div class="method-teaching-copy">
+			<h3 class="section-heading">{content.lessonsSubtitle}</h3>
+			<p>{content.teachingText}</p>
+		</div>
+	</div>
+
+	<!-- Band D: lessons grid (kept as-is) -->
 	<div class="method-lessons-block">
 		<div class="container">
-			<h3 class="method-lessons-subtitle">{content.lessonsSubtitle}</h3>
 			<div class="method-grid">
 				{content.items.map((item) => (
 					<article class="method-card" data-hover-lift>
@@ -53,132 +99,268 @@ const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 			</div>
 		</div>
 	</div>
+
+	<!-- Band E: closing CTA -->
+	<div class="method-closing-block">
+		<div class="container method-closing-inner">
+			<h3 class="section-heading">{content.closingHeading}</h3>
+			<p>{content.closingText}</p>
+			<a class="button button-primary" href={content.closingCta.target} data-hover-lift>{content.closingCta.label}</a>
+		</div>
+	</div>
 </section>
 
 <style>
-	.method-intro-block {
-		background: linear-gradient(160deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
-		color: var(--color-white);
+	.method-hero {
+		position: relative;
+		background: var(--color-white);
 		padding: var(--section-padding);
+		overflow: hidden;
 	}
 
-	.method-intro-inner {
+	.method-hero-blob {
+		position: absolute;
+		top: -12%;
+		right: -10%;
+		width: 26rem;
+		height: 26rem;
+		opacity: 0.35;
+		pointer-events: none;
+		z-index: 0;
+	}
+
+	.method-hero-inner {
+		position: relative;
+		z-index: 1;
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: clamp(2rem, 5vw, 4rem);
-		align-items: start;
+		grid-template-areas:
+			"copy copy"
+			"photo text";
+		gap: clamp(1.5rem, 4vw, 3rem);
 	}
 
-	.method-intro-copy {
+	.method-hero-copy {
+		grid-area: copy;
+	}
+
+	.method-hero-title-row {
 		display: flex;
-		flex-direction: column;
+		align-items: center;
+		gap: 0.6rem;
 	}
 
-	.method-title {
-		font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-		margin-bottom: 0.75rem;
-	}
-
-	.method-subtitle {
-		font-weight: 700;
-		font-size: 1.1rem;
-		color: var(--color-secondary-light);
-		margin-bottom: 1rem;
-	}
-
-	.method-intro-text {
-		color: rgb(255 255 255 / 0.85);
-		max-width: 34rem;
-		margin-bottom: 1.5rem;
-	}
-
-	.method-steps-col {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.method-steps-label {
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.04em;
-		font-size: 0.85rem;
-		color: var(--color-secondary-light);
-	}
-
-	.method-steps {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 1.25rem;
-	}
-
-	.method-step {
-		position: relative;
-		max-width: 22rem;
-		background: var(--color-cream);
-		border: 2px solid var(--color-white);
+	.method-hero-title {
 		color: var(--color-primary-dark);
-		border-radius: var(--radius-lg);
-		padding: 1rem 1.5rem;
+	}
+
+	.method-sparkle {
+		width: clamp(1.1rem, 2vw, 1.5rem);
+		height: clamp(1.1rem, 2vw, 1.5rem);
+		flex-shrink: 0;
+	}
+
+	.method-hero-tagline {
+		max-width: 24rem;
+		margin-left: auto;
+		text-align: right;
+		text-transform: uppercase;
+		letter-spacing: 0.02em;
 		font-weight: 700;
-		font-size: 0.95rem;
-		box-shadow: var(--shadow-soft);
-		transform: rotate(var(--rotate));
+		font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+		line-height: 1.25;
+		color: var(--color-tertiary);
 	}
 
-	.method-step-number {
-		color: var(--color-primary);
+	.method-hero-photo {
+		grid-area: photo;
 	}
 
-	.method-step::after {
-		content: "";
-		position: absolute;
-		bottom: -0.55rem;
-		left: 1.6rem;
-		width: 1rem;
-		height: 1rem;
-		background: var(--color-cream);
-		border-bottom: 2px solid var(--color-white);
-		border-right: 2px solid var(--color-white);
-		transform: rotate(45deg);
-		border-radius: 0 0 3px 0;
+	.method-hero-photo :global(.placeholder-image) {
+		aspect-ratio: 4 / 3;
+	}
+
+	.method-hero-text {
+		grid-area: text;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: center;
+		gap: 1.5rem;
+	}
+
+	.method-hero-body :global(p) {
+		font-size: 1.1rem;
+		color: var(--color-ink);
+	}
+
+	.method-hero-body :global(strong) {
+		color: var(--color-primary-dark);
 	}
 
 	@media (max-width: 800px) {
-		.method-intro-inner {
+		.method-hero-inner {
 			grid-template-columns: 1fr;
+			grid-template-areas:
+				"copy"
+				"photo"
+				"text";
 			text-align: center;
 		}
 
-		.method-intro-copy {
+		.method-hero-title-row {
+			flex-direction: column;
 			align-items: center;
 		}
 
-		.method-intro-text {
-			max-width: none;
+		.method-hero-tagline {
+			margin-inline: auto;
+			text-align: center;
 		}
 
-		.method-steps-col {
+		.method-hero-text {
 			align-items: center;
 		}
+	}
 
-		.method-steps {
-			align-items: center;
+	.method-steps-block {
+		background: var(--color-cream);
+		padding: var(--section-padding);
+	}
+
+	.method-steps-heading {
+		position: relative;
+		z-index: 0;
+		text-align: center;
+		color: var(--color-tertiary);
+		margin-bottom: -1rem;
+	}
+
+	.method-steps-grid {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 2.5rem;
+	}
+
+	.method-step-stack {
+		position: relative;
+		padding-top: 3rem;
+	}
+
+	.method-step-photo {
+		width: 70%;
+		margin-inline: auto;
+	}
+
+	.method-step-photo :global(.placeholder-image) {
+		aspect-ratio: 1 / 1;
+		border-radius: var(--radius-md);
+	}
+
+	.method-step-card {
+		position: relative;
+		z-index: 1;
+		margin: -3rem 0.5rem 0;
+		background: var(--color-white);
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-lift);
+		padding: 1.5rem 1.25rem 1.25rem;
+		transform: rotate(var(--rotate));
+	}
+
+	.method-step-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.2rem;
+		height: 2.2rem;
+		border-radius: var(--radius-full);
+		color: var(--color-white);
+		font-weight: 700;
+		font-size: 0.85rem;
+		margin-bottom: 0.75rem;
+	}
+
+	.method-step-card p {
+		color: var(--color-ink-soft);
+		font-size: 0.95rem;
+	}
+
+	@media (max-width: 900px) {
+		.method-steps-heading {
+			margin-bottom: 1.5rem;
+		}
+
+		.method-steps-grid {
+			grid-template-columns: 1fr;
+			max-width: 24rem;
+			margin-inline: auto;
+			gap: 3.5rem;
+		}
+	}
+
+	.method-teaching-block {
+		display: grid;
+		grid-template-columns: minmax(280px, 40%) 1fr;
+		align-items: stretch;
+		min-height: 26rem;
+	}
+
+	.method-teaching-photo {
+		position: relative;
+		height: 100%;
+	}
+
+	.method-teaching-photo :global(.placeholder-image) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 0;
+		display: block;
+	}
+
+	.method-teaching-copy {
+		background: linear-gradient(160deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+		color: var(--color-white);
+		padding: var(--section-padding);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.method-teaching-copy h3 {
+		margin-bottom: 1rem;
+	}
+
+	.method-teaching-copy p {
+		color: rgb(255 255 255 / 0.9);
+		max-width: 28rem;
+		font-size: 1.05rem;
+	}
+
+	@media (max-width: 800px) {
+		.method-teaching-block {
+			grid-template-columns: 1fr;
+			min-height: auto;
+			text-align: center;
+		}
+
+		.method-teaching-photo {
+			width: 100%;
+			height: auto;
+			aspect-ratio: 4 / 3;
+		}
+
+		.method-teaching-copy p {
+			margin-inline: auto;
 		}
 	}
 
 	.method-lessons-block {
 		background: var(--color-white);
 		padding: var(--section-padding);
-	}
-
-	.method-lessons-subtitle {
-		font-size: clamp(1.8rem, 3vw, 2.4rem);
-		color: var(--color-primary-dark);
-		text-align: center;
-		margin-bottom: 2.5rem;
 	}
 
 	.method-grid {
@@ -232,5 +414,29 @@ const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 	.method-card p {
 		color: var(--color-ink-soft);
 		font-size: 0.95rem;
+	}
+
+	.method-closing-block {
+		background: var(--color-cream);
+		border-top: 1px solid color-mix(in srgb, var(--color-primary) 15%, transparent);
+		padding: var(--section-padding);
+	}
+
+	.method-closing-inner {
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.method-closing-inner h3 {
+		color: var(--color-primary-dark);
+		max-width: 34rem;
+	}
+
+	.method-closing-inner p {
+		color: var(--color-ink-soft);
+		max-width: 28rem;
 	}
 </style>

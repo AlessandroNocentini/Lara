@@ -39,7 +39,7 @@ const activeLevels = levels
 			<PlaceholderImage src={content.image || undefined} alt="Results of learning Italian with Lara" variant="rounded" />
 		</div>
 		<div class="results-levels">
-			<h2>{content.title}</h2>
+			<h2 class="section-heading">{content.title}</h2>
 			{activeLevels.map((level) => (
 				<div class="results-card" data-hover-lift>
 					{level.label && <span class="results-label">{level.label}</span>}
@@ -84,7 +84,6 @@ const activeLevels = levels
 	}
 
 	h2 {
-		font-size: clamp(1.8rem, 3.5vw, 2.6rem);
 		color: var(--color-primary-dark);
 		margin-bottom: 1.5rem;
 	}

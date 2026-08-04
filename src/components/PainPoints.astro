@@ -17,7 +17,7 @@ const headingParts = splitHighlighted(content.heading, content.highlightWords);
 <section id="pain-points" class="pain-points">
 	<div class="container pain-points-inner">
 		<div class="pain-points-copy">
-			<h2>
+			<h2 class="section-heading">
 				{headingParts.map((part, i) =>
 					part.highlight ? (
 						<span class="highlight" style={`--highlight-color: ${accentColors[i % accentColors.length]}`}>{part.text}</span>
@@ -65,7 +65,6 @@ const headingParts = splitHighlighted(content.heading, content.highlightWords);
 	}
 
 	h2 {
-		font-size: clamp(1.8rem, 3.5vw, 2.6rem);
 		color: var(--color-primary-dark);
 	}
 
