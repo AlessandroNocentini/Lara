@@ -4,6 +4,8 @@
 @import "@fontsource/nunito/400.css";
 @import "@fontsource/nunito/600.css";
 @import "@fontsource/nunito/700.css";
+@import "@fontsource/bebas-neue/400.css";
+@import "@fontsource/beau-rivage/400.css";
 
 :root {
   /* Brand palette — the only 3 colors + white; every other tone below is
@@ -24,6 +26,8 @@
   /* Typography */
   --font-heading: "Fraunces", Georgia, serif;
   --font-body: "Nunito", system-ui, sans-serif;
+  --font-display: "Bebas Neue", "Haettenschweiler", Impact, sans-serif;
+  --font-script: "Beau Rivage", "Freestyle Script", cursive;
 
   /* Spacing / shape */
   --radius-sm: 0.5rem;

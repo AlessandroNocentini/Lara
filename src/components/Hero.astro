@@ -41,8 +41,8 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 			))}
 		</ul>
 	)}
-	<div class="hero-inner container">
-		<div class="hero-copy">
+	<div class="hero-inner">
+		<div class="hero-copy container">
 			<span class="hero-italy" aria-hidden="true" style={`mask-image:url(${withBase("/images/italy.svg")});-webkit-mask-image:url(${withBase("/images/italy.svg")});`}></span>
 			<h1>
 				<span class="title-line">
@@ -53,14 +53,10 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 			{content.text && <p class="hero-text">{content.text}</p>}
 			<a class="button button-primary hero-cta" href="#contact" data-hover-lift>Let's learn together →</a>
 		</div>
-		<div class="hero-portrait" data-hover-lift>
-			<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="square" />
+		<div class="hero-portrait">
+			<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="rounded" />
 		</div>
 	</div>
-
-	<svg class="hero-wave" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true">
-		<path d="M0,50 C320,-20 1120,110 1440,40 L1440,100 L0,100 Z" fill="var(--color-cream)" />
-	</svg>
 </section>
 
 <style>
@@ -71,7 +67,6 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 		background-size: cover;
 		background-position: center;
 		color: var(--color-white);
-		padding: calc(var(--navbar-height) + clamp(2.5rem, 6vw, 5rem)) clamp(1.5rem, 6vw, 4rem) 6rem;
 		overflow: hidden;
 	}
 
@@ -90,20 +85,24 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 		position: relative;
 		z-index: 1;
 		display: grid;
-		grid-template-columns: 1.3fr 1fr;
-		gap: clamp(2rem, 5vw, 4rem);
-		align-items: center;
+		grid-template-columns: minmax(320px, 50%) 1fr;
+		align-items: stretch;
+		min-height: 34rem;
 	}
 
 	.hero-copy {
 		position: relative;
+		padding: calc(var(--navbar-height) + clamp(2.5rem, 6vw, 5rem)) clamp(1.5rem, 6vw, 4rem) clamp(2.5rem, 6vw, 4rem) clamp(1.5rem, 6vw, 4rem);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 	}
 
 	.hero-italy {
 		display: block;
 		position: absolute;
 		left: -3.25rem;
-		top: 0.25rem;
+		top: calc(var(--navbar-height) + 0.25rem);
 		width: 6rem;
 		aspect-ratio: 287.9 / 346.2;
 		background-color: var(--color-secondary-light);
@@ -124,7 +123,10 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 		display: flex;
 		flex-direction: column;
 		text-transform: uppercase;
-		font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+		font-family: var(--font-display);
+		letter-spacing: 0.015em;
+		font-size: clamp(3.2rem, 7vw, 5.5rem);
+		line-height: 1.05;
 		margin-bottom: 1.25rem;
 	}
 
@@ -152,10 +154,6 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 			animation: enter-fade-up 0.4s ease-out 0.32s both;
 		}
 
-		.hero-portrait {
-			animation: enter-drop 0.7s cubic-bezier(0.34, 1.15, 0.64, 1) 0.15s both, idle-sway 9s ease-in-out 0.85s infinite;
-		}
-
 		.hero-cta {
 			animation: enter-fade-up 0.4s ease-out 0.5s both;
 		}
@@ -167,9 +165,10 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 
 	.title-line:last-child {
 		text-transform: none;
-		font-family: var(--font-heading);
-		font-style: italic;
-		font-weight: 600;
+		font-family: var(--font-script);
+		font-weight: 400;
+		font-size: 0.65em;
+		letter-spacing: 0;
 		color: var(--color-secondary-light);
 	}
 
@@ -193,9 +192,9 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 		height: 2.75rem;
 		border-radius: var(--radius-full);
 		background: var(--color-white);
-		color: var(--color-primary);
+		color: var(--color-tertiary);
 		box-shadow: var(--shadow-soft);
-		transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+		transition: background-color 0.2s ease, color 0.2s ease;
 	}
 
 	.social-links a:hover {
@@ -205,27 +204,23 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 
 	.hero-portrait {
 		position: relative;
-		width: min(420px, 78vw);
-		margin-inline: auto;
+		height: 100%;
 	}
 
 	.hero-portrait :global(.placeholder-image) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 0;
+		display: block;
 		mask-image: linear-gradient(to left, black 55%, transparent 100%);
 		-webkit-mask-image: linear-gradient(to left, black 55%, transparent 100%);
-	}
-
-	.hero-wave {
-		position: absolute;
-		bottom: -2px;
-		left: 0;
-		width: 100%;
-		height: 90px;
-		display: block;
 	}
 
 	@media (max-width: 800px) {
 		.hero-inner {
 			grid-template-columns: 1fr;
+			min-height: auto;
 			text-align: center;
 		}
 
@@ -237,6 +232,11 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 		.hero-text {
 			max-width: none;
 			margin-inline: auto;
+		}
+
+		.hero-portrait {
+			height: auto;
+			aspect-ratio: 4 / 5;
 		}
 
 		.hero-portrait :global(.placeholder-image) {
