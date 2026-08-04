@@ -102,8 +102,8 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 	.hero-italy {
 		display: block;
 		position: absolute;
-		left: -1rem;
-		top: calc(var(--navbar-height) + 0.5rem);
+		left: 3rem;
+		top: calc(var(--navbar-height) + 10rem);
 		width: 12rem;
 		aspect-ratio: 287.9 / 346.2;
 		background-color: var(--color-secondary-light);
@@ -113,7 +113,7 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 		-webkit-mask-repeat: no-repeat;
 		-webkit-mask-position: center;
 		-webkit-mask-size: contain;
-		opacity: 0.45;
+		opacity: 0.5;
 		pointer-events: none;
 		z-index: 0;
 	}
@@ -213,7 +213,7 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 	}
 
 	.social-links a[data-platform="instagram"] {
-		color: var(--color-secondary);
+		color: var(--color-tertiary);
 	}
 
 	.social-links a[data-platform="email"]:hover {
@@ -222,7 +222,7 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 	}
 
 	.social-links a[data-platform="instagram"]:hover {
-		background: var(--color-secondary);
+		background: var(--color-tertiary);
 		color: var(--color-white);
 	}
 
