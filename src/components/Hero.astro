@@ -31,6 +31,7 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 					<a
 						href={social.url}
 						data-hover-lift
+						data-platform={social.platform}
 						aria-label={social.platform}
 						target={social.platform === "email" ? undefined : "_blank"}
 						rel={social.platform === "email" ? undefined : "noopener noreferrer"}
@@ -101,9 +102,9 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 	.hero-italy {
 		display: block;
 		position: absolute;
-		left: -3.25rem;
-		top: calc(var(--navbar-height) + 0.25rem);
-		width: 6rem;
+		left: -1rem;
+		top: calc(var(--navbar-height) + 0.5rem);
+		width: 12rem;
 		aspect-ratio: 287.9 / 346.2;
 		background-color: var(--color-secondary-light);
 		mask-repeat: no-repeat;
@@ -112,7 +113,7 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 		-webkit-mask-repeat: no-repeat;
 		-webkit-mask-position: center;
 		-webkit-mask-size: contain;
-		opacity: 0.4;
+		opacity: 0.45;
 		pointer-events: none;
 		z-index: 0;
 	}
@@ -122,10 +123,11 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 		z-index: 1;
 		display: flex;
 		flex-direction: column;
+		align-items: center;
 		text-transform: uppercase;
 		font-family: var(--font-display);
 		letter-spacing: 0.015em;
-		font-size: clamp(3.2rem, 7vw, 5.5rem);
+		font-size: clamp(3.6rem, 7.5vw, 6.2rem);
 		line-height: 1.05;
 		margin-bottom: 1.25rem;
 	}
@@ -138,6 +140,11 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 		line-height: 1.5;
 		margin-bottom: 2rem;
 		max-width: 26rem;
+	}
+
+	.hero-cta {
+		align-self: flex-start;
+		padding: 0.65rem 1.5rem;
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
@@ -188,17 +195,34 @@ const secondLine = rest.length > 0 ? `with ${rest.join(" with ")}` : "";
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 2.75rem;
-		height: 2.75rem;
+		width: 3.5rem;
+		height: 3.5rem;
 		border-radius: var(--radius-full);
 		background: var(--color-white);
-		color: var(--color-tertiary);
 		box-shadow: var(--shadow-soft);
 		transition: background-color 0.2s ease, color 0.2s ease;
 	}
 
-	.social-links a:hover {
-		background: var(--color-tertiary);
+	.social-links :global(svg) {
+		width: 28px;
+		height: 28px;
+	}
+
+	.social-links a[data-platform="email"] {
+		color: var(--color-primary);
+	}
+
+	.social-links a[data-platform="instagram"] {
+		color: var(--color-secondary);
+	}
+
+	.social-links a[data-platform="email"]:hover {
+		background: var(--color-primary);
+		color: var(--color-white);
+	}
+
+	.social-links a[data-platform="instagram"]:hover {
+		background: var(--color-secondary);
 		color: var(--color-white);
 	}
 
