@@ -44,6 +44,7 @@ export interface MethodItem {
 
 export interface MethodContent {
   title: string;
+  image: string;
   introSubtitle: string;
   introText: string;
   stepsLabel: string;

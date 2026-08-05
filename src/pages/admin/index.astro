@@ -119,6 +119,12 @@ import "../../styles/global.css";
 					<legend>Method Section</legend>
 					<label class="checkbox-label"><input type="checkbox" data-field="method.visible" /> Show this section on the website</label>
 					<label>Section label<input data-field="method.title" type="text" /></label>
+					<div class="image-field" data-image-field="method.image">
+						<label>Photo</label>
+						<p class="hint">Square-ish photo — cropped to a circle.</p>
+						<img data-image-preview class="image-preview" alt="" />
+						<input type="file" accept="image/*" />
+					</div>
 					<label>Intro subtitle<input data-field="method.introSubtitle" type="text" /></label>
 					<label>Intro text<textarea data-field="method.introText" rows="4"></textarea></label>
 					<div class="list-field" id="methodItems-list">
