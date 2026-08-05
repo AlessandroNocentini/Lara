@@ -162,6 +162,12 @@ import "../../styles/global.css";
 					<legend>Services Section</legend>
 					<label class="checkbox-label"><input type="checkbox" data-field="services.visible" /> Show this section on the website</label>
 					<label>Heading<input data-field="services.title" type="text" /></label>
+					<div class="image-field" data-image-field="services.image">
+						<label>Photo</label>
+						<p class="hint">Square-ish photo — cropped to a circle.</p>
+						<img data-image-preview class="image-preview" alt="" />
+						<input type="file" accept="image/*" />
+					</div>
 					<div class="list-field" id="services-list">
 						<label>Services</label>
 						<div class="list-items"></div>
