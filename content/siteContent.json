@@ -83,8 +83,16 @@
     ],
     "introSubtitle": "Interactive lessons designed to help you speak from day one",
     "introText": "Through guided conversations, practical activities, and fun exercises, you'll start using Italian naturally while building confidence step by step.",
-    "teachingText": "My approach is all about communication, confidence, and real progress. You won't just study Italian, you'll actually use it.",
-    "stepsLabel": "What makes my lessons different",
+    "visible": true
+  },
+  "howITeach": {
+    "heading": "How I teach",
+    "text": "My approach is all about communication, confidence, and real progress. You won't just study Italian, you'll actually use it.",
+    "image": "/images/lara_about.jpg",
+    "visible": true
+  },
+  "lessonsDifferent": {
+    "heading": "What makes my lessons different",
     "steps": [
       {
         "title": "I don't interrupt to correct you.",
@@ -103,7 +111,6 @@
         "description": "English, French or Russian – whatever helps you understand best."
       }
     ],
-    "lessonsSubtitle": "How I teach",
     "visible": true
   },
   "services": {

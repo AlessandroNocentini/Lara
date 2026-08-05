@@ -42,21 +42,30 @@ export interface MethodItem {
   image: string;
 }
 
-export interface MethodStep {
-  title: string;
-  description: string;
-}
-
 export interface MethodContent {
   title: string;
   image: string;
   introSubtitle: string;
   introText: string;
-  teachingText: string;
-  stepsLabel: string;
-  steps: MethodStep[];
-  lessonsSubtitle: string;
   items: MethodItem[];
+  visible: boolean;
+}
+
+export interface HowITeachContent {
+  heading: string;
+  text: string;
+  image: string;
+  visible: boolean;
+}
+
+export interface LessonsStep {
+  title: string;
+  description: string;
+}
+
+export interface LessonsDifferentContent {
+  heading: string;
+  steps: LessonsStep[];
   visible: boolean;
 }
 
@@ -112,6 +121,8 @@ export interface SiteContent {
   hero: HeroContent;
   painPoints: PainPointsContent;
   method: MethodContent;
+  howITeach: HowITeachContent;
+  lessonsDifferent: LessonsDifferentContent;
   services: ServicesContent;
   results: ResultsContent;
   testimonials: TestimonialsContent;
