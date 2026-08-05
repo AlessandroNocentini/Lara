@@ -85,6 +85,7 @@ export interface ServiceItem {
 
 export interface ServicesContent {
   title: string;
+  image: string;
   items: ServiceItem[];
   visible: boolean;
 }

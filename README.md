@@ -105,13 +105,14 @@ ratio — used by Hero, About, Results, Method's card images, and
 constrains its size/ratio), `"pill"` (3:4, capsule-shaped, always
 force-cropped via `object-fit: cover` — used only by Pain Points' portrait,
 since a capsule only reads correctly when cropped to it), or `"circle"`
-(1:1, fully rounded — used by Method's portrait). `"portrait"` and
-`"square"` also exist as variants but no current section uses them.
-`Method.astro` and `HowITeach.astro` are separate sections with separate
-`image` fields (`method.image` / `howITeach.image`) — despite both being
-photos of Lara, they are not the same content field (see CLAUDE.md's
-Method/HowITeach/LessonsDifferent note for why each section owns its
-content independently).
+(1:1, fully rounded — used by Method's and Services' portraits). `"portrait"`
+and `"square"` also exist as variants but no current section uses them.
+`Method.astro`, `HowITeach.astro`, and `Services.astro` are separate
+sections with separate `image` fields (`method.image` / `howITeach.image` /
+`services.image`) — despite all being photos of Lara, they are not the same
+content field (see CLAUDE.md's Method/HowITeach/LessonsDifferent note for
+why each section owns its content independently; Services follows the same
+precedent).
 
 ## Structure
 

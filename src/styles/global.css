@@ -18,6 +18,7 @@
   /* Derived tones */
   --color-primary-dark: color-mix(in srgb, var(--color-primary) 80%, black);
   --color-primary-light: color-mix(in srgb, var(--color-primary) 35%, white);
+  --color-tertiary-light: color-mix(in srgb, var(--color-tertiary) 35%, white);
   --color-secondary-light: color-mix(in srgb, var(--color-secondary) 65%, white);
   --color-secondary-pale: color-mix(in srgb, var(--color-secondary) 22%, white);
   --color-cream: color-mix(in srgb, var(--color-secondary) 6%, white);

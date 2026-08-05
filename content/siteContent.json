@@ -115,6 +115,7 @@
   },
   "services": {
     "title": "Ways to Learn With Me",
+    "image": "/images/lara_about.jpg",
     "items": [
       {
         "icon": "private",
