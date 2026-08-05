@@ -114,6 +114,8 @@ export interface AboutContent {
 export interface ContactContent {
   heading: string;
   description: string;
+  connectLabel: string;
+  socialLinks: SocialLink[];
   successMessage: string;
 }
 

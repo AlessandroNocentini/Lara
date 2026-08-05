@@ -191,7 +191,18 @@
   },
   "contact": {
     "heading": "Get in touch",
-    "description": "",
+    "description": "Have a question or want to book your first lesson?\n\nSend me a message!\n\nI'll get back to you as soon as possible.",
+    "connectLabel": "Let's Connect",
+    "socialLinks": [
+      {
+        "platform": "instagram",
+        "url": "https://www.instagram.com/laraduardo?igsh=MWJtbWFnaTJuN3Y3MA=="
+      },
+      {
+        "platform": "email",
+        "url": "#"
+      }
+    ],
     "successMessage": "Thanks! I'll get back to you soon."
   },
   "cursor": {
