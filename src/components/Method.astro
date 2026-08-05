@@ -68,8 +68,11 @@ const titleParts = splitHighlighted(content.title, ["Method"]);
 	}
 
 	.method-title {
+		font-family: var(--font-display);
+		text-transform: uppercase;
+		letter-spacing: 0.01em;
 		font-size: clamp(2.4rem, 5vw, 3.6rem);
-		font-weight: 600;
+		line-height: 1.05;
 		color: var(--color-primary-dark);
 		margin-bottom: 1.25rem;
 	}
@@ -92,7 +95,7 @@ const titleParts = splitHighlighted(content.title, ["Method"]);
 
 	.method-portrait {
 		position: relative;
-		z-index: 2;
+		z-index: 1;
 		width: 100%;
 		max-width: 26rem;
 		margin-left: auto;
@@ -100,7 +103,7 @@ const titleParts = splitHighlighted(content.title, ["Method"]);
 
 	.method-grid {
 		position: relative;
-		z-index: 1;
+		z-index: 2;
 		margin-top: -6rem;
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
