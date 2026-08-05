@@ -1,6 +1,7 @@
 ---
 import PlaceholderImage from "./PlaceholderImage.astro";
 import { renderMarkdown } from "../utils/markdown";
+import { withBase } from "../utils/baseUrl";
 import type { AboutContent } from "../types/content";
 
 interface Props {
@@ -12,45 +13,28 @@ const bioHtml = renderMarkdown(content.bio);
 ---
 
 <section id="about" class="about">
-	<svg class="about-blob" viewBox="0 0 400 400" aria-hidden="true">
-		<path
-			fill="var(--color-primary)"
-			d="M320 60 C380 110 390 220 330 290 C270 360 150 370 90 310 C30 250 30 130 100 70 C170 10 260 10 320 60 Z"
-		/>
-	</svg>
-	<div class="about-inner">
-		<div class="about-photo" data-hover-lift>
-			<PlaceholderImage src={content.image || undefined} alt={`Photo of ${content.name}`} variant="rounded" />
+	<div class="container about-copy">
+		<div class="about-title-row">
+			<h2 class="about-title">
+				<span class="highlight">{content.greeting}</span> {content.name}
+			</h2>
+			<span
+				class="about-stamp"
+				aria-hidden="true"
+				style={`mask-image:url(${withBase("/images/heart_stamp.svg")});-webkit-mask-image:url(${withBase("/images/heart_stamp.svg")});`}
+			></span>
 		</div>
-		<div class="container about-copy">
-			<p class="greeting">{content.greeting}</p>
-			<h2>{content.name}</h2>
-			<div class="bio" set:html={bioHtml} />
-		</div>
+		<div class="bio" set:html={bioHtml} />
+	</div>
+	<div class="about-photo" data-hover-lift>
+		<PlaceholderImage src={content.image || undefined} alt={`Photo of ${content.name}`} variant="rounded" />
 	</div>
 </section>
 
 <style>
 	.about {
-		position: relative;
-		background: var(--color-white);
-		overflow: hidden;
-	}
-
-	.about-blob {
-		position: absolute;
-		top: -8%;
-		right: -12%;
-		width: 32rem;
-		height: 32rem;
-		opacity: 0.08;
-		pointer-events: none;
-		z-index: 0;
-	}
-
-	.about-inner {
-		position: relative;
-		z-index: 1;
+		background-color: var(--color-primary);
+		background-image: linear-gradient(160deg, color-mix(in srgb, var(--color-primary) 88%, transparent) 0%, color-mix(in srgb, var(--color-primary-dark) 94%, transparent) 100%);
 		display: grid;
 		grid-template-columns: minmax(280px, 45%) 1fr;
 		align-items: stretch;
@@ -68,6 +52,11 @@ const bioHtml = renderMarkdown(content.bio);
 		object-fit: cover;
 		border-radius: 0;
 		display: block;
+		/* Fade the photo's left edge into the gradient panel next to it —
+		   same technique as How I Teach's portrait fade, mirrored since the
+		   photo sits on the right here (same directionality as Hero's). */
+		mask-image: linear-gradient(to left, black 55%, transparent 100%);
+		-webkit-mask-image: linear-gradient(to left, black 55%, transparent 100%);
 	}
 
 	.about-copy {
@@ -78,26 +67,50 @@ const bioHtml = renderMarkdown(content.bio);
 		justify-content: center;
 	}
 
-	.greeting {
-		font-family: var(--font-heading);
-		font-style: italic;
-		font-size: 2rem;
-		color: var(--color-tertiary);
-	}
-
-	h2 {
-		font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-		color: var(--color-primary-dark);
+	.about-title-row {
+		position: relative;
 		margin-bottom: 1.25rem;
 	}
 
+	.about-title {
+		font-family: var(--font-display);
+		text-transform: uppercase;
+		letter-spacing: 0.01em;
+		font-size: clamp(2.4rem, 5vw, 3.6rem);
+		line-height: 1.05;
+		color: var(--color-white);
+	}
+
+	.about-title .highlight {
+		color: var(--color-secondary);
+	}
+
 	.bio :global(p) {
-		color: var(--color-ink-soft);
+		color: rgb(255 255 255 / 0.85);
 		margin-bottom: 1rem;
 	}
 
+	.about-stamp {
+		display: block;
+		position: absolute;
+		right: 10%;
+		bottom: -1.5rem;
+		width: 2.75rem;
+		aspect-ratio: 13.4944 / 15.394346;
+		background-color: var(--color-white);
+		mask-repeat: no-repeat;
+		mask-position: center;
+		mask-size: contain;
+		-webkit-mask-repeat: no-repeat;
+		-webkit-mask-position: center;
+		-webkit-mask-size: contain;
+		opacity: 0.9;
+		pointer-events: none;
+		z-index: 0;
+	}
+
 	@media (max-width: 800px) {
-		.about-inner {
+		.about {
 			grid-template-columns: 1fr;
 			min-height: auto;
 			text-align: center;
@@ -109,8 +122,18 @@ const bioHtml = renderMarkdown(content.bio);
 			aspect-ratio: 4 / 5;
 		}
 
+		.about-photo :global(.placeholder-image) {
+			mask-image: none;
+			-webkit-mask-image: none;
+		}
+
 		.about-copy {
 			padding: var(--section-padding);
+		}
+
+		.about-stamp {
+			right: 50%;
+			translate: 50% 0;
 		}
 	}
 </style>
