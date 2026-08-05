@@ -40,6 +40,8 @@ const headingParts = splitHighlighted(content.heading, ["teach"]);
 
 <style>
 	.how-i-teach {
+		background-color: var(--color-primary);
+		background-image: linear-gradient(160deg, color-mix(in srgb, var(--color-primary) 88%, transparent) 0%, color-mix(in srgb, var(--color-primary-dark) 94%, transparent) 100%);
 		display: grid;
 		grid-template-columns: minmax(280px, 45%) 1fr;
 		align-items: stretch;
@@ -65,8 +67,6 @@ const headingParts = splitHighlighted(content.heading, ["teach"]);
 
 	.how-i-teach-copy {
 		position: relative;
-		background-color: var(--color-primary);
-		background-image: linear-gradient(160deg, color-mix(in srgb, var(--color-primary) 88%, transparent) 0%, color-mix(in srgb, var(--color-primary-dark) 94%, transparent) 100%);
 		color: var(--color-white);
 		display: flex;
 		align-items: center;
