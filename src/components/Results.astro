@@ -1,6 +1,8 @@
 ---
 import PlaceholderImage from "./PlaceholderImage.astro";
 import { renderMarkdown } from "../utils/markdown";
+import { splitHighlighted } from "../utils/highlightText";
+import { withBase } from "../utils/baseUrl";
 import type { ResultsContent } from "../types/content";
 
 interface Props {
@@ -8,6 +10,8 @@ interface Props {
 }
 
 const { content } = Astro.props;
+
+const titleParts = splitHighlighted(content.title, ["Achieve"]);
 
 const levels = ["beginner", "intermediate"] as const;
 
@@ -25,6 +29,12 @@ function splitLeadBold(markdown: string): { label: string; bodyHtml: string } {
 const activeLevels = levels
   .filter((key) => Boolean(content[key]))
   .map((key) => splitLeadBold(content[key]));
+
+// Fixed decorative icons + colors tied to card position (not admin-editable
+// data), same positional-array convention as Pain Points'/Services' icon
+// arrays. Both SVGs are already white-filled, so no mask-recolor needed.
+const cardIcons = ["/images/results_plant.svg", "/images/results_tree.svg"];
+const cardColors = ["var(--color-primary-light)", "var(--color-tertiary-light)"];
 ---
 
 <section id="results" class="results">
@@ -34,16 +44,31 @@ const activeLevels = levels
 			d="M300 70 C360 130 350 250 280 310 C210 370 90 360 50 290 C10 220 30 100 110 60 C190 20 240 10 300 70 Z"
 		/>
 	</svg>
-	<div class="container results-inner">
-		<div class="results-image" data-hover-lift>
-			<PlaceholderImage src={content.image || undefined} alt="Results of learning Italian with Lara" variant="rounded" />
+	<div class="container">
+		<div class="results-top">
+			<h2 class="results-title">
+				{titleParts.map((part) =>
+					part.highlight ? (
+						<span class="highlight">{part.text}</span>
+					) : (
+						<>{part.text}</>
+					)
+				)}
+			</h2>
+			<div class="results-image" data-hover-lift>
+				<PlaceholderImage src={content.image || undefined} alt="Results of learning Italian with Lara" variant="rounded" />
+			</div>
 		</div>
-		<div class="results-levels">
-			<h2>{content.title}</h2>
-			{activeLevels.map((level) => (
-				<div class="results-card" data-hover-lift>
-					{level.label && <span class="results-label">{level.label}</span>}
-					<div set:html={level.bodyHtml} />
+		<div class="results-cards">
+			{activeLevels.map((level, i) => (
+				<div class="results-card">
+					<span class="results-card-icon" style={`background: ${cardColors[i % cardColors.length]}`}>
+						<img src={withBase(cardIcons[i % cardIcons.length])} alt="" class="results-card-icon-img" />
+					</span>
+					<div class="results-card-body">
+						{level.label && <p class="results-label">{level.label}</p>}
+						<div set:html={level.bodyHtml} />
+					</div>
 				</div>
 			))}
 		</div>
@@ -54,6 +79,7 @@ const activeLevels = levels
 	.results {
 		position: relative;
 		padding: var(--section-padding);
+		padding-top: clamp(1.5rem, 3vw, 3rem);
 		background: var(--color-white);
 		overflow: hidden;
 	}
@@ -69,13 +95,27 @@ const activeLevels = levels
 		z-index: 0;
 	}
 
-	.results-inner {
+	.results-top {
 		position: relative;
 		z-index: 1;
 		display: grid;
-		grid-template-columns: 1.15fr 1fr;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 		gap: clamp(2rem, 5vw, 3.5rem);
-		align-items: start;
+		align-items: center;
+		margin-bottom: 3rem;
+	}
+
+	.results-title {
+		font-family: var(--font-display);
+		text-transform: uppercase;
+		letter-spacing: 0.01em;
+		font-size: clamp(2.4rem, 5vw, 3.6rem);
+		line-height: 1.05;
+		color: var(--color-primary-dark);
+	}
+
+	.results-title .highlight {
+		color: var(--color-secondary);
 	}
 
 	.results-image :global(.placeholder-image) {
@@ -83,52 +123,80 @@ const activeLevels = levels
 		aspect-ratio: auto;
 	}
 
-	h2 {
-		font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-		color: var(--color-primary-dark);
-		margin-bottom: 1.5rem;
-	}
-
-	.results-levels {
+	.results-cards {
+		position: relative;
+		z-index: 1;
 		display: flex;
 		flex-direction: column;
-		gap: 1.25rem;
+		gap: 1.5rem;
 	}
 
 	.results-card {
-		background: var(--color-cream);
-		border-left: 4px solid var(--color-secondary);
-		border-radius: var(--radius-sm);
-		padding: 1.25rem 1.5rem;
+		display: flex;
+		align-items: stretch;
+		border-radius: var(--radius-lg);
+		overflow: hidden;
 		box-shadow: var(--shadow-soft);
 	}
 
+	.results-card-icon {
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 6.5rem;
+	}
+
+	.results-card-icon-img {
+		width: 3.75rem;
+		height: auto;
+	}
+
+	.results-card-body {
+		flex: 1;
+		background: var(--color-secondary-pale);
+		padding: 1.5rem 2rem;
+	}
+
 	.results-label {
-		display: inline-block;
-		text-transform: uppercase;
-		letter-spacing: 0.06em;
-		font-size: 0.75rem;
 		font-weight: 700;
-		color: var(--color-secondary);
-		margin-bottom: 0.4rem;
-	}
-
-	.results-card :global(strong) {
+		font-size: 1.1rem;
 		color: var(--color-primary-dark);
+		margin-bottom: 0.35rem;
 	}
 
-	.results-card :global(p) {
+	.results-card-body :global(p) {
 		color: var(--color-ink-soft);
 	}
 
 	@media (max-width: 800px) {
-		.results-inner {
+		.results-top {
 			grid-template-columns: 1fr;
+			text-align: center;
 		}
 
 		.results-image {
 			max-width: 26rem;
 			margin-inline: auto;
+		}
+
+		.results-card-icon {
+			width: 5rem;
+		}
+
+		.results-card-body {
+			padding: 1.25rem 1.5rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.results-card {
+			flex-direction: column;
+		}
+
+		.results-card-icon {
+			width: 100%;
+			padding: 0.75rem;
 		}
 	}
 </style>
