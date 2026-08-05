@@ -204,7 +204,14 @@ import "../../styles/global.css";
 				<fieldset class="panel">
 					<legend>Contact Section</legend>
 					<label>Heading<input data-field="contact.heading" type="text" /></label>
-					<label>Description<input data-field="contact.description" type="text" /></label>
+					<label>Description<textarea data-field="contact.description" rows="4"></textarea></label>
+					<p class="hint">Line breaks are preserved.</p>
+					<label>Connect label<input data-field="contact.connectLabel" type="text" /></label>
+					<div class="list-field" id="contactSocialLinks-list">
+						<label>Social links</label>
+						<div class="list-items"></div>
+						<button type="button" class="button button-ghost add-btn" data-add="contactSocialLinks">+ Add link</button>
+					</div>
 					<label>Success message<input data-field="contact.successMessage" type="text" /></label>
 					<p class="hint">Shown after someone submits the contact form.</p>
 				</fieldset>
@@ -618,8 +625,8 @@ import "../../styles/global.css";
 
 			const SOCIAL_PLATFORMS = ["instagram", "facebook", "whatsapp", "tiktok", "email", "website"];
 
-			function renderSocialLinks(links: { platform: string; url: string }[]) {
-				const list = document.querySelector("#socialLinks-list .list-items")!;
+			function renderSocialLinks(containerId: string, links: { platform: string; url: string }[]) {
+				const list = document.querySelector(`#${containerId} .list-items`)!;
 				list.innerHTML = "";
 				links.forEach((link) => addSocialRow(list, link));
 			}
@@ -639,8 +646,8 @@ import "../../styles/global.css";
 				list.appendChild(row);
 			}
 
-			function readSocialLinks(): { platform: string; url: string }[] {
-				return Array.from(document.querySelectorAll("#socialLinks-list .list-item")).map((row) => ({
+			function readSocialLinks(containerId: string): { platform: string; url: string }[] {
+				return Array.from(document.querySelectorAll(`#${containerId} .list-item`)).map((row) => ({
 					platform: (row.querySelector("select") as HTMLSelectElement).value,
 					url: (row.querySelector("input") as HTMLInputElement).value.trim(),
 				}));
@@ -831,6 +838,7 @@ import "../../styles/global.css";
 					if (kind === "questions") addStringRow(document.querySelector("#questions-list .list-items")!, "");
 					if (kind === "highlightWords") addStringRow(document.querySelector("#highlightWords-list .list-items")!, "");
 					if (kind === "socialLinks") addSocialRow(document.querySelector("#socialLinks-list .list-items")!, { platform: "instagram", url: "" });
+					if (kind === "contactSocialLinks") addSocialRow(document.querySelector("#contactSocialLinks-list .list-items")!, { platform: "instagram", url: "" });
 					if (kind === "methodItems") addMethodItemRow(document.querySelector("#methodItems-list .list-items")!, { title: "", description: "", image: "" }, -1);
 					if (kind === "lessonsSteps") addStepRow(document.querySelector("#lessonsSteps-list .list-items")!, { title: "", description: "" });
 					if (kind === "services") addServiceRow(document.querySelector("#services-list .list-items")!, { title: "", description: "", icon: "private" });
@@ -849,7 +857,8 @@ import "../../styles/global.css";
 				populateImageFields(data);
 				renderStringList("questions-list", data.painPoints.questions);
 				renderStringList("highlightWords-list", data.painPoints.highlightWords);
-				renderSocialLinks(data.hero.socialLinks);
+				renderSocialLinks("socialLinks-list", data.hero.socialLinks);
+				renderSocialLinks("contactSocialLinks-list", data.contact.socialLinks);
 				renderMethodItems(data.method.items);
 				renderStepsList("lessonsSteps-list", data.lessonsDifferent.steps);
 				renderServices(data.services.items);
@@ -872,7 +881,8 @@ import "../../styles/global.css";
 					readScalarFields(data);
 					data.painPoints.questions = readStringList("questions-list");
 					data.painPoints.highlightWords = readStringList("highlightWords-list");
-					data.hero.socialLinks = readSocialLinks();
+					data.hero.socialLinks = readSocialLinks("socialLinks-list");
+					data.contact.socialLinks = readSocialLinks("contactSocialLinks-list");
 					data.method.items = await readMethodItems();
 					data.lessonsDifferent.steps = readStepsList("lessonsSteps-list");
 					data.services.items = readServices();
