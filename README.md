@@ -100,12 +100,18 @@ now flat, transparent-background cutouts, each sized by its caller's own
 wrapper class (`.hero-portrait`, `.about-photo`, `.results-image`,
 `.pain-points-portrait`) rather than by `PlaceholderImage` itself. `variant`
 only picks the image's own base shape: `"rounded"` (soft corners, no fixed
-ratio — used by Hero, About, Results, and Method's card images; each
-caller's wrapper CSS is what actually constrains its size/ratio) or `"pill"`
-(3:4, capsule-shaped, always force-cropped via `object-fit: cover` — used
-only by Pain Points' portrait, since a capsule only reads correctly when
-cropped to it). `"portrait"`, `"circle"`, and `"square"` also exist as
-variants but no current section uses them.
+ratio — used by Hero, About, Results, Method's card images, and
+`HowITeach`'s full-bleed photo; each caller's wrapper CSS is what actually
+constrains its size/ratio), `"pill"` (3:4, capsule-shaped, always
+force-cropped via `object-fit: cover` — used only by Pain Points' portrait,
+since a capsule only reads correctly when cropped to it), or `"circle"`
+(1:1, fully rounded — used by Method's portrait). `"portrait"` and
+`"square"` also exist as variants but no current section uses them.
+`Method.astro` and `HowITeach.astro` are separate sections with separate
+`image` fields (`method.image` / `howITeach.image`) — despite both being
+photos of Lara, they are not the same content field (see CLAUDE.md's
+Method/HowITeach/LessonsDifferent note for why each section owns its
+content independently).
 
 ## Structure
 
@@ -125,9 +131,10 @@ src/utils/highlightText.ts Splits a string into plain/highlighted parts (used by
 Ideas/                     Reference mockups that informed the design (see Ideas/README.md)
 ```
 
-Page sections, in render order: Hero → PainPoints → Method → Results →
-Testimonials → About → Contact (see `src/pages/index.astro`; About sits just
-before Contact by design — see CLAUDE.md), each its own component in
+Page sections, in render order: Hero → PainPoints → Method → HowITeach →
+LessonsDifferent → Services → Results → Testimonials → About → Contact (see
+`src/pages/index.astro`; About sits just before Contact by design — see
+CLAUDE.md), each its own component in
 `src/components/`. Shared/non-section components: `Navbar` (fixed top bar),
 `CustomCursor`, `PlaceholderImage`, `SectionKicker` (unused, kept in case the
 pattern is wanted again — see CLAUDE.md), `NavIcon` (unused, same reason),
@@ -190,7 +197,8 @@ components and hand-written CSS custom properties in `global.css`.
 field in `SiteContent` — text/textarea inputs, image upload-and-preview
 fields (with orientation hints like "Portrait photo, roughly 3:4 — shown
 as-is, never cropped"), and add/remove list editors for `hero.socialLinks`,
-`painPoints.questions`, `painPoints.highlightWords`, and `method.items`.
+`painPoints.questions`, `painPoints.highlightWords`, `method.items`, and
+`lessonsDifferent.steps`.
 
 **This replaced an earlier plan to use Sveltia CMS with a Cloudflare Worker
 OAuth broker.** That approach was scrapped before ever merging — it was more
@@ -249,7 +257,7 @@ These are known, intentional gaps — not oversights:
   submit handler just calls `preventDefault()` and toggles the success-state
   CSS class; no `fetch`/`action` call sends the data anywhere, so it's
   currently discarded. Web3Forms is the intended backend; not yet integrated.
-- **Real photos and final copy**: 3 of the 6 `method.items` images are still
+- **Real photos and final copy**: 4 of the 6 `method.items` images are still
   empty (rendering as placeholders); cursor art is done (see `CustomCursor`
   above). `hero.image` currently points at the same photo as `about.image`
   as a placeholder, pending a dedicated hero photo. `hero.socialLinks`'

@@ -132,13 +132,30 @@ import "../../styles/global.css";
 						<div class="list-items"></div>
 						<button type="button" class="button button-ghost add-btn" data-add="methodItems">+ Add card</button>
 					</div>
-					<label>Steps label<input data-field="method.stepsLabel" type="text" /></label>
-					<div class="list-field" id="methodSteps-list">
-						<label>What makes lessons different (shown as bubbles)</label>
-						<div class="list-items"></div>
-						<button type="button" class="button button-ghost add-btn" data-add="methodSteps">+ Add reason</button>
+				</fieldset>
+
+				<fieldset class="panel">
+					<legend>How I Teach Section</legend>
+					<label class="checkbox-label"><input type="checkbox" data-field="howITeach.visible" /> Show this section on the website</label>
+					<label>Heading<input data-field="howITeach.heading" type="text" /></label>
+					<label>Text<textarea data-field="howITeach.text" rows="3"></textarea></label>
+					<div class="image-field" data-image-field="howITeach.image">
+						<label>Photo</label>
+						<p class="hint">Square-ish photo — fills the left half of the section, fading into the background on the right.</p>
+						<img data-image-preview class="image-preview" alt="" />
+						<input type="file" accept="image/*" />
 					</div>
-					<label>Lessons subtitle<input data-field="method.lessonsSubtitle" type="text" /></label>
+				</fieldset>
+
+				<fieldset class="panel">
+					<legend>What Makes My Lessons Different Section</legend>
+					<label class="checkbox-label"><input type="checkbox" data-field="lessonsDifferent.visible" /> Show this section on the website</label>
+					<label>Heading<input data-field="lessonsDifferent.heading" type="text" /></label>
+					<div class="list-field" id="lessonsSteps-list">
+						<label>Timeline steps</label>
+						<div class="list-items"></div>
+						<button type="button" class="button button-ghost add-btn" data-add="lessonsSteps">+ Add step</button>
+					</div>
 				</fieldset>
 
 				<fieldset class="panel">
@@ -693,6 +710,39 @@ import "../../styles/global.css";
 				return items;
 			}
 
+			// ---- Timeline steps (title + description, no image) — used by the
+			// "What makes my lessons different" list, keyed by container id
+			// since the same shape/UI is only needed in one place today but
+			// isn't inherently tied to any single section. ----
+
+			function renderStepsList(containerId: string, steps: { title: string; description: string }[]) {
+				const list = document.querySelector(`#${containerId} .list-items`)!;
+				list.innerHTML = "";
+				steps.forEach((step) => addStepRow(list, step));
+			}
+
+			function addStepRow(list: Element, step: { title: string; description: string }) {
+				const row = document.createElement("div");
+				row.className = "step-row";
+				row.innerHTML = `
+					<input type="text" class="ms-title" value="${escapeHtml(step.title)}" placeholder="Title" />
+					<input type="text" class="ms-description" value="${escapeHtml(step.description)}" placeholder="Description" />
+					<button type="button" class="remove-btn">Remove step</button>
+				`;
+				row.querySelector(".remove-btn")!.addEventListener("click", () => row.remove());
+				list.appendChild(row);
+			}
+
+			function readStepsList(containerId: string): { title: string; description: string }[] {
+				const rows = Array.from(document.querySelectorAll<HTMLElement>(`#${containerId} .step-row`));
+				return rows
+					.map((row) => ({
+						title: row.querySelector<HTMLInputElement>(".ms-title")!.value.trim(),
+						description: row.querySelector<HTMLInputElement>(".ms-description")!.value.trim(),
+					}))
+					.filter((step) => step.title || step.description);
+			}
+
 			// ---- Testimonials (name + text + date + gender) ----
 
 			const TESTIMONIAL_GENDERS = ["female", "male", "other"];
@@ -776,7 +826,7 @@ import "../../styles/global.css";
 					if (kind === "highlightWords") addStringRow(document.querySelector("#highlightWords-list .list-items")!, "");
 					if (kind === "socialLinks") addSocialRow(document.querySelector("#socialLinks-list .list-items")!, { platform: "instagram", url: "" });
 					if (kind === "methodItems") addMethodItemRow(document.querySelector("#methodItems-list .list-items")!, { title: "", description: "", image: "" }, -1);
-					if (kind === "methodSteps") addStringRow(document.querySelector("#methodSteps-list .list-items")!, "");
+					if (kind === "lessonsSteps") addStepRow(document.querySelector("#lessonsSteps-list .list-items")!, { title: "", description: "" });
 					if (kind === "services") addServiceRow(document.querySelector("#services-list .list-items")!, { title: "", description: "", icon: "private" });
 					if (kind === "testimonials") addTestimonialRow(document.querySelector("#testimonials-list .list-items")!, { name: "", text: "", date: "", gender: "female" });
 				});
@@ -795,7 +845,7 @@ import "../../styles/global.css";
 				renderStringList("highlightWords-list", data.painPoints.highlightWords);
 				renderSocialLinks(data.hero.socialLinks);
 				renderMethodItems(data.method.items);
-				renderStringList("methodSteps-list", data.method.steps);
+				renderStepsList("lessonsSteps-list", data.lessonsDifferent.steps);
 				renderServices(data.services.items);
 				renderTestimonials(data.testimonials.items);
 
@@ -818,7 +868,7 @@ import "../../styles/global.css";
 					data.painPoints.highlightWords = readStringList("highlightWords-list");
 					data.hero.socialLinks = readSocialLinks();
 					data.method.items = await readMethodItems();
-					data.method.steps = readStringList("methodSteps-list");
+					data.lessonsDifferent.steps = readStepsList("lessonsSteps-list");
 					data.services.items = readServices();
 					data.testimonials.items = readTestimonials();
 

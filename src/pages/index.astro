@@ -3,6 +3,8 @@ import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
 import PainPoints from "../components/PainPoints.astro";
 import Method from "../components/Method.astro";
+import HowITeach from "../components/HowITeach.astro";
+import LessonsDifferent from "../components/LessonsDifferent.astro";
 import Services from "../components/Services.astro";
 import Results from "../components/Results.astro";
 import Testimonials from "../components/Testimonials.astro";
@@ -18,6 +20,8 @@ const content = siteContent as SiteContent;
 	<Hero content={content.hero} siteName={content.meta.siteName} titleImage={content.meta.image} />
 	{content.painPoints.visible && <PainPoints content={content.painPoints} />}
 	{content.method.visible && <Method content={content.method} />}
+	{content.howITeach.visible && <HowITeach content={content.howITeach} />}
+	{content.lessonsDifferent.visible && <LessonsDifferent content={content.lessonsDifferent} />}
 	{content.services.visible && <Services content={content.services} />}
 	{content.results.visible && <Results content={content.results} />}
 	{content.testimonials.visible && <Testimonials content={content.testimonials} />}
