@@ -42,13 +42,19 @@ export interface MethodItem {
   image: string;
 }
 
+export interface MethodStep {
+  title: string;
+  description: string;
+}
+
 export interface MethodContent {
   title: string;
   image: string;
   introSubtitle: string;
   introText: string;
+  teachingText: string;
   stepsLabel: string;
-  steps: string[];
+  steps: MethodStep[];
   lessonsSubtitle: string;
   items: MethodItem[];
   visible: boolean;

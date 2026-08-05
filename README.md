@@ -100,12 +100,17 @@ now flat, transparent-background cutouts, each sized by its caller's own
 wrapper class (`.hero-portrait`, `.about-photo`, `.results-image`,
 `.pain-points-portrait`) rather than by `PlaceholderImage` itself. `variant`
 only picks the image's own base shape: `"rounded"` (soft corners, no fixed
-ratio — used by Hero, About, Results, and Method's card images; each
-caller's wrapper CSS is what actually constrains its size/ratio) or `"pill"`
-(3:4, capsule-shaped, always force-cropped via `object-fit: cover` — used
-only by Pain Points' portrait, since a capsule only reads correctly when
-cropped to it). `"portrait"`, `"circle"`, and `"square"` also exist as
-variants but no current section uses them.
+ratio — used by Hero, About, Results, Method's card images, and part 2's
+full-bleed "How I Teach" photo; each caller's wrapper CSS is what actually
+constrains its size/ratio), `"pill"` (3:4, capsule-shaped, always
+force-cropped via `object-fit: cover` — used only by Pain Points' portrait,
+since a capsule only reads correctly when cropped to it), or `"circle"`
+(1:1, fully rounded — used by Method's part 1 portrait). `"portrait"` and
+`"square"` also exist as variants but no current section uses them.
+Method's `content.image` field does double duty: it's the source for both
+`variant="circle"` (part 1's portrait) and `variant="rounded"` (part 2's
+full-bleed "How I Teach" photo) — one photo, two renderings, not two
+separate fields.
 
 ## Structure
 
@@ -190,7 +195,8 @@ components and hand-written CSS custom properties in `global.css`.
 field in `SiteContent` — text/textarea inputs, image upload-and-preview
 fields (with orientation hints like "Portrait photo, roughly 3:4 — shown
 as-is, never cropped"), and add/remove list editors for `hero.socialLinks`,
-`painPoints.questions`, `painPoints.highlightWords`, and `method.items`.
+`painPoints.questions`, `painPoints.highlightWords`, `method.items`, and
+`method.steps`.
 
 **This replaced an earlier plan to use Sveltia CMS with a Cloudflare Worker
 OAuth broker.** That approach was scrapped before ever merging — it was more
