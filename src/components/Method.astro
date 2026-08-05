@@ -1,5 +1,6 @@
 ---
 import PlaceholderImage from "./PlaceholderImage.astro";
+import { splitHighlighted } from "../utils/highlightText";
 import type { MethodContent } from "../types/content";
 
 interface Props {
@@ -7,181 +8,100 @@ interface Props {
 }
 
 const { content } = Astro.props;
-const rotations = [-2, 1, -1.5, 2, -1, 1.5];
+
+const titleParts = splitHighlighted(content.title, ["Method"]);
 ---
 
 <section id="method" class="method">
-	<div class="method-intro-block">
-		<div class="container method-intro-inner">
-			<div class="method-intro-copy">
-				<h2 class="method-title">{content.title}</h2>
-				<p class="method-subtitle">{content.introSubtitle}</p>
-				<p class="method-intro-text">{content.introText}</p>
-				<p class="method-steps-label">{content.stepsLabel}:</p>
-			</div>
-			<div class="method-steps-col">
-				<ul class="method-steps">
-					{content.steps.map((step, i) => (
-						<li
-							class="method-step"
-							data-hover-wiggle
-							style={`--rotate: ${rotations[i % rotations.length]}deg`}
-						>
-							<span class="method-step-number">{i + 1}.</span> {step}
-						</li>
-					))}
-				</ul>
-			</div>
+	<div class="container method-top">
+		<div class="method-copy">
+			<h2 class="method-title">
+				{titleParts.map((part) =>
+					part.highlight ? (
+						<span class="highlight">{part.text}</span>
+					) : (
+						<>{part.text}</>
+					)
+				)}
+			</h2>
+			<p class="method-subtitle">{content.introSubtitle}</p>
+			<p class="method-intro-text">{content.introText}</p>
+		</div>
+		<div class="method-portrait">
+			<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="circle" />
 		</div>
 	</div>
 
-	<div class="method-lessons-block">
-		<div class="container">
-			<h3 class="method-lessons-subtitle">{content.lessonsSubtitle}</h3>
-			<div class="method-grid">
-				{content.items.map((item) => (
-					<article class="method-card" data-hover-lift>
-						<div class="method-card-media">
-							<PlaceholderImage src={item.image || undefined} alt={item.title} variant="rounded" />
-						</div>
-						<div class="method-card-body">
-							<h3>{item.title}</h3>
-							<p>{item.description}</p>
-						</div>
-					</article>
-				))}
-			</div>
-		</div>
+	<div class="container method-grid">
+		{content.items.map((item) => (
+			<article class="method-card" data-hover-lift>
+				<div class="method-card-media">
+					<PlaceholderImage src={item.image || undefined} alt={item.title} variant="rounded" />
+				</div>
+				<div class="method-card-body">
+					<h3>{item.title}</h3>
+					<p>{item.description}</p>
+				</div>
+			</article>
+		))}
 	</div>
 </section>
 
 <style>
-	.method-intro-block {
-		background: linear-gradient(160deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
-		color: var(--color-white);
+	.method {
+		background: var(--color-secondary-pale);
 		padding: var(--section-padding);
+		overflow: hidden;
 	}
 
-	.method-intro-inner {
+	.method-top {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
 		gap: clamp(2rem, 5vw, 4rem);
 		align-items: start;
 	}
 
-	.method-intro-copy {
+	.method-copy {
 		display: flex;
 		flex-direction: column;
+		padding-top: 0.5rem;
 	}
 
 	.method-title {
-		font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-		margin-bottom: 0.75rem;
+		font-size: clamp(2.4rem, 5vw, 3.6rem);
+		font-weight: 600;
+		color: var(--color-primary-dark);
+		margin-bottom: 1.25rem;
+	}
+
+	.method-title .highlight {
+		color: var(--color-tertiary);
 	}
 
 	.method-subtitle {
 		font-weight: 700;
-		font-size: 1.1rem;
-		color: var(--color-secondary-light);
+		font-size: 1.2rem;
+		color: var(--color-primary-dark);
 		margin-bottom: 1rem;
 	}
 
 	.method-intro-text {
-		color: rgb(255 255 255 / 0.85);
-		max-width: 34rem;
-		margin-bottom: 1.5rem;
+		color: var(--color-ink);
+		max-width: 30rem;
 	}
 
-	.method-steps-col {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.method-steps-label {
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.04em;
-		font-size: 0.85rem;
-		color: var(--color-secondary-light);
-	}
-
-	.method-steps {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 1.25rem;
-	}
-
-	.method-step {
+	.method-portrait {
 		position: relative;
-		max-width: 22rem;
-		background: var(--color-cream);
-		border: 2px solid var(--color-white);
-		color: var(--color-primary-dark);
-		border-radius: var(--radius-lg);
-		padding: 1rem 1.5rem;
-		font-weight: 700;
-		font-size: 0.95rem;
-		box-shadow: var(--shadow-soft);
-		transform: rotate(var(--rotate));
-	}
-
-	.method-step-number {
-		color: var(--color-primary);
-	}
-
-	.method-step::after {
-		content: "";
-		position: absolute;
-		bottom: -0.55rem;
-		left: 1.6rem;
-		width: 1rem;
-		height: 1rem;
-		background: var(--color-cream);
-		border-bottom: 2px solid var(--color-white);
-		border-right: 2px solid var(--color-white);
-		transform: rotate(45deg);
-		border-radius: 0 0 3px 0;
-	}
-
-	@media (max-width: 800px) {
-		.method-intro-inner {
-			grid-template-columns: 1fr;
-			text-align: center;
-		}
-
-		.method-intro-copy {
-			align-items: center;
-		}
-
-		.method-intro-text {
-			max-width: none;
-		}
-
-		.method-steps-col {
-			align-items: center;
-		}
-
-		.method-steps {
-			align-items: center;
-		}
-	}
-
-	.method-lessons-block {
-		background: var(--color-white);
-		padding: var(--section-padding);
-	}
-
-	.method-lessons-subtitle {
-		font-size: clamp(1.8rem, 3vw, 2.4rem);
-		color: var(--color-primary-dark);
-		text-align: center;
-		margin-bottom: 2.5rem;
+		z-index: 2;
+		width: 100%;
+		max-width: 26rem;
+		margin-left: auto;
 	}
 
 	.method-grid {
+		position: relative;
+		z-index: 1;
+		margin-top: -6rem;
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		gap: 1.75rem;
@@ -190,6 +110,31 @@ const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 	@media (max-width: 900px) {
 		.method-grid {
 			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 800px) {
+		.method-top {
+			grid-template-columns: 1fr;
+			text-align: center;
+		}
+
+		.method-copy {
+			align-items: center;
+			padding-top: 0;
+		}
+
+		.method-intro-text {
+			max-width: none;
+		}
+
+		.method-portrait {
+			max-width: 18rem;
+			margin-inline: auto;
+		}
+
+		.method-grid {
+			margin-top: 3rem;
 		}
 	}
 
@@ -202,7 +147,7 @@ const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 	.method-card {
 		display: flex;
 		flex-direction: column;
-		background: var(--color-cream);
+		background: var(--color-white);
 		border-radius: var(--radius-md);
 		overflow: hidden;
 		box-shadow: var(--shadow-soft);
@@ -221,6 +166,7 @@ const rotations = [-2, 1, -1.5, 2, -1, 1.5];
 	.method-card-body {
 		flex: 1 1 50%;
 		padding: 1.5rem;
+		text-align: center;
 	}
 
 	.method-card h3 {

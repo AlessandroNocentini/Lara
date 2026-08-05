@@ -49,6 +49,7 @@
   },
   "method": {
     "title": "My Method",
+    "image": "/images/lara_about.jpg",
     "items": [
       {
         "title": "Speak from Day One",
