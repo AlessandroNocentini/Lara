@@ -92,21 +92,20 @@ now just the gradient plus the Italy silhouette flourish, and `hero.image`
 (the portrait photo) goes through `PlaceholderImage` like every other photo
 field.
 
-`PlaceholderImage` also takes optional `frame` / `rotate` / `tapeColor` props
-(all default off/unset, so existing callers are unaffected) that wrap the
-image in a white polaroid-style card with a rotated washi-tape accent —
-the "scrapbook" look inspired by `Ideas/style_1–3.jpeg`. It's applied to the
-Hero, About, and Pain Points portraits (each its own rotation angle and tape
-color — ocher/yellow/red respectively) and to the Results image (light blue
-tape). `variant` picks the image's own shape independent of the frame:
-`"portrait"` (3:4, used for the three "photo of Lara" spots — no circular
-crop) or `"rounded"` (soft corners, no fixed ratio — used for Results' image,
-whose aspect-ratio is set per-section to match its actual photo, and for
-Method's card images, which don't use `frame`/`rotate`/`tapeColor` at all).
-**Method's card images intentionally don't use the frame** — Method's cards
-are a half-image/half-text layout from an earlier design pass, and
-framing/rotating an image inside that layout would fight it rather than
-complement it.
+**There is no more polaroid/frame treatment.** `PlaceholderImage` only takes
+`src`/`alt`/`variant`/`class` — an earlier `frame`/`rotate`/`tapeColor` prop
+set (a white polaroid card with a rotated washi-tape accent, the "scrapbook"
+look inspired by `Ideas/style_1–3.jpeg`) was removed outright; all photos are
+now flat, transparent-background cutouts, each sized by its caller's own
+wrapper class (`.hero-portrait`, `.about-photo`, `.results-image`,
+`.pain-points-portrait`) rather than by `PlaceholderImage` itself. `variant`
+only picks the image's own base shape: `"rounded"` (soft corners, no fixed
+ratio — used by Hero, About, Results, and Method's card images; each
+caller's wrapper CSS is what actually constrains its size/ratio) or `"pill"`
+(3:4, capsule-shaped, always force-cropped via `object-fit: cover` — used
+only by Pain Points' portrait, since a capsule only reads correctly when
+cropped to it). `"portrait"`, `"circle"`, and `"square"` also exist as
+variants but no current section uses them.
 
 ## Structure
 
@@ -126,11 +125,14 @@ src/utils/highlightText.ts Splits a string into plain/highlighted parts (used by
 Ideas/                     Reference mockups that informed the design (see Ideas/README.md)
 ```
 
-Page sections, in render order: Hero → About → PainPoints → Method → Results
-→ Contact, each its own component in `src/components/`. Shared/non-section
-components: `Navbar` (fixed nav), `CustomCursor`, `PlaceholderImage`,
-`SectionKicker` (small rotated tab/sticker-style label, see below), and
-`SocialIcon` (a small hand-authored icon set — no icon library dependency).
+Page sections, in render order: Hero → PainPoints → Method → Results →
+Testimonials → About → Contact (see `src/pages/index.astro`; About sits just
+before Contact by design — see CLAUDE.md), each its own component in
+`src/components/`. Shared/non-section components: `Navbar` (fixed top bar),
+`CustomCursor`, `PlaceholderImage`, `SectionKicker` (unused, kept in case the
+pattern is wanted again — see CLAUDE.md), `NavIcon` (unused, same reason),
+and `SocialIcon`/`TestimonialAvatar` (small hand-authored icon sets — no icon
+library dependency).
 
 A couple of content-modeling choices worth knowing before editing copy:
 
@@ -139,12 +141,16 @@ A couple of content-modeling choices worth knowing before editing copy:
   — there's no separate `hero.headline` field. This is deliberate: the brand
   name and the hero title are the same string, kept as one source of truth
   instead of two fields that could drift out of sync.
-- **The highlighted heading above the pain-point bubbles** ("Learn Italian
-  with a Native Italian Teacher", with accent-colored words) is
-  `painPoints.heading` / `painPoints.highlightWords`, rendered via
+- **The highlighted heading above the Pain Points question list** ("Learn
+  Italian with a Native Italian Teacher", with the phrase "Native Italian"
+  accent-colored) is `painPoints.heading` / `painPoints.highlightWords`
+  (currently `["Native Italian"]`, a single phrase, not two separate words —
+  see CLAUDE.md for why that distinction matters), rendered via
   `splitHighlighted()` from `src/utils/highlightText.ts`. It lives on
   `PainPointsContent`, not `HeroContent` — despite reading like a hero
-  headline, it renders inside the PainPoints section.
+  headline, it renders inside the PainPoints section. The questions
+  themselves (`painPoints.questions`) render as an icon+text list
+  (`.pain-list`), not the speech-bubble cards this file used to describe.
 - **There is no `meta.themeColor` field.** `<meta name="theme-color">` in
   `Layout.astro` reads `meta.primaryColor` directly — the same token that
   drives the rest of the palette. An earlier, separate `themeColor` field

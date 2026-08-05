@@ -4,7 +4,7 @@ import { withBase } from "../utils/baseUrl";
 interface Props {
   src?: string;
   alt: string;
-  variant?: "circle" | "rounded" | "portrait" | "square";
+  variant?: "circle" | "rounded" | "portrait" | "square" | "pill";
   class?: string;
 }
 
@@ -48,6 +48,11 @@ const { src, alt, variant = "rounded", class: className = "" } = Astro.props;
 
   .placeholder-image.portrait {
     border-radius: var(--radius-sm);
+    aspect-ratio: 3 / 4;
+  }
+
+  .placeholder-image.pill {
+    border-radius: 999px;
     aspect-ratio: 3 / 4;
   }
 
