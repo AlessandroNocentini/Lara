@@ -142,8 +142,10 @@ A couple of content-modeling choices worth knowing before editing copy:
   name and the hero title are the same string, kept as one source of truth
   instead of two fields that could drift out of sync.
 - **The highlighted heading above the Pain Points question list** ("Learn
-  Italian with a Native Italian Teacher", with accent-colored words) is
-  `painPoints.heading` / `painPoints.highlightWords`, rendered via
+  Italian with a Native Italian Teacher", with the phrase "Native Italian"
+  accent-colored) is `painPoints.heading` / `painPoints.highlightWords`
+  (currently `["Native Italian"]`, a single phrase, not two separate words —
+  see CLAUDE.md for why that distinction matters), rendered via
   `splitHighlighted()` from `src/utils/highlightText.ts`. It lives on
   `PainPointsContent`, not `HeroContent` — despite reading like a hero
   headline, it renders inside the PainPoints section. The questions
