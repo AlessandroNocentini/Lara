@@ -23,7 +23,7 @@ function formatDate(iso: string): string {
 // same positional-array convention as Pain Points'/Services' icon arrays.
 const avatarTints = [
   { bg: "var(--color-primary-light)", fg: "var(--color-primary)" },
-  { bg: "var(--color-secondary-light)", fg: "var(--color-secondary)" },
+  { bg: "var(--color-secondary-pale)", fg: "var(--color-secondary)" },
   { bg: "var(--color-tertiary-light)", fg: "var(--color-tertiary)" },
 ];
 ---
@@ -78,6 +78,25 @@ const avatarTints = [
 				{content.items.map((_, i) => (
 					<button type="button" class="testimonials-dot" data-index={i} aria-label={`Show review ${i + 1}`}></button>
 				))}
+			</div>
+		</div>
+		<div class="testimonial-modal-backdrop" id="testimonial-modal-backdrop" hidden>
+			<div class="testimonial-modal-card" role="dialog" aria-modal="true" aria-label="Full review">
+				<button type="button" class="testimonial-modal-close" aria-label="Close">
+					<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--color-primary-dark)" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+				</button>
+				<svg class="testimonial-quote" viewBox="0 0 24 16" width="34" height="24" fill="var(--color-primary)" aria-hidden="true">
+					<path d="M7 15c-1.7 0-3-1.3-3-3 0-2.8 1.8-5.2 4.5-6.5L9.5 7C7.8 7.8 7 8.9 7 10c1.7 0 3 1.3 3 3s-1.3 3-3 3z" />
+					<path d="M16 15c-1.7 0-3-1.3-3-3 0-2.8 1.8-5.2 4.5-6.5L18.5 7c-1.7.8-2.5 1.9-2.5 3 1.7 0 3 1.3 3 3s-1.3 3-3 3z" />
+				</svg>
+				<p class="testimonial-modal-text"></p>
+				<div class="testimonial-meta">
+					<span class="testimonial-avatar-circle testimonial-modal-avatar"></span>
+					<span class="testimonial-meta-text">
+						<span class="testimonial-modal-name"></span>
+						<span class="testimonial-modal-date"></span>
+					</span>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -135,11 +154,11 @@ const avatarTints = [
 	}
 
 	.testimonials-arrow--prev {
-		left: -0.5rem;
+		left: -2rem;
 	}
 
 	.testimonials-arrow--next {
-		right: -0.5rem;
+		right: -2rem;
 	}
 
 	.testimonials-row {
@@ -148,7 +167,7 @@ const avatarTints = [
 		gap: 2rem;
 		overflow-x: auto;
 		scroll-snap-type: x proximity;
-		padding: 1rem 3.5rem 1.5rem;
+		padding: 1rem 4.5rem 1.5rem;
 		margin: 0 -0.25rem;
 		scrollbar-width: none;
 	}
@@ -184,11 +203,6 @@ const avatarTints = [
 		overflow: hidden;
 	}
 
-	.testimonial-card.is-expanded .testimonial-text {
-		-webkit-line-clamp: unset;
-		overflow: visible;
-	}
-
 	.testimonial-toggle {
 		align-self: flex-end;
 		background: none;
@@ -216,17 +230,20 @@ const avatarTints = [
 	}
 
 	.testimonial-avatar-circle {
+		position: relative;
 		flex-shrink: 0;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		overflow: hidden;
 		width: 3rem;
 		height: 3rem;
 		border-radius: var(--radius-full);
 	}
 
 	:global(.testimonial-avatar) {
-		width: 1.75rem;
+		position: absolute;
+		left: 50%;
+		bottom: 0;
+		translate: -50% 0;
+		width: 2.4rem;
 		height: auto;
 	}
 
@@ -277,13 +294,69 @@ const avatarTints = [
 		}
 
 		.testimonials-row {
-			padding-inline: 3rem;
+			padding-inline: 3.5rem;
 		}
 
 		.testimonials-arrow {
 			width: 2.5rem;
 			height: 2.5rem;
 		}
+
+		.testimonials-arrow--prev {
+			left: -1rem;
+		}
+
+		.testimonials-arrow--next {
+			right: -1rem;
+		}
+	}
+
+	.testimonial-modal-backdrop {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		align-items: center;
+		justify-content: center;
+		padding: 1.5rem;
+		background: color-mix(in srgb, var(--color-primary-dark) 55%, transparent);
+	}
+
+	.testimonial-modal-backdrop:not([hidden]) {
+		display: flex;
+	}
+
+	.testimonial-modal-card {
+		position: relative;
+		width: min(34rem, 100%);
+		max-height: 80vh;
+		overflow-y: auto;
+		background: var(--color-white);
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-lift);
+		padding: 2rem 1.75rem 1.75rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.testimonial-modal-close {
+		position: absolute;
+		top: 0.75rem;
+		right: 0.75rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		border: none;
+		border-radius: var(--radius-full);
+		background: var(--color-cream);
+		cursor: pointer;
+	}
+
+	.testimonial-modal-text {
+		color: var(--color-ink-soft);
+		white-space: pre-line;
 	}
 </style>
 
@@ -293,6 +366,36 @@ const avatarTints = [
 	const dots = Array.from(document.querySelectorAll<HTMLButtonElement>(".testimonials-dot"));
 	const prevBtn = document.querySelector<HTMLButtonElement>(".testimonials-arrow--prev");
 	const nextBtn = document.querySelector<HTMLButtonElement>(".testimonials-arrow--next");
+
+	const modalBackdrop = document.getElementById("testimonial-modal-backdrop");
+	const modalText = modalBackdrop?.querySelector<HTMLElement>(".testimonial-modal-text");
+	const modalAvatar = modalBackdrop?.querySelector<HTMLElement>(".testimonial-modal-avatar");
+	const modalName = modalBackdrop?.querySelector<HTMLElement>(".testimonial-modal-name");
+	const modalDate = modalBackdrop?.querySelector<HTMLElement>(".testimonial-modal-date");
+	const modalClose = modalBackdrop?.querySelector<HTMLButtonElement>(".testimonial-modal-close");
+
+	function openModal(card: HTMLElement) {
+		if (!modalBackdrop || !modalText || !modalAvatar || !modalName || !modalDate) return;
+		modalText.textContent = card.querySelector(".testimonial-text")?.textContent ?? "";
+		const avatarCircle = card.querySelector<HTMLElement>(".testimonial-avatar-circle");
+		modalAvatar.innerHTML = avatarCircle?.innerHTML ?? "";
+		modalAvatar.setAttribute("style", avatarCircle?.getAttribute("style") ?? "");
+		modalName.textContent = card.querySelector(".testimonial-name")?.textContent ?? "";
+		modalDate.textContent = card.querySelector(".testimonial-date")?.textContent ?? "";
+		modalBackdrop.hidden = false;
+	}
+
+	function closeModal() {
+		if (modalBackdrop) modalBackdrop.hidden = true;
+	}
+
+	modalClose?.addEventListener("click", closeModal);
+	modalBackdrop?.addEventListener("click", (event) => {
+		if (event.target === modalBackdrop) closeModal();
+	});
+	document.addEventListener("keydown", (event) => {
+		if (event.key === "Escape" && modalBackdrop && !modalBackdrop.hidden) closeModal();
+	});
 
 	cards.forEach((card) => {
 		const text = card.querySelector<HTMLElement>(".testimonial-text");
@@ -304,10 +407,7 @@ const avatarTints = [
 			return;
 		}
 
-		toggle.addEventListener("click", () => {
-			const expanded = card.classList.toggle("is-expanded");
-			toggle.textContent = expanded ? "Show less" : "Show more";
-		});
+		toggle.addEventListener("click", () => openModal(card));
 	});
 
 	if (row && cards.length > 0) {
