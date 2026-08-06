@@ -80,7 +80,7 @@
     "heading": "How I teach",
     "text": "My approach is all about communication, confidence, and real progress. You won't just study Italian, you'll actually use it.",
     "image": "/images/lara_about.jpg",
-    "visible": true
+    "visible": false
   },
   "lessonsDifferent": {
     "heading": "What makes my lessons different",
@@ -136,7 +136,7 @@
     "image": "/images/results.png",
     "beginner": "**Starting from zero?** In few months you'll be able to handle many everyday situations, ask directions, express needs, desires and simple opinions.",
     "intermediate": "**Already have a good level of Italian?** You’ll expand your vocabulary, explore more complex and specialised topics, and learn to express your ideas with greater accuracy, confidence, and naturalness.",
-    "visible": true
+    "visible": false
   },
   "testimonials": {
     "title": "What My Students Say",
