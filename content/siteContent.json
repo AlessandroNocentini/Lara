@@ -3,23 +3,14 @@
     "siteName": "Learn 🍹talian with Lara",
     "image": "/images/spritz-ms1o6xgs.svg",
     "language": "en",
-    "primaryColor": "#6dd5b2",
-    "secondaryColor": "#f9ca48",
-    "tertiaryColor": "#e3170a"
+    "primaryColor": "#daefe7",
+    "secondaryColor": "#d9cb04",
+    "tertiaryColor": "#f23322"
   },
   "hero": {
-    "text": "Fun, interactive lessons tailored to you.\nFor real conversations and real life.",
+    "text": "",
     "image": "/images/lara_about.jpg",
-    "socialLinks": [
-      {
-        "platform": "instagram",
-        "url": "https://www.instagram.com/laraduardo?igsh=MWJtbWFnaTJuN3Y3MA=="
-      },
-      {
-        "platform": "email",
-        "url": "#"
-      }
-    ]
+    "socialLinks": []
   },
   "about": {
     "greeting": "Ciao!",
