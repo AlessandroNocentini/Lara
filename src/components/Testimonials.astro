@@ -144,7 +144,11 @@ const avatarTints = [
 	.testimonials-viewport {
 		width: calc(3 * var(--tcard-w) + 2 * var(--tcard-gap));
 		max-width: 100%;
-		overflow: hidden;
+		/* Clip horizontally only — the center card's focus-scale grows past
+		   its own layout box, and clipping vertically too would cut its top
+		   and bottom off. */
+		overflow-x: hidden;
+		overflow-y: visible;
 	}
 
 	.testimonials-arrow {
@@ -183,9 +187,12 @@ const avatarTints = [
 		gap: var(--tcard-gap);
 		overflow-x: auto;
 		scroll-snap-type: x proximity;
-		/* Padding of exactly one card+gap on each side lets the first and
-		   last real cards still scroll all the way to the viewport's center. */
-		padding: 1rem calc(var(--tcard-w) + var(--tcard-gap)) 1.5rem;
+		/* Horizontal padding of exactly one card+gap on each side lets the
+		   first and last real cards still scroll all the way to the
+		   viewport's center. Vertical padding leaves room for the centered
+		   card's focus-scale (up to 1.15x) to grow without visually
+		   colliding with the heading/dots above and below. */
+		padding: 2.75rem calc(var(--tcard-w) + var(--tcard-gap)) 3rem;
 		scrollbar-width: none;
 	}
 
@@ -528,9 +535,10 @@ const avatarTints = [
 		});
 
 		requestAnimationFrame(() => {
-			centerCard(cards[0], "auto");
+			const initialIndex = cards.length > 1 ? 1 : 0;
+			centerCard(cards[initialIndex], "auto");
 			applyScale();
-			setActive(0);
+			setActive(initialIndex);
 		});
 	}
 </script>
