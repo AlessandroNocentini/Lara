@@ -12,43 +12,42 @@ const { content } = Astro.props;
 
 const headingParts = splitHighlighted(content.heading, content.highlightWords);
 
-// Fixed decorative icons tied to list position (not admin-editable data),
-// same positional-array pattern this file already used for card rotations.
-const questionIcons = [
-  '<path d="M4 5c2-1 5-1 7 1v13c-2-2-5-2-7-1V5Z" /><path d="M20 5c-2-1-5-1-7 1v13c2-2 5-2 7-1V5Z" />',
-  '<rect x="5" y="9" width="14" height="10" rx="1.5" /><path d="M9 9V6.5A1.5 1.5 0 0 1 10.5 5h3A1.5 1.5 0 0 1 15 6.5V9" /><path d="M5 13.5h14" />',
-  '<path d="M4 5h16v10H9l-4 4v-4H4z" />',
-  '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z" />',
+// Fixed decorative placement/color for each of the 4 scattered thoughts
+// (not admin-editable data), same positional-array pattern this file
+// previously used for the icon-circle list.
+const thoughtStyles = [
+  { top: "2%", left: "0%", rotate: "-6deg", color: "var(--color-primary-dark)" },
+  { top: "6%", left: "62%", rotate: "5deg", color: "var(--color-tertiary)" },
+  { top: "70%", left: "2%", rotate: "-4deg", color: "var(--color-secondary)" },
+  { top: "68%", left: "60%", rotate: "7deg", color: "var(--color-primary)" },
 ];
 ---
 
 <section id="pain-points" class="pain-points">
 	<div class="container pain-points-inner">
-		<div class="pain-points-portrait" data-hover-lift>
-			<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="pill" />
+		<h2>
+			{headingParts.map((part) =>
+				part.highlight ? (
+					<span class="highlight">{part.text}</span>
+				) : (
+					<>{part.text}</>
+				)
+			)}
+		</h2>
+		<div class="pain-points-scatter">
+			<div class="pain-points-photo polaroid" data-hover-lift>
+				<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="square" />
+			</div>
+			{content.questions.map((question, i) => (
+				<p
+					class="pain-thought"
+					style={`top:${thoughtStyles[i % thoughtStyles.length].top}; left:${thoughtStyles[i % thoughtStyles.length].left}; rotate:${thoughtStyles[i % thoughtStyles.length].rotate}; color:${thoughtStyles[i % thoughtStyles.length].color};`}
+				>
+					{question}
+				</p>
+			))}
 		</div>
-		<div class="pain-points-copy">
-			<h2>
-				{headingParts.map((part) =>
-					part.highlight ? (
-						<span class="highlight">{part.text}</span>
-					) : (
-						<>{part.text}</>
-					)
-				)}
-			</h2>
-			<ul class="pain-list">
-				{content.questions.map((question, i) => (
-					<li class="pain-item">
-						<span class="pain-icon-circle" aria-hidden="true">
-							<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--color-white)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={questionIcons[i % questionIcons.length]} />
-						</span>
-						<span class="pain-text">{question}</span>
-					</li>
-				))}
-			</ul>
-			<a class="button button-primary pain-points-cta" href={content.cta.target} data-hover-lift>{content.cta.label}</a>
-		</div>
+		<a class="button button-primary pain-points-cta" href={content.cta.target} data-hover-lift>{content.cta.label}</a>
 		<span
 			class="pain-points-stamp"
 			aria-hidden="true"
@@ -67,78 +66,68 @@ const questionIcons = [
 
 	.pain-points-inner {
 		position: relative;
-		display: grid;
-		grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-		gap: clamp(2rem, 5vw, 3.5rem);
-		align-items: center;
-	}
-
-	.pain-points-portrait {
-		width: min(360px, 100%);
-	}
-
-	.pain-points-copy {
 		display: flex;
 		flex-direction: column;
-		gap: 1.75rem;
+		align-items: center;
+		gap: 2.5rem;
+		text-align: center;
 	}
 
 	h2 {
 		font-family: var(--font-display);
 		text-transform: uppercase;
 		letter-spacing: 0.01em;
-		font-size: clamp(2.4rem, 5vw, 3.6rem);
+		font-size: clamp(1.5rem, 3.4vw, 3rem);
 		line-height: 1.05;
 		color: var(--color-primary-dark);
+		max-width: 60rem;
 	}
 
 	.highlight {
 		color: var(--color-secondary);
 	}
 
-	.pain-list {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 1.1rem;
-	}
-
-	.pain-item {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-	}
-
-	.pain-icon-circle {
-		flex-shrink: 0;
+	.pain-points-scatter {
+		position: relative;
+		width: 100%;
+		max-width: 46rem;
+		min-height: 24rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 3rem;
-		height: 3rem;
-		border-radius: var(--radius-full);
-		background: var(--color-primary-light);
-		transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
 	}
 
-	@media (prefers-reduced-motion: no-preference) {
-		.pain-item:hover .pain-icon-circle {
-			background: var(--color-primary);
-			box-shadow: var(--shadow-soft);
-			transform: scale(1.15) rotate(-8deg);
-		}
+	.pain-points-photo {
+		width: min(300px, 70%);
 	}
 
-	.pain-text {
-		font-weight: 600;
+	.polaroid {
+		background: var(--color-white);
+		padding: 0.75rem 0.75rem 2.25rem;
+		box-shadow: var(--shadow-lift);
+		rotate: -3deg;
+	}
+
+	.polaroid :global(.placeholder-image) {
+		width: 100%;
+		aspect-ratio: 1 / 1;
+		object-fit: cover;
+		border-radius: 0;
+		display: block;
+	}
+
+	.pain-thought {
+		position: absolute;
+		max-width: 15rem;
+		font-family: var(--font-heading);
+		font-style: italic;
+		font-weight: 700;
 		font-size: 1.05rem;
-		color: var(--color-ink);
+		line-height: 1.3;
 	}
 
 	.pain-points-cta {
-		align-self: flex-start;
+		align-self: center;
 	}
 
 	.pain-points-stamp {
@@ -161,21 +150,16 @@ const questionIcons = [
 	}
 
 	@media (max-width: 800px) {
-		.pain-points-inner {
-			grid-template-columns: 1fr;
-			text-align: center;
+		.pain-points-scatter {
+			flex-direction: column;
+			min-height: auto;
+			gap: 1.5rem;
 		}
 
-		.pain-points-portrait {
-			margin-inline: auto;
-		}
-
-		.pain-points-copy {
-			align-items: center;
-		}
-
-		.pain-item {
-			justify-content: center;
+		.pain-thought {
+			position: static;
+			max-width: 22rem;
+			rotate: 0deg !important;
 		}
 
 		.pain-points-stamp {
