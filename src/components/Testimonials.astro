@@ -46,29 +46,31 @@ const avatarTints = [
 				<button type="button" class="testimonials-arrow testimonials-arrow--prev" aria-label="Previous review">
 					<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--color-white)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7" /></svg>
 				</button>
-				<div class="testimonials-row" role="list">
-					{content.items.map((item, i) => (
-						<article class="testimonial-card" data-hover-lift role="listitem">
-							<svg class="testimonial-quote" viewBox="0 0 24 16" width="34" height="24" fill="var(--color-primary)" aria-hidden="true">
-								<path d="M7 15c-1.7 0-3-1.3-3-3 0-2.8 1.8-5.2 4.5-6.5L9.5 7C7.8 7.8 7 8.9 7 10c1.7 0 3 1.3 3 3s-1.3 3-3 3z" />
-								<path d="M16 15c-1.7 0-3-1.3-3-3 0-2.8 1.8-5.2 4.5-6.5L18.5 7c-1.7.8-2.5 1.9-2.5 3 1.7 0 3 1.3 3 3s-1.3 3-3 3z" />
-							</svg>
-							<p class="testimonial-text">{item.text}</p>
-							<button type="button" class="testimonial-toggle">Show more</button>
-							<svg class="testimonial-divider" viewBox="0 0 300 16" preserveAspectRatio="none" aria-hidden="true">
-								<path d="M0,2 H50 L65,15 L80,2 H300" fill="none" stroke="var(--color-primary-dark)" stroke-width="1.5" />
-							</svg>
-							<footer class="testimonial-meta">
-								<span class="testimonial-avatar-circle" style={`background: ${avatarTints[i % avatarTints.length].bg}; color: ${avatarTints[i % avatarTints.length].fg}`}>
-									<TestimonialAvatar class="testimonial-avatar" gender={item.gender} />
-								</span>
-								<span class="testimonial-meta-text">
-									<span class="testimonial-name">{item.name}</span>
-									<time class="testimonial-date" datetime={item.date}>{formatDate(item.date)}</time>
-								</span>
-							</footer>
-						</article>
-					))}
+				<div class="testimonials-viewport">
+					<div class="testimonials-row" role="list">
+						{content.items.map((item, i) => (
+							<article class="testimonial-card" role="listitem">
+								<svg class="testimonial-quote" viewBox="0 0 24 16" width="34" height="24" fill="var(--color-primary)" aria-hidden="true">
+									<path d="M7 15c-1.7 0-3-1.3-3-3 0-2.8 1.8-5.2 4.5-6.5L9.5 7C7.8 7.8 7 8.9 7 10c1.7 0 3 1.3 3 3s-1.3 3-3 3z" />
+									<path d="M16 15c-1.7 0-3-1.3-3-3 0-2.8 1.8-5.2 4.5-6.5L18.5 7c-1.7.8-2.5 1.9-2.5 3 1.7 0 3 1.3 3 3s-1.3 3-3 3z" />
+								</svg>
+								<p class="testimonial-text">{item.text}</p>
+								<button type="button" class="testimonial-toggle">Show more</button>
+								<svg class="testimonial-divider" viewBox="0 0 300 16" preserveAspectRatio="none" aria-hidden="true">
+									<path d="M0,2 H50 L65,15 L80,2 H300" fill="none" stroke="var(--color-primary-dark)" stroke-width="1.5" />
+								</svg>
+								<footer class="testimonial-meta">
+									<span class="testimonial-avatar-circle" style={`background: ${avatarTints[i % avatarTints.length].bg}; color: ${avatarTints[i % avatarTints.length].fg}`}>
+										<TestimonialAvatar class="testimonial-avatar" gender={item.gender} />
+									</span>
+									<span class="testimonial-meta-text">
+										<span class="testimonial-name">{item.name}</span>
+										<time class="testimonial-date" datetime={item.date}>{formatDate(item.date)}</time>
+									</span>
+								</footer>
+							</article>
+						))}
+					</div>
 				</div>
 				<button type="button" class="testimonials-arrow testimonials-arrow--next" aria-label="Next review">
 					<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--color-white)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7" /></svg>
@@ -107,6 +109,11 @@ const avatarTints = [
 		padding: var(--section-padding);
 		background: var(--color-secondary-pale);
 		overflow: hidden;
+		/* Fixed card metrics, shared by the row's centering padding, the
+		   viewport's exactly-3-cards width, and the card size itself, so the
+		   viewport always clips to precisely 3 cards with none peeking. */
+		--tcard-w: clamp(220px, 26vw, 320px);
+		--tcard-gap: 1.25rem;
 	}
 
 	.testimonials-heading {
@@ -129,6 +136,15 @@ const avatarTints = [
 
 	.testimonials-carousel {
 		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.testimonials-viewport {
+		width: calc(3 * var(--tcard-w) + 2 * var(--tcard-gap));
+		max-width: 100%;
+		overflow: hidden;
 	}
 
 	.testimonials-arrow {
@@ -163,12 +179,13 @@ const avatarTints = [
 
 	.testimonials-row {
 		display: flex;
-		align-items: stretch;
-		gap: 2rem;
+		align-items: center;
+		gap: var(--tcard-gap);
 		overflow-x: auto;
 		scroll-snap-type: x proximity;
-		padding: 1rem 4.5rem 1.5rem;
-		margin: 0 -0.25rem;
+		/* Padding of exactly one card+gap on each side lets the first and
+		   last real cards still scroll all the way to the viewport's center. */
+		padding: 1rem calc(var(--tcard-w) + var(--tcard-gap)) 1.5rem;
 		scrollbar-width: none;
 	}
 
@@ -181,8 +198,10 @@ const avatarTints = [
 		display: flex;
 		flex-direction: column;
 		flex: 0 0 auto;
-		scroll-snap-align: start;
-		width: clamp(300px, 32vw, 380px);
+		scroll-snap-align: center;
+		transform-origin: center;
+		width: var(--tcard-w);
+		height: 21rem;
 		background: var(--color-white);
 		border-radius: var(--radius-md);
 		box-shadow: var(--shadow-soft);
@@ -190,8 +209,15 @@ const avatarTints = [
 		gap: 0.5rem;
 	}
 
+	@media (prefers-reduced-motion: no-preference) {
+		.testimonial-card {
+			transition: transform 0.2s ease, opacity 0.2s ease;
+		}
+	}
+
 	.testimonial-quote {
 		margin-bottom: 0.25rem;
+		flex-shrink: 0;
 	}
 
 	.testimonial-text {
@@ -222,12 +248,14 @@ const avatarTints = [
 		height: 0.9rem;
 		margin-top: auto;
 		margin-bottom: 0.75rem;
+		flex-shrink: 0;
 	}
 
 	.testimonial-meta {
 		display: flex;
 		align-items: center;
 		gap: 0.75rem;
+		flex-shrink: 0;
 	}
 
 	.testimonial-avatar-circle {
@@ -289,13 +317,20 @@ const avatarTints = [
 		box-shadow: none;
 	}
 
-	@media (max-width: 560px) {
-		.testimonial-card {
-			width: clamp(260px, 82vw, 340px);
+	@media (max-width: 700px) {
+		.testimonials {
+			--tcard-w: clamp(150px, 27vw, 210px);
+			--tcard-gap: 0.75rem;
 		}
 
-		.testimonials-row {
-			padding-inline: 3.5rem;
+		.testimonial-card {
+			height: 19rem;
+			padding: 1.1rem 1.1rem 1rem;
+		}
+
+		.testimonial-text {
+			font-size: 0.8rem;
+			-webkit-line-clamp: 4;
 		}
 
 		.testimonials-arrow {
@@ -411,48 +446,91 @@ const avatarTints = [
 		toggle.addEventListener("click", () => openModal(card));
 	});
 
-	if (row && cards.length > 0) {
+	if (row && cards.length > 0 && dots.length > 0) {
+		function centerCard(card: HTMLElement, behavior: ScrollBehavior) {
+			const rowRect = row!.getBoundingClientRect();
+			const cardRect = card.getBoundingClientRect();
+			const delta = cardRect.left + cardRect.width / 2 - (rowRect.left + rowRect.width / 2);
+			row!.scrollBy({ left: delta, behavior });
+		}
+
+		function closestIndex(): number {
+			const rowRect = row!.getBoundingClientRect();
+			const rowCenter = rowRect.left + rowRect.width / 2;
+			let closest = 0;
+			let minDist = Infinity;
+			cards.forEach((card, i) => {
+				const rect = card.getBoundingClientRect();
+				const dist = Math.abs(rect.left + rect.width / 2 - rowCenter);
+				if (dist < minDist) {
+					minDist = dist;
+					closest = i;
+				}
+			});
+			return closest;
+		}
+
+		function setActive(index: number) {
+			dots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
+		}
+
+		function applyScale() {
+			const rowRect = row!.getBoundingClientRect();
+			const rowCenter = rowRect.left + rowRect.width / 2;
+			const half = rowRect.width / 2 || 1;
+			cards.forEach((card) => {
+				const rect = card.getBoundingClientRect();
+				const dist = Math.abs(rect.left + rect.width / 2 - rowCenter);
+				const t = Math.min(dist / half, 1);
+				card.style.transform = `scale(${(1.15 - t * 0.33).toFixed(3)})`;
+				card.style.opacity = (1 - t * 0.4).toFixed(3);
+			});
+		}
+
+		let ticking = false;
+		function onScrollTick() {
+			applyScale();
+			setActive(closestIndex());
+			ticking = false;
+		}
+
+		row.addEventListener(
+			"scroll",
+			() => {
+				if (!ticking) {
+					ticking = true;
+					requestAnimationFrame(onScrollTick);
+				}
+			},
+			{ passive: true }
+		);
+
 		prevBtn?.addEventListener("click", () => {
-			row.scrollBy({ left: -(cards[0].offsetWidth + 32), behavior: "smooth" });
+			const idx = closestIndex();
+			centerCard(cards[Math.max(idx - 1, 0)], "smooth");
 		});
 		nextBtn?.addEventListener("click", () => {
-			row.scrollBy({ left: cards[0].offsetWidth + 32, behavior: "smooth" });
+			const idx = closestIndex();
+			centerCard(cards[Math.min(idx + 1, cards.length - 1)], "smooth");
 		});
 
 		dots.forEach((dot, i) => {
 			dot.addEventListener("click", () => {
 				const card = cards[i];
-				if (!card) return;
-				const delta = card.getBoundingClientRect().left - row.getBoundingClientRect().left;
-				row.scrollBy({ left: delta, behavior: "smooth" });
+				if (card) centerCard(card, "smooth");
 			});
 		});
 
-		const setActive = (index: number) => {
-			dots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
-		};
+		window.addEventListener("resize", () => {
+			const active = dots.findIndex((dot) => dot.classList.contains("is-active"));
+			applyScale();
+			if (active >= 0) centerCard(cards[active], "auto");
+		});
 
-		const observer = new IntersectionObserver(
-			(entries) => {
-				const visible = entries
-					.filter((entry) => entry.isIntersecting)
-					.map((entry) => ({ index: cards.indexOf(entry.target as HTMLElement), ratio: entry.intersectionRatio }))
-					.filter((entry) => entry.index !== -1);
-				// Prefer the leftmost card that's (near enough) fully visible, rather
-				// than strictly the highest ratio — sub-pixel rounding can otherwise
-				// make an earlier card lose to a later one that's 100.0% vs 99.9%.
-				const fullyVisible = visible.filter((entry) => entry.ratio >= 0.95);
-				const pool = fullyVisible.length > 0 ? fullyVisible : visible;
-				pool.sort((a, b) => a.index - b.index);
-				if (pool.length > 0) setActive(pool[0].index);
-			},
-			{
-				root: row,
-				threshold: [0.5, 0.75, 1],
-			}
-		);
-
-		cards.forEach((card) => observer.observe(card));
-		setActive(0);
+		requestAnimationFrame(() => {
+			centerCard(cards[0], "auto");
+			applyScale();
+			setActive(0);
+		});
 	}
 </script>
