@@ -39,7 +39,6 @@
   },
   "method": {
     "title": "My Method",
-    "image": "/images/chatgpt-image-4-ago-2026-14-36-24-mshhfpd6.png",
     "items": [
       {
         "title": "Speak from Day One",
@@ -50,16 +49,6 @@
         "title": "Interactive & Fun",
         "description": "Games, activities, and engaging tasks that make learning enjoyable.",
         "image": "/images/interactive.jpg"
-      },
-      {
-        "title": "Authentic Italian",
-        "description": "Learn with songs, videos, podcasts, and real-life materials.",
-        "image": ""
-      },
-      {
-        "title": "Conversation-Based",
-        "description": "Talk about a wide range of topics and build confidence naturally.",
-        "image": ""
       },
       {
         "title": "Tailored to You",
@@ -73,7 +62,6 @@
       }
     ],
     "introSubtitle": "Interactive lessons designed to help you speak from day one",
-    "introText": "Through guided conversations, practical activities, and fun exercises, you'll start using Italian naturally while building confidence step by step.",
     "visible": true
   },
   "howITeach": {
