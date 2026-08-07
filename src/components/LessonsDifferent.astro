@@ -11,16 +11,10 @@ const { content } = Astro.props;
 
 const headingParts = splitHighlighted(content.heading, ["different"]);
 
-// Fixed decorative icons + circle colors tied to timeline position (not
-// admin-editable data), same positional-array convention as Pain Points'
-// questionIcons.
-const timelineIcons = [
-  '<path d="M4 5h16v10H9l-4 4v-4H4z" />',
-  '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" />',
-  '<path d="M4 9h2a2 2 0 1 1 0 4H4v4h4v-2a2 2 0 1 1 4 0v2h4v-4h2a2 2 0 1 0 0-4h-2V5h-4v2a2 2 0 1 1-4 0V5H4v4Z" />',
-  '<circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />',
-];
-const timelineColors = ["var(--color-primary)", "var(--color-primary-dark)", "var(--color-secondary)", "var(--color-tertiary)"];
+// Fixed decorative accent color tied to card position (not admin-editable
+// data), same positional-array convention as Pain Points'/Services' arrays —
+// previously the timeline circles' fill, now each card's number-badge color.
+const cardAccents = ["var(--color-primary)", "var(--color-primary-dark)", "var(--color-secondary)", "var(--color-tertiary)"];
 ---
 
 <section id="lessons-different" class="lessons-different">
@@ -39,16 +33,12 @@ const timelineColors = ["var(--color-primary)", "var(--color-primary-dark)", "va
 				)
 			)}
 		</h2>
-		<div class="timeline">
+		<div class="lessons-grid">
 			{content.steps.map((step, i) => (
-				<div class="timeline-step">
-					<span class="timeline-circle" style={`background: ${timelineColors[i % timelineColors.length]}`}>
-						<span class="timeline-number">{`0${i + 1}`}</span>
-					</span>
-					<span class="timeline-connector" aria-hidden="true"></span>
-					<svg class="timeline-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke={timelineColors[i % timelineColors.length]} stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={timelineIcons[i % timelineIcons.length]} />
-					<h3 class="timeline-title">{step.title}</h3>
-					<p class="timeline-description">{step.description}</p>
+				<div class="lessons-card">
+					<span class="lessons-card-number" style={`color: ${cardAccents[i % cardAccents.length]}`}>{`0${i + 1}`}</span>
+					<h3 class="lessons-card-title">{step.title}</h3>
+					<p class="lessons-card-description">{step.description}</p>
 				</div>
 			))}
 		</div>
@@ -58,7 +48,7 @@ const timelineColors = ["var(--color-primary)", "var(--color-primary-dark)", "va
 <style>
 	.lessons-different {
 		position: relative;
-		background: var(--color-white);
+		background: var(--color-primary);
 		padding: var(--section-padding);
 		overflow: hidden;
 	}
@@ -70,7 +60,7 @@ const timelineColors = ["var(--color-primary)", "var(--color-primary-dark)", "va
 		font-size: clamp(2.4rem, 5vw, 3.6rem);
 		line-height: 1.05;
 		text-align: center;
-		color: var(--color-primary-dark);
+		color: var(--color-white);
 		margin-bottom: 3.5rem;
 	}
 
@@ -78,68 +68,38 @@ const timelineColors = ["var(--color-primary)", "var(--color-primary-dark)", "va
 		color: var(--color-secondary);
 	}
 
-	.timeline {
+	.lessons-grid {
 		position: relative;
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
 		gap: 2rem;
 	}
 
-	.timeline::before {
-		content: "";
-		position: absolute;
-		top: 1.1rem;
-		left: 12%;
-		right: 12%;
-		border-top: 2px dashed var(--color-primary-light);
-		z-index: 0;
-	}
-
-	.timeline-step {
-		position: relative;
-		z-index: 1;
+	.lessons-card {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		text-align: center;
-	}
-
-	.timeline-circle {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 2.2rem;
-		height: 2.2rem;
-		border-radius: var(--radius-full);
+		background: var(--color-white);
+		border-radius: var(--radius-md);
 		box-shadow: var(--shadow-soft);
+		padding: 2rem 1.5rem;
+		min-height: 22rem;
 	}
 
-	.timeline-number {
+	.lessons-card-number {
 		font-family: var(--font-heading);
-		font-weight: 600;
-		font-size: 0.8rem;
-		color: var(--color-white);
+		font-weight: 700;
+		font-size: 1.75rem;
+		margin-bottom: 1.5rem;
 	}
 
-	.timeline-connector {
-		display: block;
-		width: 0;
-		height: 1.1rem;
-		border-left: 2px dashed var(--color-primary-light);
-	}
-
-	.timeline-icon {
-		margin-bottom: 0.75rem;
-	}
-
-	.timeline-title {
-		font-size: 1rem;
+	.lessons-card-title {
+		font-size: 1.1rem;
 		font-weight: 700;
 		color: var(--color-primary-dark);
-		margin-bottom: 0.4rem;
+		margin-bottom: 0.6rem;
 	}
 
-	.timeline-description {
+	.lessons-card-description {
 		color: var(--color-ink-soft);
 		font-size: 0.9rem;
 	}
@@ -151,26 +111,26 @@ const timelineColors = ["var(--color-primary)", "var(--color-primary-dark)", "va
 		top: -1rem;
 		width: 7rem;
 		aspect-ratio: 45.914291 / 44.24184;
-		background-color: var(--color-primary);
+		background-color: var(--color-white);
 		mask-repeat: no-repeat;
 		mask-position: center;
 		mask-size: contain;
 		-webkit-mask-repeat: no-repeat;
 		-webkit-mask-position: center;
 		-webkit-mask-size: contain;
-		opacity: 0.85;
+		opacity: 0.5;
 		pointer-events: none;
 		z-index: 0;
 	}
 
 	@media (max-width: 800px) {
-		.timeline {
+		.lessons-grid {
 			grid-template-columns: 1fr;
-			gap: 2.5rem;
+			gap: 1.5rem;
 		}
 
-		.timeline::before {
-			display: none;
+		.lessons-card {
+			min-height: 0;
 		}
 
 		.lessons-different-stamp {
