@@ -27,7 +27,9 @@ const bioHtml = renderMarkdown(content.bio);
 		<div class="bio" set:html={bioHtml} />
 	</div>
 	<div class="about-photo" data-hover-lift>
-		<PlaceholderImage src={content.image || undefined} alt={`Photo of ${content.name}`} variant="rounded" />
+		<div class="about-photo-frame polaroid">
+			<PlaceholderImage src={content.image || undefined} alt={`Photo of ${content.name}`} variant="square" />
+		</div>
 	</div>
 </section>
 
@@ -44,19 +46,28 @@ const bioHtml = renderMarkdown(content.bio);
 	.about-photo {
 		position: relative;
 		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
-	.about-photo :global(.placeholder-image) {
+	.about-photo-frame {
+		width: min(320px, 80%);
+	}
+
+	.polaroid {
+		background: var(--color-white);
+		padding: 0.75rem 0.75rem 2.25rem;
+		box-shadow: var(--shadow-lift);
+		rotate: -3deg;
+	}
+
+	.polaroid :global(.placeholder-image) {
 		width: 100%;
-		height: 100%;
+		aspect-ratio: 1 / 1;
 		object-fit: cover;
 		border-radius: 0;
 		display: block;
-		/* Fade the photo's left edge into the gradient panel next to it —
-		   same technique as How I Teach's portrait fade, mirrored since the
-		   photo sits on the right here (same directionality as Hero's). */
-		mask-image: linear-gradient(to left, black 55%, transparent 100%);
-		-webkit-mask-image: linear-gradient(to left, black 55%, transparent 100%);
 	}
 
 	.about-copy {
@@ -119,12 +130,11 @@ const bioHtml = renderMarkdown(content.bio);
 		.about-photo {
 			width: 100%;
 			height: auto;
-			aspect-ratio: 4 / 5;
+			padding: 2rem 0;
 		}
 
-		.about-photo :global(.placeholder-image) {
-			mask-image: none;
-			-webkit-mask-image: none;
+		.about-photo-frame {
+			width: min(260px, 70%);
 		}
 
 		.about-copy {
