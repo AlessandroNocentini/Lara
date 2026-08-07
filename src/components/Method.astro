@@ -68,21 +68,40 @@ const titleParts = splitHighlighted(content.title, ["Method"]);
 
 	.method-stage {
 		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: clamp(3rem, 7vw, 5rem) clamp(2.5rem, 6vw, 4rem);
-		max-width: 35rem;
+		grid-template-columns: 1fr auto 1fr;
+		grid-template-areas:
+			"card1 text card3"
+			"card2 text card4";
+		gap: clamp(2rem, 5vw, 3rem) clamp(2.5rem, 6vw, 4rem);
+		max-width: 46rem;
 		margin-inline: auto;
 		align-items: start;
 	}
 
+	.method-card:nth-of-type(1) {
+		grid-area: card1;
+	}
+
+	.method-card:nth-of-type(2) {
+		grid-area: card2;
+	}
+
+	.method-card:nth-of-type(3) {
+		grid-area: card3;
+	}
+
+	.method-card:nth-of-type(4) {
+		grid-area: card4;
+	}
+
 	.polaroid {
 		background: var(--color-white);
-		padding: 0.75rem 0.75rem 2.75rem;
+		padding: 0.75rem 0.75rem 2rem;
 		box-shadow: var(--shadow-lift);
 		rotate: -3deg;
 	}
 
-	.method-card:nth-child(2n) {
+	.method-card:nth-of-type(2n) {
 		rotate: 3deg;
 	}
 
@@ -110,10 +129,10 @@ const titleParts = splitHighlighted(content.title, ["Method"]);
 	}
 
 	.method-center-text {
-		grid-column: 1 / -1;
+		grid-area: text;
 		align-self: center;
-		max-width: 22rem;
-		margin-inline: auto;
+		justify-self: center;
+		max-width: 11rem;
 		text-align: center;
 		font-weight: 700;
 		font-size: 1.1rem;
@@ -123,6 +142,12 @@ const titleParts = splitHighlighted(content.title, ["Method"]);
 	@media (max-width: 800px) {
 		.method-stage {
 			grid-template-columns: 1fr;
+			grid-template-areas:
+				"card1"
+				"card2"
+				"text"
+				"card3"
+				"card4";
 			max-width: 20rem;
 			gap: 2.5rem;
 		}
