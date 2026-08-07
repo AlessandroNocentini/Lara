@@ -73,7 +73,7 @@ const titleParts = splitHighlighted(content.title, ["Method"]);
 			"card1 text card3"
 			"card2 text card4";
 		gap: clamp(2rem, 5vw, 3rem) clamp(2.5rem, 6vw, 4rem);
-		max-width: 46rem;
+		max-width: 60rem;
 		margin-inline: auto;
 		align-items: start;
 	}
@@ -96,13 +96,17 @@ const titleParts = splitHighlighted(content.title, ["Method"]);
 
 	.polaroid {
 		background: var(--color-white);
-		padding: 0.75rem 0.75rem 2rem;
+		padding: 0.75rem 0.75rem 0.75rem;
 		box-shadow: var(--shadow-lift);
-		rotate: -3deg;
+		rotate: -4deg;
 	}
 
-	.method-card:nth-of-type(2n) {
-		rotate: 3deg;
+	.method-card:nth-of-type(2) {
+		rotate: 4deg;
+	}
+
+	.method-card:nth-of-type(3) {
+		rotate: 4deg;
 	}
 
 	.polaroid :global(.placeholder-image) {
