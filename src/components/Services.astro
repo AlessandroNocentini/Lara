@@ -39,7 +39,7 @@ const cardAccents = ["var(--color-primary)", "var(--color-secondary)", "var(--co
 			></span>
 		</div>
 		<div class="services-portrait">
-			<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="circle" />
+			<PlaceholderImage src={content.image || undefined} alt="Photo of Lara" variant="portrait" />
 		</div>
 	</div>
 
@@ -121,6 +121,23 @@ const cardAccents = ["var(--color-primary)", "var(--color-secondary)", "var(--co
 		width: 100%;
 		max-width: 26rem;
 		margin-left: auto;
+	}
+
+	.services-portrait :global(.placeholder-image) {
+		/* Sticker effect, same technique as Hero.astro's portrait: a white
+		   outline that hugs the photo's own alpha silhouette rather than a
+		   rectangular/circular crop. Each 0-blur drop-shadow stamps a solid
+		   white copy of the image offset in one direction; stacking a ring
+		   of them builds a continuous halo that follows the cutout edge. */
+		filter:
+			drop-shadow(3px 0 0 white)
+			drop-shadow(-3px 0 0 white)
+			drop-shadow(0 3px 0 white)
+			drop-shadow(0 -3px 0 white)
+			drop-shadow(2.2px 2.2px 0 white)
+			drop-shadow(-2.2px 2.2px 0 white)
+			drop-shadow(2.2px -2.2px 0 white)
+			drop-shadow(-2.2px -2.2px 0 white);
 	}
 
 	.services-grid {
