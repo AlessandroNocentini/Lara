@@ -124,6 +124,15 @@ const cardAccents = ["var(--color-primary)", "var(--color-secondary)", "var(--co
 	}
 
 	.services-portrait :global(.placeholder-image) {
+		/* Capped by height (not width) and right-aligned within the
+		   container, so shrinking it doesn't affect .services-portrait's
+		   own layout/position in the grid. ~1/3 of the previous rendered
+		   height (was ~599px at this column width). */
+		width: auto;
+		max-height: 12.5rem;
+		margin-left: auto;
+		display: block;
+		rotate: -3deg;
 		/* Sticker effect, same technique as Hero.astro's portrait: a white
 		   outline that hugs the photo's own alpha silhouette rather than a
 		   rectangular/circular crop. Each 0-blur drop-shadow stamps a solid
