@@ -26,14 +26,14 @@
     ],
     "image": "/images/lara_1.jpg",
     "questions": [
-      "Does grammar feel overwhelming?",
-      "Planning a trip or moving to Italy?",
-      "Dreaming of having real conversations in Italian?",
-      "Do you want to understand Italians beyond the textbook?"
+      "DOES GRAMMAR FEEL OVERWHELMING?",
+      "PLANNING A TRIP OR MOVING TO ITALY?",
+      "DREAMING OF HAVING REAL CONVERSATIONS IN ITALIAN?",
+      "DO YOU WANT TO UNDERSTAND ITALIANS BEYOND THE TEXTBOOK?"
     ],
     "cta": {
       "label": "Tell me more",
-      "target": "#method"
+      "target": "#mymethod"
     },
     "visible": true
   },
