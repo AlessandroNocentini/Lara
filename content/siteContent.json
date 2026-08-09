@@ -3,9 +3,9 @@
     "siteName": "Learn 🍹talian with Lara",
     "image": "/images/spritz-ms1o6xgs.svg",
     "language": "en",
-    "primaryColor": "#bfeede",
-    "secondaryColor": "#0006bd",
-    "tertiaryColor": "#7a002b"
+    "primaryColor": "#b60300",
+    "secondaryColor": "#77ab00",
+    "tertiaryColor": "#147cbf"
   },
   "hero": {
     "text": "",
@@ -66,7 +66,7 @@
   },
   "howITeach": {
     "heading": "How I teach",
-    "text": "My approach is all about communication, confidence, and real progress. You won't just study Italian, you'll actually use it.",
+    "text": "My approach is all about communication, confidence, and real progress. You won't just study Italian, you'll actually use it!",
     "image": "/images/lara_about.jpg",
     "visible": false
   },
@@ -93,7 +93,7 @@
     "visible": true
   },
   "services": {
-    "title": "Ways to Learn With Me",
+    "title": "Services",
     "image": "/images/chatgpt-image-4-ago-2026-14-36-24-mshm8dml.png",
     "items": [
       {
