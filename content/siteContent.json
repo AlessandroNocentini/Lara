@@ -3,9 +3,9 @@
     "siteName": "Learn 🍹talian with Lara",
     "image": "/images/spritz-ms1o6xgs.svg",
     "language": "en",
-    "primaryColor": "#147cbf",
-    "secondaryColor": "#b60300",
-    "tertiaryColor": "#77a800"
+    "primaryColor": "#77a800",
+    "secondaryColor": "#147cbf",
+    "tertiaryColor": "#b60300"
   },
   "hero": {
     "text": "",
