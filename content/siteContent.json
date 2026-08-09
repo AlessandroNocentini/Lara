@@ -33,7 +33,7 @@
     ],
     "cta": {
       "label": "Tell me more",
-      "target": "#contact"
+      "target": "#method"
     },
     "visible": true
   },
@@ -61,7 +61,7 @@
         "image": ""
       }
     ],
-    "introSubtitle": "Interactive lessons designed to help you speak from day one",
+    "introSubtitle": "INTERACTIVE LESSONS DESIGNED TO HELP YOU SPEAK FROM DAY ONE",
     "visible": true
   },
   "howITeach": {
