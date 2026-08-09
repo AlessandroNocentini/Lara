@@ -42,22 +42,22 @@
     "items": [
       {
         "title": "Speak from Day One",
-        "description": "Start communicationg in Italian from your very first lesson.",
+        "description": "Start speaking Italian from your very first lesson",
         "image": ""
       },
       {
         "title": "Interactive & Fun",
-        "description": "Games, activities, and engaging tasks that make learning enjoyable.",
+        "description": "Games, activities, and engaging tasks that make learning enjoyable",
         "image": "/images/interactive.jpg"
       },
       {
         "title": "Tailored to You",
-        "description": "Every lesson is adapted to your goals, interests, and learning style.",
+        "description": "Every lesson is adapted to your goals, interests, and learning style",
         "image": "/images/tailored.jpg"
       },
       {
         "title": "Italian for Real Life",
-        "description": "Practice the language you'll actualy use in everyday situations.",
+        "description": "Practice the language you'll actualy use in everyday situations with authentic materials",
         "image": ""
       }
     ],
